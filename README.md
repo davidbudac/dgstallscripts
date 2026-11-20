@@ -1,17 +1,102 @@
-# Data Guard SYNC stall analysis scripts
+# dgstallscripts
 
-Scripts for the troubleshooting guide "Data Guard SYNC transport stalls" (LGWR on
-`SYNC Remote Write`, `log file sync` pile-ups, ORA-16198, LAD UNSYNCHRONIZED).
-Everything is read-only. Tested on Oracle 19c (primary open, standby mounted), Linux; the shell
-scripts use only POSIX sh and awk features available on AIX.
+Read-only scripts that work out why commits stalled on an Oracle Data Guard primary with a SYNC or
+FASTSYNC standby: LGWR waiting on `SYNC Remote Write`, sessions piling up on `log file sync`,
+ORA-16198, and the destination going `UNSYNCHRONIZED`. They collect the evidence from both hosts and
+turn it into one HTML report.
 
-Licensing: sections 10–13, 17 and 18 read ASH/AWR (`DBA_HIST_*`, `V$ACTIVE_SESSION_HISTORY`),
-which needs the Diagnostics Pack.
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/report-dark.png">
+  <img src="docs/report-light.png" alt="The HTML report: summary cards, matched signals and the incident timeline">
+</picture>
 
-## What to run, in order
+**[Open the sample report](https://raw.githack.com/davidbudac/dgstallscripts/main/examples/sample-report.html)**
+(or download [`examples/sample-report.html`](examples/sample-report.html) and open it). It is built
+from the synthetic bundles in [`examples/`](examples): fictional names and documentation IP addresses,
+shaped like a real incident.
 
-Pick a window that starts a few minutes before the first symptom and ends after the destination
-is SYNCHRONIZED again. Copy the whole directory to each host and run from inside it.
+## Quick start
+
+Copy this directory to both database hosts. Run the collector as the `oracle` user with the
+environment of the database set (`ORACLE_SID`, `ORACLE_HOME`, `PATH`). Pick a window that starts a few
+minutes before the first symptom and ends after the destination is `SYNCHRONIZED` again.
+
+```sh
+# 1. On the standby
+sh/collect.sh standby "2026-11-13 20:35" "2026-11-13 20:58"
+
+# 2. On the primary, after copying the standby bundle over
+sh/collect.sh -c dgr_standby_<host>_<ts>.jsonl -p <standby redo IP> primary "2026-11-13 20:35" "2026-11-13 20:58"
+
+# 3. Anywhere with both bundles: a database host or your laptop
+sh/make_report.sh -o report.html dgr_primary_*.jsonl dgr_standby_*.jsonl
+```
+
+Open `report.html` in any browser. It is a single file with no external resources, so it works offline
+and can be attached to a ticket.
+
+- Each `collect.sh` run writes one bundle, `dgr_<side>_<host>_<timestamp>.jsonl`, and prints what it
+  found. A full run takes about half a minute.
+- `-c` and `-p` are optional. Without `-c`, the clients refused at the standby are listed but not
+  looked up on the primary. Without `-p`, there is no network card.
+- One bundle is enough for a report. The sections that need the other side say what is missing.
+
+## What the report shows
+
+| Section | What it answers | Source |
+|---|---|---|
+| Summary | How long commits were blocked, the longest SYNC write, how long the standby was out of sync | ASH, alert log |
+| Signals | Which readings from the troubleshooting guide match, with clickable evidence; what is ruled out or not checked | All of the below |
+| Incident timeline | Alert messages, commit waits, LGWR, NSS/TT and archiver waits, destination state, standby logins and redo rate on one clock, with zoom | Everything |
+| Commit waits per minute | Average sessions on `log file sync` behind LGWR, other waits, CPU | ASH or AWR ASH |
+| Longest waits, SYNC Remote Write | Merged LGWR/transport/archiver waits; histogram for the window (AWR) and since startup | ASH, AWR, `v$event_histogram_micro` |
+| Alert logs | Primary and standby merged, filterable, incident rows highlighted | `v$diag_alert_ext`, alert log file |
+| Earlier occurrences, traces | The same errors on other days; errors in background traces in the window | Alert logs, trace files |
+| Redo shipping | When each sequence reached the standby, and whether it came as a gap (FAL) | `v$archived_log` |
+| Listener logins | Logins per minute on each side; refused clients and whether they reached the primary | Listener logs |
+| Configuration | Transport mode, `NET_TIMEOUT`, `REOPEN`, protection level, standby redo logs, lag | `v$archive_dest`, `v$database`, `v$standby_log`, `v$dataguard_stats` |
+| Network and OS | Round trip, loss, TCP retransmits and Send-Q to the peer | `ping`, `netstat` |
+
+## Requirements and safety
+
+- Oracle 19c (tested on 19.27). The primary must be open; the standby can be mounted.
+- A POSIX shell and awk. Tested on Linux; the scripts avoid GNU-only options so they run on AIX.
+- `sqlplus` connecting as SYSDBA (`/ as sysdba` by default).
+- The ASH and AWR parts need the **Diagnostics Pack** license.
+- **Read-only.** The SQL is `SELECT` only, plus `ALTER SESSION` for date formats. The shell scripts
+  only read logs and run display commands. Files are written to the current directory and `/tmp`.
+- The heaviest step is reading the alert log through `v$diag_alert_ext` for the "earlier
+  occurrences" history. Use `-d 7` to shorten it on a large alert log.
+- Bundles and reports contain host names, IP addresses, connection IDs and log text. Handle them like
+  the logs themselves.
+
+## `collect.sh` options
+
+```
+sh/collect.sh [options] primary|standby "YYYY-MM-DD HH:MI" "YYYY-MM-DD HH:MI"
+```
+
+| Option | Default | Meaning |
+|---|---|---|
+| `-o file` | `./dgr_<side>_<host>_<now>.jsonl` | Bundle to write |
+| `-u conn` | `/ as sysdba` | sqlplus connect string |
+| `-t dir` | `Diag Trace` from `v$diag_info` | Trace directory |
+| `-a file` | `<trace dir>/alert_$ORACLE_SID.log` | Text alert log (read on the standby) |
+| `-l file` | from `lsnrctl status` | Listener text log |
+| `-c file` | none | Standby bundle whose refused CONNECTION_IDs are looked up in this listener log |
+| `-p ip` | none | Peer redo IP for a 10 s network check (`-P port`, default 1521) |
+| `-d days` | 30 | How far back "earlier occurrences" looks |
+
+Limitations: the window must lie within one day, in the hosts' local time. Only the listener whose log
+`lsnrctl status` reports is scanned; pass `-l` for another one.
+
+## Individual scripts
+
+The same evidence as plain text, for when you want to read it directly or run one check on its own.
+
+### What to run, in order
+
+Copy the whole directory to each host and run from inside it.
 
 | # | Where | Command | Answers |
 |---|---|---|---|
@@ -27,7 +112,7 @@ is SYNCHRONIZED again. Copy the whole directory to each host and run from inside
 The SQL drivers spool to `dg_primary_<db>_<timestamp>.txt` / `dg_standby_<db>_<timestamp>.txt`
 in the current directory. `history_days` (default 30) sets how far back section 21 looks.
 
-## Finding the inputs
+### Finding the inputs
 
 - **Trace dir and alert log:** section 00 of the SQL output prints `Diag Trace`; the text alert log is
   `<Diag Trace>/alert_<SID>.log`.
@@ -38,7 +123,7 @@ in the current directory. `history_days` (default 30) sets how far back section 
 - **Peer redo IP:** the address the redo actually travels on (from `v$archive_dest.destination` →
   tnsnames → IP), not necessarily the host's first interface.
 
-## Reading the output (short version)
+### Reading the output (short version)
 
 - `log file sync` rows whose `blocking_session` is LGWR's SID = commits waiting on LGWR (section 10).
 - LGWR on `log file parallel write` instead of `SYNC Remote Write` = local redo I/O, not Data Guard.
@@ -56,13 +141,21 @@ in the current directory. `history_days` (default 30) sets how far back section 
 ## Files
 
 ```
-run_primary.sql          driver, primary (open)
-run_standby.sql          driver, standby (works in MOUNT)
+sh/collect.sh            collect one host's data into a bundle for the report
+sh/make_report.sh        build the HTML report from bundles
+report/template.html     the report page (make_report.sh inserts the data)
+sql/json_primary.sql     report data, primary (called by collect.sh)
+sql/json_standby.sql     report data, standby (called by collect.sh)
+examples/                synthetic sample bundles and the report built from them
+docs/                    README screenshots
+
+run_primary.sql          text report driver, primary (open)
+run_standby.sql          text report driver, standby (works in MOUNT)
 sql/_settings.sql        formatting
 sql/00_context.sql       database, instance, diag paths
-sql/10_ash_foreground.sql   foreground waits per minute (DBA_HIST and V$ ASH)
+sql/10_ash_foreground.sql      foreground waits per minute (DBA_HIST and V$ ASH)
 sql/12_ash_lgwr_transport.sql  LGWR / NSS / TT / ARC / TMON samples
-sql/14_sync_latency.sql  averages, histograms, AWR histogram per snapshot, redo and commit rate
+sql/14_sync_latency.sql  averages, histograms, AWR histogram per snapshot, workload per minute
 sql/20_alert_log.sql     alert log window + earlier occurrences (primary only)
 sql/22_dataguard_status.sql  V$DATAGUARD_STATUS
 sql/30_dest_config.sql   destination mode, timers, sync and gap state, parameters
@@ -75,3 +168,6 @@ sh/connid_lookup.sh      CONNECTION_ID cross-check on the primary
 sh/os_net_check.sh       network and OS checks (AIX and Linux)
 sh/dgmgrl_checks.sh      broker checks
 ```
+
+To rebuild the sample report after changing the template:
+`sh/make_report.sh -o examples/sample-report.html examples/sample_primary.jsonl examples/sample_standby.jsonl`

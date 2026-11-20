@@ -1,0 +1,91 @@
+{"t":"bundle","side":"standby","host":"stby-host","from":"2026-11-13 20:35:00","to":"2026-11-13 20:58:00","collected":"2026-11-14 09:10:02","cidcheck":"no","v":1}
+{"t":"meta","side":"standby","db":"PRODDB","uniq":"proddb_s","role":"PHYSICAL STANDBY","open":"MOUNTED","pmode":"MAXIMUM AVAILABILITY","plevel":"MAXIMUM AVAILABILITY","inst":"proddb1","host":"stby-host.example","ver":"19.30.0.0.0","plat":"AIX-Based Systems (64-bit)","from":"2026-11-13 20:35:00","to":"2026-11-13 20:58:00","gen":"2026-11-14 09:10:03","tz":"+01:00"}
+{"t":"alert","side":"standby","ts":"20:39:09.112","msg":"\n***********************************************************************\n\nFatal NI connect error 12170.\n\n  VERSION INFORMATION:\n\tTNS for IBM/AIX RISC System/6000: Version 19.0.0.0.0 - Production\n  Time: 13-NOV-2026 20:39:09\n  Tracing not turned on.\n  Tns error struct:\n    ns main err code: 12535\n\nTNS-12535: TNS:operation timed out\n    ns secondary err code: 12560\n    nt main err code: 0\n    nt secondary err code: 0\n    nt OS err code: 0\n  Client address: (ADDRESS=(PROTOCOL=tcp)(HOST=198.51.100.11)(PORT=40112))"}
+{"t":"alert","side":"standby","ts":"20:39:09.140","msg":"rfs (PID:21299312): Standby redo log 11 for T-1.S-114494: 2048 blocks marked corrupt in the incomplete write"}
+{"t":"alert","side":"standby","ts":"20:39:09.141","msg":"rfs (PID:21299312): Possible network disconnect with primary database"}
+{"t":"alert","side":"standby","ts":"20:43:58.105","msg":"rfs (PID:22872070): Foreground-client RFS connected from primary database proddb"}
+{"t":"alert","side":"standby","ts":"20:43:59.402","msg":"rfs (PID:22872072): Primary database is in MAXIMUM AVAILABILITY mode, level RESYNCHRONIZATION"}
+{"t":"alert","side":"standby","ts":"20:53:22.963","msg":"rfs (PID:23200112): Foreground-client RFS connected from primary database proddb"}
+{"t":"alert","side":"standby","ts":"20:53:25.204","msg":"rfs (PID:23200112): Opened log for T-1.S-114495 dbid 2934781120 branch 1112345678, received by FAL"}
+{"t":"alert","side":"standby","ts":"20:53:27.950","msg":"rfs (PID:22872072): Primary database is in MAXIMUM AVAILABILITY mode, level SYNCHRONIZED"}
+{"t":"arch","side":"standby","dest":1,"thr":1,"seq":114493,"first":"20:31:02","next":"20:36:41","done":"20:36:41","creator":"ARCH","reg":"RFS","fal":"NO","mb":445.4}
+{"t":"arch","side":"standby","dest":1,"thr":1,"seq":114494,"first":"20:36:41","next":"20:52:10","done":"20:52:11","creator":"ARCH","reg":"RFS","fal":"NO","mb":425.3}
+{"t":"arch","side":"standby","dest":1,"thr":1,"seq":114495,"first":"20:52:10","next":"20:53:24","done":"20:53:25","creator":"ARCH","reg":"RFS","fal":"YES","mb":439.2}
+{"t":"srl","thr":1,"grp":10,"seq":0,"st":"UNASSIGNED","mb":1024}
+{"t":"srl","thr":1,"grp":11,"seq":114496,"st":"ACTIVE","mb":1024}
+{"t":"srl","thr":1,"grp":12,"seq":0,"st":"UNASSIGNED","mb":1024}
+{"t":"srl","thr":1,"grp":13,"seq":0,"st":"UNASSIGNED","mb":1024}
+{"t":"dgstat","name":"transport lag","value":"+00 00:00:00","unit":"day(2) to second(0) interval"}
+{"t":"dgstat","name":"apply lag","value":"+00 00:00:01","unit":"day(2) to second(0) interval"}
+{"t":"lsnr","side":"standby","m":"20:38","code":"12514","n":3}
+{"t":"lsnr","side":"standby","m":"20:39","code":"12514","n":6}
+{"t":"lsnr","side":"standby","m":"20:40","code":"12514","n":5}
+{"t":"lsnr","side":"standby","m":"20:41","code":"12514","n":5}
+{"t":"lsnr","side":"standby","m":"20:42","code":"12514","n":4}
+{"t":"lsnr","side":"standby","m":"20:43","code":"12514","n":5}
+{"t":"lsnr","side":"standby","m":"20:44","code":"12514","n":4}
+{"t":"lsnr","side":"standby","m":"20:45","code":"12514","n":4}
+{"t":"lsnr","side":"standby","m":"20:46","code":"12514","n":3}
+{"t":"lsnr","side":"standby","m":"20:47","code":"12514","n":4}
+{"t":"lsnr","side":"standby","m":"20:48","code":"12514","n":3}
+{"t":"lsnr","side":"standby","m":"20:49","code":"12514","n":2}
+{"t":"lsnr","side":"standby","m":"20:50","code":"12514","n":1}
+{"t":"lsnr","side":"standby","m":"20:43","code":"0","n":1}
+{"t":"lsnr","side":"standby","m":"20:53","code":"0","n":2}
+{"t":"lsnr_ip","side":"standby","ip":"192.0.2.21","code":"12514","n":21}
+{"t":"lsnr_ip","side":"standby","ip":"192.0.2.22","code":"12514","n":17}
+{"t":"lsnr_ip","side":"standby","ip":"192.0.2.23","code":"12514","n":11}
+{"t":"lsnr_ip","side":"standby","ip":"198.51.100.11","code":"0","n":3}
+{"t":"lsnr_ref","side":"standby","ts":"20:38:19","ip":"192.0.2.23","code":"12514","cid":"1VrT+1FJors/6ILi8IHn5k==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:38:41","ip":"192.0.2.22","code":"12514","cid":"xsC7tVO/HbkQfyy/KV5zjR==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:38:55","ip":"192.0.2.23","code":"12514","cid":"j1twdTKWTddB+XhkAS1voQ==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:39:32","ip":"192.0.2.22","code":"12514","cid":"G6yyzyN9zHYIa4UOrGNATM==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:39:39","ip":"192.0.2.23","code":"12514","cid":"DJawTgsu8PO+799nKSNrh9==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:39:41","ip":"192.0.2.23","code":"12514","cid":"UCauSDmLhuVtcqcYezdZ/t==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:39:43","ip":"192.0.2.23","code":"12514","cid":"DDj8hYs5suKcNd8Zra9A9s==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:39:47","ip":"192.0.2.21","code":"12514","cid":"KPxZ9W3qLy7zKUVQDT7S8s==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:39:54","ip":"192.0.2.23","code":"12514","cid":"QCBNR3YbDgbleph1QHt61Q==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:40:01","ip":"192.0.2.22","code":"12514","cid":"4XATWS8PHp9NHfYjFM5DI4==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:40:09","ip":"192.0.2.23","code":"12514","cid":"Zj59fhZ5R1Py4oJe2JbmPT==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:40:32","ip":"192.0.2.22","code":"12514","cid":"uSgR7cMy+UcU3zr1ZtoLuC==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:40:33","ip":"192.0.2.23","code":"12514","cid":"64CxqlIOdNKhiFXiQ2hzT/==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:40:55","ip":"192.0.2.21","code":"12514","cid":"pLjHX2JiCLhKcIhP6Br1iQ==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:41:07","ip":"192.0.2.23","code":"12514","cid":"hGXZnnal5WisCgEBCY8f5N==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:41:10","ip":"192.0.2.23","code":"12514","cid":"3/ynbdrZRzsGQBJg3UHKwk==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:41:15","ip":"192.0.2.21","code":"12514","cid":"flF6XUi5AhuqpfEnbtXAqw==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:41:33","ip":"192.0.2.22","code":"12514","cid":"8jZfALhLSzFyCmmdKTxp/T==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:41:45","ip":"192.0.2.23","code":"12514","cid":"SF2RCdKDFRuNw5GCf+hA6I==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:42:32","ip":"192.0.2.23","code":"12514","cid":"LI8gJhead6/wJ9kFZJSqgm==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:42:34","ip":"192.0.2.21","code":"12514","cid":"RB9H+iMb+lk777PZnK8Cl6==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:42:57","ip":"192.0.2.23","code":"12514","cid":"5ixaaJLShuQjOud/+yDUA+==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:42:59","ip":"192.0.2.22","code":"12514","cid":"5zmS1swoPqApryPZBlgvIy==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:43:04","ip":"192.0.2.23","code":"12514","cid":"2jGjNGkTfi3oYv2DzaKG05==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:43:23","ip":"192.0.2.21","code":"12514","cid":"Rk+GQV81rkmghzem9yPVUJ==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:43:37","ip":"192.0.2.23","code":"12514","cid":"/c5q52RYfLWrLoevhZC0x0==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:43:55","ip":"192.0.2.23","code":"12514","cid":"awirH/juQbLifxz53nCQE2==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:43:59","ip":"192.0.2.23","code":"12514","cid":"8+AJy75fNcTTN6KFAQdEmQ==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:44:16","ip":"192.0.2.21","code":"12514","cid":"OMJmYxhcABm6jof8efD0nH==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:44:27","ip":"192.0.2.22","code":"12514","cid":"Y/1Kgd2vd/Er1uyZAlIa/Z==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:44:33","ip":"192.0.2.21","code":"12514","cid":"Yd7chlN/Xc+1HSyGbDS1GH==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:44:40","ip":"192.0.2.22","code":"12514","cid":"y5oOKVqYX7Enwvq4VNAKjK==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:45:07","ip":"192.0.2.22","code":"12514","cid":"awtn3LG8Zv5Ypu8D0fzFwE==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:45:26","ip":"192.0.2.22","code":"12514","cid":"IHgYIruiqFhojmAIDdN87x==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:45:35","ip":"192.0.2.23","code":"12514","cid":"3/Q/XBmTepo6uKZyUf0IE9==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:45:56","ip":"192.0.2.23","code":"12514","cid":"pU2NJhKaM1/5WdR16ePllj==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:46:16","ip":"192.0.2.21","code":"12514","cid":"hZ4fXfeTkYpIygfdM7ENA8==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:46:17","ip":"192.0.2.21","code":"12514","cid":"5vFldPGYYJvW5hANsbEvrS==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:46:23","ip":"192.0.2.22","code":"12514","cid":"agEaBp0vXnJaE/9I0MyTLU==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:47:17","ip":"192.0.2.21","code":"12514","cid":"n1Gnt11CuZyzaA3U2OLzu6==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:47:18","ip":"192.0.2.22","code":"12514","cid":"QBGSyLvVSskUVINx+ZmQF9==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:47:26","ip":"192.0.2.21","code":"12514","cid":"GxLUczZ8XbFzUxtPTfYFEp==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:47:44","ip":"192.0.2.21","code":"12514","cid":"x6n1nf2xv54WCA+7e56W8z==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:48:04","ip":"192.0.2.21","code":"12514","cid":"3uL4FFQKoKGwRDIOYQ+kVc==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:48:08","ip":"192.0.2.21","code":"12514","cid":"sgUpj6Sg9aheovEZXzUjpw==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:48:22","ip":"192.0.2.22","code":"12514","cid":"hOGu5NgyvhwvSuqK4dWGlg==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:49:40","ip":"192.0.2.22","code":"12514","cid":"oAEcTl31uGQ+dFCGAtmNtc==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:49:55","ip":"192.0.2.21","code":"12514","cid":"mRau8URBfT5MISizhBHs4/==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:50:10","ip":"192.0.2.23","code":"12514","cid":"AFHDzXeUHNBZS0Z1WnImG9==","svc":"APP_RW"}
+{"t":"trace","side":"standby","ts":"20:39:09.110","file":"proddb1_rfs_21299312.trc","msg":"TNS-12535: TNS:operation timed out"}
+{"t":"trace","side":"standby","ts":"20:39:09.110","file":"proddb1_rfs_21299312.trc","msg":"    nt secondary err code: 0"}
+{"t":"alhist","side":"standby","ts":"2026-10-30 20:44:42","msg":"TNS-12535: TNS:operation timed out"}
+{"t":"net","side":"standby","peer":"198.51.100.11","port":"1526","os":"AIX","rtt":"0.43","loss":"0%","retr":1,"secs":10,"sendq":0,"at":"09:10:31"}

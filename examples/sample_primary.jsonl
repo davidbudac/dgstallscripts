@@ -1,0 +1,238 @@
+{"t":"bundle","side":"primary","host":"prim-host","from":"2026-11-13 20:35:00","to":"2026-11-13 20:58:00","collected":"2026-11-14 09:12:40","cidcheck":"yes","v":1}
+{"t":"meta","side":"primary","db":"PRODDB","uniq":"proddb","role":"PRIMARY","open":"READ WRITE","pmode":"MAXIMUM AVAILABILITY","plevel":"MAXIMUM AVAILABILITY","inst":"proddb1","host":"prim-host.example","ver":"19.30.0.0.0","plat":"AIX-Based Systems (64-bit)","from":"2026-11-13 20:35:00","to":"2026-11-13 20:58:00","gen":"2026-11-14 09:12:41","tz":"+01:00","ash":"H"}
+{"t":"dest","id":2,"dest":"proddb_s_dgmgrl","uniq":"proddb_s","status":"VALID","mode":"PARALLELSYNC","affirm":"NO","net_timeout":30,"reopen":300,"max_failure":0,"failures":1,"error":null,"sync":"OK","synced":"YES","gap":"NO GAP"}
+{"t":"param","name":"data_guard_sync_latency","value":"0"}
+{"t":"param","name":"log_archive_config","value":"dg_config=(proddb,proddb_s)"}
+{"t":"fg","m":"20:35","lgwr":0,"other":12,"cpu":30}
+{"t":"fg","m":"20:36","lgwr":0,"other":18,"cpu":36}
+{"t":"fg","m":"20:37","lgwr":16,"other":12,"cpu":30}
+{"t":"fg","m":"20:38","lgwr":87,"other":6,"cpu":12}
+{"t":"fg","m":"20:44","lgwr":0,"other":6,"cpu":6}
+{"t":"fg","m":"20:45","lgwr":0,"other":6,"cpu":12}
+{"t":"fg","m":"20:46","lgwr":0,"other":0,"cpu":6}
+{"t":"fg","m":"20:47","lgwr":0,"other":6,"cpu":6}
+{"t":"fg","m":"20:48","lgwr":0,"other":0,"cpu":12}
+{"t":"fg","m":"20:49","lgwr":0,"other":6,"cpu":6}
+{"t":"fg","m":"20:50","lgwr":0,"other":6,"cpu":12}
+{"t":"fg","m":"20:51","lgwr":0,"other":0,"cpu":6}
+{"t":"fg","m":"20:52","lgwr":0,"other":6,"cpu":6}
+{"t":"fg","m":"20:53","lgwr":0,"other":12,"cpu":24}
+{"t":"fg","m":"20:54","lgwr":0,"other":18,"cpu":36}
+{"t":"fg","m":"20:55","lgwr":0,"other":12,"cpu":30}
+{"t":"fg","m":"20:56","lgwr":0,"other":18,"cpu":36}
+{"t":"fg","m":"20:57","lgwr":0,"other":12,"cpu":30}
+{"t":"fg10","b":"20:37:40","n":4}
+{"t":"fg10","b":"20:37:50","n":12}
+{"t":"fg10","b":"20:38:00","n":9}
+{"t":"fg10","b":"20:38:10","n":13}
+{"t":"fg10","b":"20:38:20","n":14}
+{"t":"fg10","b":"20:38:30","n":16}
+{"t":"fg10","b":"20:38:40","n":17}
+{"t":"fg10","b":"20:38:50","n":18}
+{"t":"tx","ts":"20:35:02.118","p":"LGWR","ev":"SYNC Remote Write","seq":63881,"tw":2400}
+{"t":"tx","ts":"20:35:22.118","p":"LGWR","ev":"log file parallel write","seq":63883,"tw":800}
+{"t":"tx","ts":"20:35:32.118","p":"LGWR","ev":"SYNC Remote Write","seq":63884,"tw":1200}
+{"t":"tx","ts":"20:35:42.118","p":"LGWR","ev":"SYNC Remote Write","seq":63885,"tw":2400}
+{"t":"tx","ts":"20:35:52.118","p":"LGWR","ev":"SYNC Remote Write","seq":63886,"tw":2400}
+{"t":"tx","ts":"20:36:02.118","p":"LGWR","ev":"log file parallel write","seq":63887,"tw":800}
+{"t":"tx","ts":"20:36:42.118","p":"LGWR","ev":"log file parallel write","seq":63891,"tw":2400}
+{"t":"tx","ts":"20:36:52.118","p":"LGWR","ev":"SYNC Remote Write","seq":63892,"tw":800}
+{"t":"tx","ts":"20:37:12.118","p":"LGWR","ev":"SYNC Remote Write","seq":63894,"tw":1200}
+{"t":"tx","ts":"20:37:22.118","p":"LGWR","ev":"log file parallel write","seq":63895,"tw":1900}
+{"t":"tx","ts":"20:37:42.118","p":"LGWR","ev":"SYNC Remote Write","seq":63896,"tw":420000}
+{"t":"tx","ts":"20:37:52.118","p":"LGWR","ev":"SYNC Remote Write","seq":63897,"tw":890000}
+{"t":"tx","ts":"20:38:02.118","p":"LGWR","ev":"SYNC Remote Write","seq":63898,"tw":1210000}
+{"t":"tx","ts":"20:38:12.118","p":"LGWR","ev":"SYNC Remote Write","seq":63899,"tw":1780000}
+{"t":"tx","ts":"20:38:12.118","p":"NSS2","ev":"Redo Transport MISC","seq":8801,"tw":1778000}
+{"t":"tx","ts":"20:38:22.118","p":"LGWR","ev":"SYNC Remote Write","seq":63900,"tw":640000}
+{"t":"tx","ts":"20:38:32.118","p":"LGWR","ev":"SYNC Remote Write","seq":63907,"tw":0}
+{"t":"tx","ts":"20:38:32.118","p":"NSS2","ev":"Redo Transport MISC","seq":8802,"tw":0}
+{"t":"tx","ts":"20:38:42.118","p":"LGWR","ev":"SYNC Remote Write","seq":63907,"tw":0}
+{"t":"tx","ts":"20:38:42.118","p":"NSS2","ev":"Redo Transport MISC","seq":8802,"tw":0}
+{"t":"tx","ts":"20:38:52.118","p":"LGWR","ev":"SYNC Remote Write","seq":63907,"tw":26434000}
+{"t":"tx","ts":"20:38:52.118","p":"NSS2","ev":"Redo Transport MISC","seq":8802,"tw":0}
+{"t":"tx","ts":"20:39:02.118","p":"NSS2","ev":"Redo Transport MISC","seq":8802,"tw":0}
+{"t":"tx","ts":"20:39:12.118","p":"NSS2","ev":"Redo Transport MISC","seq":8802,"tw":0}
+{"t":"tx","ts":"20:39:22.118","p":"NSS2","ev":"Redo Transport MISC","seq":8802,"tw":0}
+{"t":"tx","ts":"20:39:32.118","p":"NSS2","ev":"Redo Transport MISC","seq":8802,"tw":0}
+{"t":"tx","ts":"20:39:42.118","p":"NSS2","ev":"Redo Transport Detach","seq":8803,"tw":16000}
+{"t":"tx","ts":"20:43:59.118","p":"LGWR","ev":"Redo Transport Open","seq":64001,"tw":120000}
+{"t":"tx","ts":"20:44:02.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:44:02.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:44:12.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:44:12.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:44:22.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:44:22.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:44:32.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:44:32.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:44:42.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:44:42.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:44:52.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:44:52.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:44:53.118","p":"LGWR","ev":"SYNC Remote Write","seq":64128,"tw":3000}
+{"t":"tx","ts":"20:45:02.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:45:02.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:45:12.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:45:12.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:45:22.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:45:22.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:45:32.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:45:32.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:45:42.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:45:42.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:45:43.118","p":"LGWR","ev":"SYNC Remote Write","seq":64129,"tw":2100}
+{"t":"tx","ts":"20:45:52.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:45:52.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:46:02.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:46:02.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:46:12.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:46:12.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:46:22.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:46:22.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:46:32.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:46:32.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:46:42.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:46:42.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:46:43.118","p":"LGWR","ev":"SYNC Remote Write","seq":64130,"tw":1300}
+{"t":"tx","ts":"20:46:52.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:46:52.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:47:02.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:47:02.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:47:12.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:47:12.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:47:22.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:47:22.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:47:32.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:47:32.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:47:42.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:47:42.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:47:52.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:47:52.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:48:02.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:48:02.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:48:12.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":260000000}
+{"t":"tx","ts":"20:48:12.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":261000000}
+{"t":"tx","ts":"20:54:23.118","p":"LGWR","ev":"SYNC Remote Write","seq":64131,"tw":1800}
+{"t":"tx","ts":"20:55:33.118","p":"LGWR","ev":"SYNC Remote Write","seq":64132,"tw":1100}
+{"t":"tx","ts":"20:56:43.118","p":"LGWR","ev":"SYNC Remote Write","seq":64133,"tw":900}
+{"t":"tx","ts":"20:57:23.118","p":"LGWR","ev":"SYNC Remote Write","seq":64134,"tw":1500}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"8 microseconds","us":8,"n":3}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"16 microseconds","us":16,"n":210}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"32 microseconds","us":32,"n":940}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"64 microseconds","us":64,"n":2210}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"128 microseconds","us":128,"n":8200}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"256 microseconds","us":256,"n":51200}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"512 microseconds","us":512,"n":184000}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"1 millisecond","us":1000,"n":312000}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"2 milliseconds","us":2000,"n":128000}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"4 milliseconds","us":4000,"n":22100}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"8 milliseconds","us":8000,"n":6400}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"16 milliseconds","us":16000,"n":2100}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"32 milliseconds","us":32000,"n":880}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"65 milliseconds","us":65000,"n":410}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"131 milliseconds","us":131000,"n":220}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"262 milliseconds","us":262000,"n":140}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"524 milliseconds","us":524000,"n":90}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"1 second","us":1000000,"n":61}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"2 seconds","us":2000000,"n":31}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"4 seconds","us":4000000,"n":9}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"8 seconds","us":8000000,"n":2}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"16 seconds","us":16000000,"n":1}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"33 seconds","us":33000000,"n":4}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":0.125,"n":140,"b":"20:30","e":"21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":0.25,"n":920,"b":"20:30","e":"21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":0.5,"n":3400,"b":"20:30","e":"21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":1,"n":6100,"b":"20:30","e":"21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":2,"n":2400,"b":"20:30","e":"21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":4,"n":410,"b":"20:30","e":"21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":8,"n":120,"b":"20:30","e":"21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":16,"n":41,"b":"20:30","e":"21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":32,"n":14,"b":"20:30","e":"21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":64,"n":6,"b":"20:30","e":"21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":128,"n":3,"b":"20:30","e":"21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":256,"n":2,"b":"20:30","e":"21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":512,"n":1,"b":"20:30","e":"21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":1024,"n":1,"b":"20:30","e":"21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":2048,"n":1,"b":"20:30","e":"21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":32768,"n":1,"b":"20:30","e":"21:00"}
+{"t":"wl","m":"20:35","redo":2.1,"txn":44.1,"logons":0.9,"aas":5.0}
+{"t":"wl","m":"20:36","redo":2.3,"txn":48.3,"logons":0.9,"aas":5.5}
+{"t":"wl","m":"20:37","redo":1.9,"txn":39.9,"logons":0.9,"aas":4.6}
+{"t":"wl","m":"20:38","redo":0.6,"txn":12.6,"logons":0.2,"aas":1.4}
+{"t":"wl","m":"20:39","redo":0.02,"txn":0.4,"logons":0.2,"aas":0.0}
+{"t":"wl","m":"20:40","redo":0.01,"txn":0.2,"logons":0.2,"aas":0.0}
+{"t":"wl","m":"20:41","redo":0.02,"txn":0.4,"logons":0.2,"aas":0.0}
+{"t":"wl","m":"20:42","redo":0.01,"txn":0.2,"logons":0.2,"aas":0.0}
+{"t":"wl","m":"20:43","redo":0.03,"txn":0.6,"logons":0.2,"aas":0.1}
+{"t":"wl","m":"20:44","redo":0.12,"txn":2.5,"logons":0.2,"aas":0.3}
+{"t":"wl","m":"20:45","redo":0.18,"txn":3.8,"logons":0.2,"aas":0.4}
+{"t":"wl","m":"20:46","redo":0.09,"txn":1.9,"logons":0.2,"aas":0.2}
+{"t":"wl","m":"20:47","redo":0.11,"txn":2.3,"logons":0.2,"aas":0.3}
+{"t":"wl","m":"20:48","redo":0.07,"txn":1.5,"logons":0.2,"aas":0.2}
+{"t":"wl","m":"20:49","redo":0.1,"txn":2.1,"logons":0.2,"aas":0.2}
+{"t":"wl","m":"20:50","redo":0.14,"txn":2.9,"logons":0.2,"aas":0.3}
+{"t":"wl","m":"20:51","redo":0.08,"txn":1.7,"logons":0.2,"aas":0.2}
+{"t":"wl","m":"20:52","redo":0.12,"txn":2.5,"logons":0.2,"aas":0.3}
+{"t":"wl","m":"20:53","redo":1.6,"txn":33.6,"logons":0.9,"aas":3.8}
+{"t":"wl","m":"20:54","redo":2.4,"txn":50.4,"logons":0.9,"aas":5.8}
+{"t":"wl","m":"20:55","redo":2.2,"txn":46.2,"logons":0.9,"aas":5.3}
+{"t":"wl","m":"20:56","redo":2.0,"txn":42.0,"logons":0.9,"aas":4.8}
+{"t":"wl","m":"20:57","redo":2.1,"txn":44.1,"logons":0.9,"aas":5.0}
+{"t":"alert","side":"primary","ts":"20:36:41.208","msg":"Thread 1 advanced to log sequence 114493 (LGWR switch), current SCN: 0x00000a1b2c3d4e5f\n  Current log# 2 seq# 114493 mem# 0: +REDO/PRODDB/ONLINELOG/group_2.262.1130000001"}
+{"t":"alert","side":"primary","ts":"20:38:58.734","msg":"LGWR (PID:10224042): ORA-16198: Received timed out error from KSR"}
+{"t":"alert","side":"primary","ts":"20:38:58.734","msg":"LGWR (PID:10224042): Attempting LAD:2 network reconnect (16198)"}
+{"t":"alert","side":"primary","ts":"20:38:58.735","msg":"LGWR (PID:10224042): LAD:2 network reconnect abandoned"}
+{"t":"alert","side":"primary","ts":"20:38:58.736","msg":"Errors in file /u01/app/oracle/diag/rdbms/proddb/proddb1/trace/proddb1_lgwr_10224042.trc:\nORA-16198: Timeout incurred on internal channel during remote archival"}
+{"t":"alert","side":"primary","ts":"20:38:58.740","msg":"LGWR (PID:10224042): LAD:2 is UNSYNCHRONIZED"}
+{"t":"alert","side":"primary","ts":"20:43:58.020","msg":"ARC1 (PID:16974138): LAD:2 network reconnect"}
+{"t":"alert","side":"primary","ts":"20:43:59.310","msg":"LGWR (PID:10224042): LAD:2 new SYNC connection established"}
+{"t":"alert","side":"primary","ts":"20:48:20.402","msg":"TMON (PID:7340090): ARC1 (PID:16974138) hung for 260 s, killed"}
+{"t":"alert","side":"primary","ts":"20:48:21.118","msg":"TMON (PID:7340090): ARC2 (PID:16908582) hung for 261 s, killed"}
+{"t":"alert","side":"primary","ts":"20:48:23.540","msg":"FAL archive of T-1.S-114495 to LAD:2 failed, error 16198"}
+{"t":"alert","side":"primary","ts":"20:49:06.811","msg":"FAL archive of T-1.S-114495 to LAD:2 failed, error 16198"}
+{"t":"alert","side":"primary","ts":"20:52:10.004","msg":"Thread 1 advanced to log sequence 114495 (LGWR switch)"}
+{"t":"alert","side":"primary","ts":"20:53:27.905","msg":"LGWR (PID:10224042): LAD:2 is SYNCHRONIZED"}
+{"t":"alhist","side":"primary","ts":"2026-10-16 20:41:12","msg":"LGWR (PID:10224042): ORA-16198: Received timed out error from KSR"}
+{"t":"alhist","side":"primary","ts":"2026-10-16 20:41:12","msg":"LGWR (PID:10224042): LAD:2 is UNSYNCHRONIZED"}
+{"t":"alhist","side":"primary","ts":"2026-10-23 20:39:55","msg":"LGWR (PID:10224042): ORA-16198: Received timed out error from KSR"}
+{"t":"alhist","side":"primary","ts":"2026-10-23 20:39:55","msg":"LGWR (PID:10224042): LAD:2 is UNSYNCHRONIZED"}
+{"t":"alhist","side":"primary","ts":"2026-10-30 20:44:31","msg":"LGWR (PID:10224042): ORA-16198: Received timed out error from KSR"}
+{"t":"alhist","side":"primary","ts":"2026-10-30 20:44:31","msg":"LGWR (PID:10224042): LAD:2 is UNSYNCHRONIZED"}
+{"t":"alhist","side":"primary","ts":"2026-11-06 20:38:07","msg":"LGWR (PID:10224042): ORA-16198: Received timed out error from KSR"}
+{"t":"alhist","side":"primary","ts":"2026-11-06 20:38:07","msg":"LGWR (PID:10224042): LAD:2 is UNSYNCHRONIZED"}
+{"t":"arch","side":"primary","dest":2,"thr":1,"seq":114493,"first":"20:31:02","next":"20:36:41","done":"20:36:41","creator":"LGWR","reg":"LGWR","fal":"NO","mb":454.0}
+{"t":"arch","side":"primary","dest":2,"thr":1,"seq":114494,"first":"20:36:41","next":"20:52:10","done":"20:52:10","creator":"LGWR","reg":"LGWR","fal":"NO","mb":470.0}
+{"t":"arch","side":"primary","dest":2,"thr":1,"seq":114495,"first":"20:52:10","next":"20:53:24","done":"20:53:25","creator":"ARCH","reg":"ARCH","fal":"YES","mb":393.6}
+{"t":"lsnr","side":"primary","m":"20:35","code":"0","n":44}
+{"t":"lsnr","side":"primary","m":"20:36","code":"0","n":49}
+{"t":"lsnr","side":"primary","m":"20:37","code":"0","n":41}
+{"t":"lsnr","side":"primary","m":"20:38","code":"0","n":29}
+{"t":"lsnr","side":"primary","m":"20:39","code":"0","n":14}
+{"t":"lsnr","side":"primary","m":"20:40","code":"0","n":30}
+{"t":"lsnr","side":"primary","m":"20:41","code":"0","n":13}
+{"t":"lsnr","side":"primary","m":"20:42","code":"0","n":18}
+{"t":"lsnr","side":"primary","m":"20:43","code":"0","n":27}
+{"t":"lsnr","side":"primary","m":"20:44","code":"0","n":29}
+{"t":"lsnr","side":"primary","m":"20:45","code":"0","n":25}
+{"t":"lsnr","side":"primary","m":"20:46","code":"0","n":22}
+{"t":"lsnr","side":"primary","m":"20:47","code":"0","n":26}
+{"t":"lsnr","side":"primary","m":"20:48","code":"0","n":30}
+{"t":"lsnr","side":"primary","m":"20:49","code":"0","n":26}
+{"t":"lsnr","side":"primary","m":"20:50","code":"0","n":23}
+{"t":"lsnr","side":"primary","m":"20:51","code":"0","n":47}
+{"t":"lsnr","side":"primary","m":"20:52","code":"0","n":45}
+{"t":"lsnr","side":"primary","m":"20:53","code":"0","n":43}
+{"t":"lsnr","side":"primary","m":"20:54","code":"0","n":45}
+{"t":"lsnr","side":"primary","m":"20:55","code":"0","n":40}
+{"t":"lsnr","side":"primary","m":"20:56","code":"0","n":47}
+{"t":"lsnr","side":"primary","m":"20:57","code":"0","n":54}
+{"t":"lsnr_ip","side":"primary","ip":"192.0.2.21","code":"0","n":412}
+{"t":"lsnr_ip","side":"primary","ip":"192.0.2.22","code":"0","n":377}
+{"t":"trace","side":"primary","ts":"20:38:58.734","file":"proddb1_lgwr_10224042.trc","msg":"Error 16198 for LNO:2 to 'proddb_s_dgmgrl'"}
+{"t":"trace","side":"primary","ts":"20:38:58.734","file":"proddb1_lgwr_10224042.trc","msg":"krsw_ksr_receive: Current time <11/13/2026 20:38:58> exceeds begin time <11/13/2026 20:38:28> by  <30> seconds, return timed out error"}
+{"t":"trace","side":"primary","ts":"20:38:58.734","file":"proddb1_lgwr_10224042.trc","msg":"krsw_ksr_status: Received error 16198 on receiving channel messages"}
+{"t":"trace","side":"primary","ts":"20:38:58.734","file":"proddb1_lgwr_10224042.trc","msg":"ORA-16198: Received timed out error from KSR"}
+{"t":"trace","side":"primary","ts":"20:39:42.061","file":"proddb1_lgwr_10224042.trc","msg":"krsu_upi_status: Error 16198 detaching RFS from standby instance at host 'proddb_s_dgmgrl'"}
+{"t":"trace","side":"primary","ts":"20:48:20.401","file":"proddb1_arc1_16974138.trc","msg":"krsi_verify_network: Error 3113 verifying archive destination LAD:2"}
+{"t":"net","side":"primary","peer":"198.51.100.12","port":"1526","os":"AIX","rtt":"0.41","loss":"0%","retr":3,"secs":10,"sendq":0,"at":"09:12:58"}
+{"t":"cid_hit","side":"primary","ts":"13-NOV-2026 20:40:07","ip":"192.0.2.21","code":"0","cid":"1VrT+1FJors/6ILi8IHn5k=="}

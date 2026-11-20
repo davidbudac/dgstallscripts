@@ -1,0 +1,1158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DG SYNC stall report</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: var(--background, #ffffff); --fg: var(--foreground, #09090b);
+  --card-bg: var(--card, #ffffff); --muted-bg: var(--muted, #f4f4f5); --muted-fg: var(--muted-foreground, #71717a);
+  --bd: var(--border, #e4e4e7); --prim: var(--primary, #18181b); --prim-fg: var(--primary-foreground, #fafafa);
+  --acc: var(--accent, #f4f4f5); --sb: #fafafa;
+  --crit: var(--destructive, #dc2626); --crit-fg: var(--destructive-foreground, #ffffff);
+  --good: var(--success, #16a34a); --warn: var(--warning, #d97706);
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s7: #6250d6;
+  --shadow: 0 1px 2px 0 rgb(0 0 0 / .05);
+  --mono: var(--font-mono, ui-monospace, "Geist Mono", "SF Mono", Menlo, Consolas, monospace);
+  --sans: var(--font-sans, "Geist", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --bg: var(--background, #0a0a0a); --fg: var(--foreground, #fafafa);
+    --card-bg: var(--card, #121212); --muted-bg: var(--muted, #262626); --muted-fg: var(--muted-foreground, #a1a1a1);
+    --bd: var(--border, #ffffff1a); --prim: var(--primary, #e5e5e5); --prim-fg: var(--primary-foreground, #171717);
+    --acc: var(--accent, #262626); --sb: #121212;
+    --crit: var(--destructive, #f26b6b); --crit-fg: var(--destructive-foreground, #0a0a0a);
+    --good: var(--success, #22c55e); --warn: var(--warning, #fbbf24);
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s7: #9085e9;
+    --shadow: 0 1px 2px 0 rgb(0 0 0 / .3);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0a0a0a; --fg: #fafafa; --card-bg: #121212; --muted-bg: #262626; --muted-fg: #a1a1a1;
+  --bd: #ffffff1a; --prim: #e5e5e5; --prim-fg: #171717; --acc: #262626; --sb: #121212;
+  --crit: #f26b6b; --crit-fg: #0a0a0a; --good: #22c55e; --warn: #fbbf24;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s7: #9085e9; --shadow: 0 1px 2px 0 rgb(0 0 0 / .3);
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #ffffff; --fg: #09090b; --card-bg: #ffffff; --muted-bg: #f4f4f5; --muted-fg: #71717a; --bd: #e4e4e7;
+  --prim: #18181b; --prim-fg: #fafafa; --acc: #f4f4f5; --sb: #fafafa; --crit: #dc2626; --crit-fg: #ffffff; --good: #16a34a; --warn: #d97706;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s7: #6250d6; --shadow: 0 1px 2px 0 rgb(0 0 0 / .05);
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 14px/1.5 var(--sans); -webkit-font-smoothing: antialiased; }
+.ic { width: 16px; height: 16px; flex: none; }
+code { font-family: var(--mono); font-size: 12.5px; background: var(--muted-bg); padding: 1px 5px; border-radius: 5px; }
+
+/* shell */
+.shell { display: grid; grid-template-columns: 1fr; min-height: 100%; }
+.sidebar { display: none; }
+@media (min-width: 1100px) {
+  .shell { grid-template-columns: 248px 1fr; }
+  .sidebar { display: block; background: var(--sb); border-right: 1px solid var(--bd); }
+  .sbi { position: sticky; top: 0; display: flex; flex-direction: column; gap: 18px; padding: 14px 12px; }
+}
+.brand { display: flex; gap: 10px; align-items: center; padding: 4px 6px; }
+.logo { width: 32px; height: 32px; border-radius: 8px; background: var(--prim); color: var(--prim-fg); display: grid; place-items: center; font-weight: 700; font-size: 12px; letter-spacing: .02em; }
+.brand b { display: block; font-size: 14px; line-height: 1.2; }
+.brand span { font-size: 12px; color: var(--muted-fg); }
+.navgroup .gl { font-size: 12px; font-weight: 500; color: var(--muted-fg); padding: 0 8px 4px; }
+.navgroup a { display: flex; align-items: center; gap: 8px; height: 32px; padding: 0 8px; border-radius: 6px; color: var(--fg); text-decoration: none; font-size: 13.5px; }
+.navgroup a .ic { color: var(--muted-fg); }
+.navgroup a:hover, .navgroup a.on { background: var(--acc); }
+.navgroup a.on { font-weight: 500; }
+
+.topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 56px; padding: 0 16px; border-bottom: 1px solid var(--bd); }
+@media (min-width: 1100px) { .topbar { padding: 0 24px; position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); } }
+.crumbs { display: flex; align-items: center; gap: 6px; font-size: 13.5px; color: var(--muted-fg); min-width: 0; white-space: nowrap; overflow: hidden; }
+.crumbs .sep { opacity: .6; }
+.crumbs .cur { color: var(--fg); font-weight: 500; overflow: hidden; text-overflow: ellipsis; }
+.actions { display: flex; gap: 8px; }
+.btn { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--bd); background: var(--card-bg); color: var(--fg); font: inherit; font-size: 13px; font-weight: 500; cursor: pointer; box-shadow: var(--shadow); }
+.btn:hover { background: var(--acc); }
+.btn.icon { width: 32px; padding: 0; justify-content: center; }
+
+.main { padding: 24px 16px 64px; display: flex; flex-direction: column; gap: 20px; min-width: 0; max-width: 1280px; }
+@media (min-width: 1100px) { .main { padding: 28px 24px 80px; } }
+.ph h1 { font-size: 24px; line-height: 1.2; font-weight: 600; letter-spacing: -0.025em; margin: 0 0 6px; }
+.ph p { margin: 0 0 12px; color: var(--muted-fg); }
+.badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.badge { display: inline-flex; align-items: center; gap: 6px; height: 22px; padding: 0 8px; border-radius: 6px; border: 1px solid var(--bd); font-size: 12px; font-weight: 500; white-space: nowrap; color: var(--fg); background: transparent; }
+.badge.secondary { background: var(--muted-bg); border-color: transparent; }
+.badge.mono { font-family: var(--mono); font-weight: 400; font-size: 11.5px; cursor: pointer; }
+.badge.mono:hover { background: var(--acc); }
+.dot { width: 6px; height: 6px; border-radius: 99px; background: currentColor; display: inline-block; flex: none; }
+
+/* cards */
+.card { background: var(--card-bg); border: 1px solid var(--bd); border-radius: 12px; box-shadow: var(--shadow); min-width: 0; }
+.ch { padding: 20px 20px 0; display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 10px 16px; }
+.ch h2 { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; margin: 0; line-height: 1.3; }
+.ch p { margin: 4px 0 0; font-size: 13px; color: var(--muted-fg); max-width: 72ch; }
+.cc { padding: 16px 20px 20px; }
+.cc.flush { padding: 16px 0 4px; }
+.grid2 { display: grid; grid-template-columns: 1fr; gap: 20px; }
+@media (min-width: 960px) { .grid2 { grid-template-columns: 1fr 1fr; } }
+
+/* stat cards */
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
+.stat { padding: 16px 18px; }
+.stat .top { display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 500; }
+.stat .top .ic { color: var(--muted-fg); }
+.stat .v { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; margin-top: 8px; font-variant-numeric: tabular-nums; }
+.stat .s { font-size: 12px; color: var(--muted-fg); font-variant-numeric: tabular-nums; }
+.stat.crit .top .ic { color: var(--crit); }
+.stat.warn .top .ic { color: var(--warn); }
+
+/* alerts (signals) */
+.alerts { display: grid; gap: 10px; }
+.alert { display: grid; grid-template-columns: 16px 1fr; gap: 4px 12px; border: 1px solid var(--bd); border-radius: 10px; padding: 12px 16px; background: var(--card-bg); }
+.alert .ic { margin-top: 2px; color: var(--crit); }
+.alert .at { font-weight: 500; color: var(--crit); line-height: 1.4; }
+.alert .ad { grid-column: 2; color: var(--muted-fg); font-size: 13px; }
+.alert .ae { grid-column: 2; display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.ruled { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--bd); }
+.ruled .rh { font-size: 12px; font-weight: 500; color: var(--muted-fg); margin-bottom: 6px; }
+.ruled div.r { display: flex; gap: 10px; align-items: baseline; font-size: 13px; padding: 3px 0; }
+.ruled div.r .ic { color: var(--good); position: relative; top: 3px; }
+.ruled div.r span { color: var(--muted-fg); }
+
+/* tabs */
+.tabs { display: inline-flex; align-items: center; gap: 2px; height: 34px; padding: 3px; background: var(--muted-bg); border-radius: 9px; }
+.tab { height: 28px; padding: 0 10px; border: 0; border-radius: 7px; background: transparent; color: var(--muted-fg); font: inherit; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap; }
+.tab[aria-selected="true"] { background: var(--card-bg); color: var(--fg); box-shadow: 0 1px 2px rgb(0 0 0 / .08); }
+.input { height: 34px; padding: 0 10px 0 32px; border-radius: 8px; border: 1px solid var(--bd); background: var(--card-bg); color: var(--fg); font: inherit; font-size: 13px; width: 220px; max-width: 100%; box-shadow: var(--shadow); }
+.input:focus { outline: 2px solid color-mix(in srgb, var(--fg) 25%, transparent); outline-offset: 1px; }
+.search { position: relative; display: inline-flex; align-items: center; }
+.search .ic { position: absolute; left: 10px; color: var(--muted-fg); pointer-events: none; }
+.tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+/* charts */
+.viz { position: relative; }
+.viz svg { display: block; width: 100%; overflow: visible; font-family: var(--sans); }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 12px; color: var(--muted-fg); margin-bottom: 10px; }
+.legend i { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 6px; vertical-align: 0; }
+.tip { position: absolute; pointer-events: none; z-index: 5; display: none; min-width: 168px; max-width: 320px; background: var(--card-bg); border: 1px solid var(--bd); border-radius: 8px; padding: 6px 10px; font-size: 12px; box-shadow: 0 10px 30px -10px rgb(0 0 0 / .25), 0 2px 6px rgb(0 0 0 / .06); }
+.tip .h { font-weight: 500; margin-bottom: 4px; font-variant-numeric: tabular-nums; }
+.tip .r { display: flex; align-items: center; gap: 8px; color: var(--muted-fg); line-height: 1.7; }
+.tip .r i { width: 8px; height: 8px; border-radius: 2px; flex: none; }
+.tip .r b { margin-left: auto; color: var(--fg); font-family: var(--mono); font-weight: 500; font-size: 11.5px; padding-left: 12px; }
+
+/* tables */
+.tbl { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+th { height: 40px; padding: 0 10px; text-align: left; font-weight: 500; color: var(--muted-fg); border-bottom: 1px solid var(--bd); white-space: nowrap; }
+td { padding: 9px 10px; border-bottom: 1px solid var(--bd); vertical-align: top; }
+tbody tr:hover td { background: color-mix(in srgb, var(--muted-bg) 50%, transparent); }
+tbody tr:last-child td { border-bottom: 0; }
+th:first-child, td:first-child { padding-left: 20px; } th:last-child, td:last-child { padding-right: 20px; }
+td.num, th.num { text-align: right; }
+.mono { font-family: var(--mono); font-size: 12px; }
+.st { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; white-space: nowrap; }
+.st .ic { width: 14px; height: 14px; }
+.st.crit { color: var(--crit); } .st.good { color: var(--good); } .st.warn { color: var(--warn); } .st.info { color: var(--muted-fg); }
+.alog { max-height: 440px; overflow: auto; border-top: 1px solid var(--bd); }
+.alog thead th { position: sticky; top: 0; background: var(--card-bg); z-index: 1; }
+.alog tr.key td { background: color-mix(in srgb, var(--crit) 6%, transparent); }
+.alog tr.key td:first-child { box-shadow: inset 2px 0 0 var(--crit); }
+.alog tr.ok td:first-child { box-shadow: inset 2px 0 0 var(--good); }
+.alog tr.flash td { animation: flash 1.6s ease-out; }
+@keyframes flash { from { background: color-mix(in srgb, var(--s1) 22%, transparent); } }
+.alog td.msg { font-family: var(--mono); font-size: 12px; white-space: pre-wrap; word-break: break-word; }
+.host { color: var(--fg); } .host.pri .dot { color: var(--s1); } .host.stby .dot { color: var(--s7); }
+
+.kv { display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; font-size: 13px; margin: 0; }
+.kv dt { color: var(--muted-fg); } .kv dd { margin: 0; text-align: right; font-weight: 500; font-variant-numeric: tabular-nums; }
+footer { color: var(--muted-fg); font-size: 12px; padding-top: 4px; }
+@media print { .sidebar, .topbar .actions, .tools, .tabs { display: none !important; } .shell { grid-template-columns: 1fr; } .alog { max-height: none; } .card { box-shadow: none; break-inside: avoid; } }
+</style>
+<style>
+.empty { padding: 20px; color: var(--muted-fg); font-size: 13px; text-align: center; }
+.cc .empty { padding: 12px 0; }
+.notice { display: grid; grid-template-columns: 16px 1fr; gap: 4px 12px; border: 1px solid var(--bd); border-radius: 10px; padding: 12px 16px; background: var(--card-bg); font-size: 13px; }
+.notice .ic { margin-top: 2px; color: var(--warn); }
+.notice b { font-weight: 500; }
+.notice ul { margin: 4px 0 0; padding-left: 18px; color: var(--muted-fg); }
+.notice code { font-size: 11.5px; }
+.alert.warn .ic, .alert.warn .at { color: var(--warn); }
+.ruled .r .ic.nc { color: var(--muted-fg); }
+.pill { font-size: 11px; color: var(--muted-fg); font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="sidebar"></aside>
+  <div>
+    <div class="topbar">
+      <div class="crumbs" id="crumbs"></div>
+      <div class="actions"><button class="btn" id="printBtn" type="button"></button><button class="btn icon" id="themeBtn" type="button" aria-label="Toggle theme"></button></div>
+    </div>
+    <main class="main">
+      <div class="ph">
+        <h1>Data Guard SYNC stall</h1>
+        <p id="sub"></p>
+        <div class="badges" id="badges"></div>
+      </div>
+      <div id="notices" class="alerts"></div>
+      <section id="summary" class="stats"></section>
+
+      <section id="signals" class="card">
+        <div class="ch"><div><h2>Signals</h2><p>Readings from the guide's table that this data matches. Each badge is evidence; click it to jump there.</p></div></div>
+        <div class="cc"><div class="alerts" id="sigs"></div><div class="ruled" id="ruled"></div></div>
+      </section>
+
+      <section id="timeline" class="card">
+        <div class="ch"><div><h2>Incident timeline</h2><p>Every source on one clock. Hover for the state of each lane; click an alert dot to open its message.</p></div>
+          <div class="tabs" role="tablist" id="tlZoom"></div></div>
+        <div class="cc"><div class="legend" id="tlLegend"></div><div class="viz" id="tl"></div></div>
+      </section>
+
+      <section id="commits" class="card">
+        <div class="ch"><div><h2>Commit waits per minute</h2><p id="fgNote">Foreground sessions from ASH. Blue is <code>log file sync</code> blocked by LGWR: commits waiting for the standby.</p></div></div>
+        <div class="cc"><div class="legend" id="fgLegend"></div><div class="viz" id="fg"></div></div>
+      </section>
+
+      <div class="grid2" id="lgwr">
+        <section class="card">
+          <div class="ch"><div><h2>Longest waits</h2><p>LGWR, transport and archiver samples with the same <code>seq#</code> merged into one wait.</p></div></div>
+          <div class="cc flush tbl" id="waits"></div>
+        </section>
+        <section class="card">
+          <div class="ch"><div><h2>SYNC Remote Write</h2><p>Waits per bucket, log scale. Anything at 1 s or more is a stall.</p></div>
+            <div class="tabs" role="tablist" id="histTabs"></div></div>
+          <div class="cc"><div class="viz" id="hist"></div></div>
+        </section>
+      </div>
+
+      <section id="alerts" class="card">
+        <div class="ch"><div><h2>Alert logs</h2><p>Primary and standby merged on one clock. Red rows start or extend the incident; green rows end it.</p></div>
+          <div class="tools" id="alFilter"></div></div>
+        <div class="cc flush"><div class="alog" id="alog"></div></div>
+      </section>
+
+      <div class="grid2" id="history">
+        <section class="card">
+          <div class="ch"><div><h2>Earlier occurrences</h2><p id="histNote">Data Guard and network errors in the alert logs before this window.</p></div></div>
+          <div class="cc flush"><div class="alog" id="ahist" style="max-height:340px"></div></div>
+        </section>
+        <section class="card" id="traces">
+          <div class="ch"><div><h2>Background traces</h2><p>Errors and timeouts in LGWR, NSS, TT, ARC, TMON, RFS and MRP traces inside the window.</p></div></div>
+          <div class="cc flush"><div class="alog" id="trc" style="max-height:340px"></div></div>
+        </section>
+      </div>
+
+      <section id="shipping" class="card">
+        <div class="ch"><div><h2>Redo shipping</h2><p>When each sequence reached the standby, and whether it came by the SYNC connection or as a gap (FAL).</p></div></div>
+        <div class="cc flush tbl" id="ship"></div>
+      </section>
+
+      <div class="grid2" id="listener">
+        <section class="card">
+          <div class="ch"><div><h2>Listener logins</h2><p>Logins per minute. Refusals at the standby (TNS-12514) are clients that could not reach the primary.</p></div>
+            <div class="tabs" role="tablist" id="lsTabs"></div></div>
+          <div class="cc"><div class="legend" id="lsLegend"></div><div class="viz" id="ls"></div></div>
+        </section>
+        <section class="card" id="cidCard">
+          <div class="ch"><div><h2>Refused clients</h2><p id="cidNote">Refused at the standby, looked up by CONNECTION_ID in the primary listener log.</p></div></div>
+          <div class="cc flush tbl" id="cid" style="max-height:420px;overflow:auto"></div>
+        </section>
+      </div>
+
+      <section id="config" class="card">
+        <div class="ch"><div><h2>Configuration</h2><p>v$archive_dest, v$archive_dest_status, v$database and the standby redo logs, as they were when collected.</p></div></div>
+        <div class="cc flush tbl" id="cfg"></div>
+      </section>
+
+      <div class="grid2" id="network"></div>
+
+      <footer id="foot"></footer>
+    </main>
+  </div>
+</div>
+<script type="text/plain" class="dgr-bundle" data-file="sample_primary.jsonl">
+{"t":"bundle","side":"primary","host":"prim-host","from":"2026-11-13 20:35:00","to":"2026-11-13 20:58:00","collected":"2026-11-14 09:12:40","cidcheck":"yes","v":1}
+{"t":"meta","side":"primary","db":"PRODDB","uniq":"proddb","role":"PRIMARY","open":"READ WRITE","pmode":"MAXIMUM AVAILABILITY","plevel":"MAXIMUM AVAILABILITY","inst":"proddb1","host":"prim-host.example","ver":"19.30.0.0.0","plat":"AIX-Based Systems (64-bit)","from":"2026-11-13 20:35:00","to":"2026-11-13 20:58:00","gen":"2026-11-14 09:12:41","tz":"+01:00","ash":"H"}
+{"t":"dest","id":2,"dest":"proddb_s_dgmgrl","uniq":"proddb_s","status":"VALID","mode":"PARALLELSYNC","affirm":"NO","net_timeout":30,"reopen":300,"max_failure":0,"failures":1,"error":null,"sync":"OK","synced":"YES","gap":"NO GAP"}
+{"t":"param","name":"data_guard_sync_latency","value":"0"}
+{"t":"param","name":"log_archive_config","value":"dg_config=(proddb,proddb_s)"}
+{"t":"fg","m":"20:35","lgwr":0,"other":12,"cpu":30}
+{"t":"fg","m":"20:36","lgwr":0,"other":18,"cpu":36}
+{"t":"fg","m":"20:37","lgwr":16,"other":12,"cpu":30}
+{"t":"fg","m":"20:38","lgwr":87,"other":6,"cpu":12}
+{"t":"fg","m":"20:44","lgwr":0,"other":6,"cpu":6}
+{"t":"fg","m":"20:45","lgwr":0,"other":6,"cpu":12}
+{"t":"fg","m":"20:46","lgwr":0,"other":0,"cpu":6}
+{"t":"fg","m":"20:47","lgwr":0,"other":6,"cpu":6}
+{"t":"fg","m":"20:48","lgwr":0,"other":0,"cpu":12}
+{"t":"fg","m":"20:49","lgwr":0,"other":6,"cpu":6}
+{"t":"fg","m":"20:50","lgwr":0,"other":6,"cpu":12}
+{"t":"fg","m":"20:51","lgwr":0,"other":0,"cpu":6}
+{"t":"fg","m":"20:52","lgwr":0,"other":6,"cpu":6}
+{"t":"fg","m":"20:53","lgwr":0,"other":12,"cpu":24}
+{"t":"fg","m":"20:54","lgwr":0,"other":18,"cpu":36}
+{"t":"fg","m":"20:55","lgwr":0,"other":12,"cpu":30}
+{"t":"fg","m":"20:56","lgwr":0,"other":18,"cpu":36}
+{"t":"fg","m":"20:57","lgwr":0,"other":12,"cpu":30}
+{"t":"fg10","b":"20:37:40","n":4}
+{"t":"fg10","b":"20:37:50","n":12}
+{"t":"fg10","b":"20:38:00","n":9}
+{"t":"fg10","b":"20:38:10","n":13}
+{"t":"fg10","b":"20:38:20","n":14}
+{"t":"fg10","b":"20:38:30","n":16}
+{"t":"fg10","b":"20:38:40","n":17}
+{"t":"fg10","b":"20:38:50","n":18}
+{"t":"tx","ts":"20:35:02.118","p":"LGWR","ev":"SYNC Remote Write","seq":63881,"tw":2400}
+{"t":"tx","ts":"20:35:22.118","p":"LGWR","ev":"log file parallel write","seq":63883,"tw":800}
+{"t":"tx","ts":"20:35:32.118","p":"LGWR","ev":"SYNC Remote Write","seq":63884,"tw":1200}
+{"t":"tx","ts":"20:35:42.118","p":"LGWR","ev":"SYNC Remote Write","seq":63885,"tw":2400}
+{"t":"tx","ts":"20:35:52.118","p":"LGWR","ev":"SYNC Remote Write","seq":63886,"tw":2400}
+{"t":"tx","ts":"20:36:02.118","p":"LGWR","ev":"log file parallel write","seq":63887,"tw":800}
+{"t":"tx","ts":"20:36:42.118","p":"LGWR","ev":"log file parallel write","seq":63891,"tw":2400}
+{"t":"tx","ts":"20:36:52.118","p":"LGWR","ev":"SYNC Remote Write","seq":63892,"tw":800}
+{"t":"tx","ts":"20:37:12.118","p":"LGWR","ev":"SYNC Remote Write","seq":63894,"tw":1200}
+{"t":"tx","ts":"20:37:22.118","p":"LGWR","ev":"log file parallel write","seq":63895,"tw":1900}
+{"t":"tx","ts":"20:37:42.118","p":"LGWR","ev":"SYNC Remote Write","seq":63896,"tw":420000}
+{"t":"tx","ts":"20:37:52.118","p":"LGWR","ev":"SYNC Remote Write","seq":63897,"tw":890000}
+{"t":"tx","ts":"20:38:02.118","p":"LGWR","ev":"SYNC Remote Write","seq":63898,"tw":1210000}
+{"t":"tx","ts":"20:38:12.118","p":"LGWR","ev":"SYNC Remote Write","seq":63899,"tw":1780000}
+{"t":"tx","ts":"20:38:12.118","p":"NSS2","ev":"Redo Transport MISC","seq":8801,"tw":1778000}
+{"t":"tx","ts":"20:38:22.118","p":"LGWR","ev":"SYNC Remote Write","seq":63900,"tw":640000}
+{"t":"tx","ts":"20:38:32.118","p":"LGWR","ev":"SYNC Remote Write","seq":63907,"tw":0}
+{"t":"tx","ts":"20:38:32.118","p":"NSS2","ev":"Redo Transport MISC","seq":8802,"tw":0}
+{"t":"tx","ts":"20:38:42.118","p":"LGWR","ev":"SYNC Remote Write","seq":63907,"tw":0}
+{"t":"tx","ts":"20:38:42.118","p":"NSS2","ev":"Redo Transport MISC","seq":8802,"tw":0}
+{"t":"tx","ts":"20:38:52.118","p":"LGWR","ev":"SYNC Remote Write","seq":63907,"tw":26434000}
+{"t":"tx","ts":"20:38:52.118","p":"NSS2","ev":"Redo Transport MISC","seq":8802,"tw":0}
+{"t":"tx","ts":"20:39:02.118","p":"NSS2","ev":"Redo Transport MISC","seq":8802,"tw":0}
+{"t":"tx","ts":"20:39:12.118","p":"NSS2","ev":"Redo Transport MISC","seq":8802,"tw":0}
+{"t":"tx","ts":"20:39:22.118","p":"NSS2","ev":"Redo Transport MISC","seq":8802,"tw":0}
+{"t":"tx","ts":"20:39:32.118","p":"NSS2","ev":"Redo Transport MISC","seq":8802,"tw":0}
+{"t":"tx","ts":"20:39:42.118","p":"NSS2","ev":"Redo Transport Detach","seq":8803,"tw":16000}
+{"t":"tx","ts":"20:43:59.118","p":"LGWR","ev":"Redo Transport Open","seq":64001,"tw":120000}
+{"t":"tx","ts":"20:44:02.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:44:02.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:44:12.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:44:12.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:44:22.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:44:22.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:44:32.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:44:32.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:44:42.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:44:42.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:44:52.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:44:52.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:44:53.118","p":"LGWR","ev":"SYNC Remote Write","seq":64128,"tw":3000}
+{"t":"tx","ts":"20:45:02.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:45:02.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:45:12.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:45:12.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:45:22.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:45:22.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:45:32.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:45:32.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:45:42.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:45:42.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:45:43.118","p":"LGWR","ev":"SYNC Remote Write","seq":64129,"tw":2100}
+{"t":"tx","ts":"20:45:52.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:45:52.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:46:02.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:46:02.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:46:12.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:46:12.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:46:22.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:46:22.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:46:32.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:46:32.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:46:42.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:46:42.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:46:43.118","p":"LGWR","ev":"SYNC Remote Write","seq":64130,"tw":1300}
+{"t":"tx","ts":"20:46:52.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:46:52.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:47:02.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:47:02.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:47:12.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:47:12.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:47:22.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:47:22.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:47:32.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:47:32.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:47:42.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:47:42.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:47:52.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:47:52.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:48:02.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"20:48:02.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"20:48:12.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":260000000}
+{"t":"tx","ts":"20:48:12.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":261000000}
+{"t":"tx","ts":"20:54:23.118","p":"LGWR","ev":"SYNC Remote Write","seq":64131,"tw":1800}
+{"t":"tx","ts":"20:55:33.118","p":"LGWR","ev":"SYNC Remote Write","seq":64132,"tw":1100}
+{"t":"tx","ts":"20:56:43.118","p":"LGWR","ev":"SYNC Remote Write","seq":64133,"tw":900}
+{"t":"tx","ts":"20:57:23.118","p":"LGWR","ev":"SYNC Remote Write","seq":64134,"tw":1500}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"8 microseconds","us":8,"n":3}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"16 microseconds","us":16,"n":210}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"32 microseconds","us":32,"n":940}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"64 microseconds","us":64,"n":2210}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"128 microseconds","us":128,"n":8200}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"256 microseconds","us":256,"n":51200}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"512 microseconds","us":512,"n":184000}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"1 millisecond","us":1000,"n":312000}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"2 milliseconds","us":2000,"n":128000}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"4 milliseconds","us":4000,"n":22100}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"8 milliseconds","us":8000,"n":6400}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"16 milliseconds","us":16000,"n":2100}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"32 milliseconds","us":32000,"n":880}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"65 milliseconds","us":65000,"n":410}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"131 milliseconds","us":131000,"n":220}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"262 milliseconds","us":262000,"n":140}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"524 milliseconds","us":524000,"n":90}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"1 second","us":1000000,"n":61}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"2 seconds","us":2000000,"n":31}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"4 seconds","us":4000000,"n":9}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"8 seconds","us":8000000,"n":2}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"16 seconds","us":16000000,"n":1}
+{"t":"hist_su","ev":"SYNC Remote Write","b":"33 seconds","us":33000000,"n":4}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":0.125,"n":140,"b":"20:30","e":"21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":0.25,"n":920,"b":"20:30","e":"21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":0.5,"n":3400,"b":"20:30","e":"21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":1,"n":6100,"b":"20:30","e":"21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":2,"n":2400,"b":"20:30","e":"21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":4,"n":410,"b":"20:30","e":"21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":8,"n":120,"b":"20:30","e":"21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":16,"n":41,"b":"20:30","e":"21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":32,"n":14,"b":"20:30","e":"21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":64,"n":6,"b":"20:30","e":"21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":128,"n":3,"b":"20:30","e":"21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":256,"n":2,"b":"20:30","e":"21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":512,"n":1,"b":"20:30","e":"21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":1024,"n":1,"b":"20:30","e":"21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":2048,"n":1,"b":"20:30","e":"21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":32768,"n":1,"b":"20:30","e":"21:00"}
+{"t":"wl","m":"20:35","redo":2.1,"txn":44.1,"logons":0.9,"aas":5.0}
+{"t":"wl","m":"20:36","redo":2.3,"txn":48.3,"logons":0.9,"aas":5.5}
+{"t":"wl","m":"20:37","redo":1.9,"txn":39.9,"logons":0.9,"aas":4.6}
+{"t":"wl","m":"20:38","redo":0.6,"txn":12.6,"logons":0.2,"aas":1.4}
+{"t":"wl","m":"20:39","redo":0.02,"txn":0.4,"logons":0.2,"aas":0.0}
+{"t":"wl","m":"20:40","redo":0.01,"txn":0.2,"logons":0.2,"aas":0.0}
+{"t":"wl","m":"20:41","redo":0.02,"txn":0.4,"logons":0.2,"aas":0.0}
+{"t":"wl","m":"20:42","redo":0.01,"txn":0.2,"logons":0.2,"aas":0.0}
+{"t":"wl","m":"20:43","redo":0.03,"txn":0.6,"logons":0.2,"aas":0.1}
+{"t":"wl","m":"20:44","redo":0.12,"txn":2.5,"logons":0.2,"aas":0.3}
+{"t":"wl","m":"20:45","redo":0.18,"txn":3.8,"logons":0.2,"aas":0.4}
+{"t":"wl","m":"20:46","redo":0.09,"txn":1.9,"logons":0.2,"aas":0.2}
+{"t":"wl","m":"20:47","redo":0.11,"txn":2.3,"logons":0.2,"aas":0.3}
+{"t":"wl","m":"20:48","redo":0.07,"txn":1.5,"logons":0.2,"aas":0.2}
+{"t":"wl","m":"20:49","redo":0.1,"txn":2.1,"logons":0.2,"aas":0.2}
+{"t":"wl","m":"20:50","redo":0.14,"txn":2.9,"logons":0.2,"aas":0.3}
+{"t":"wl","m":"20:51","redo":0.08,"txn":1.7,"logons":0.2,"aas":0.2}
+{"t":"wl","m":"20:52","redo":0.12,"txn":2.5,"logons":0.2,"aas":0.3}
+{"t":"wl","m":"20:53","redo":1.6,"txn":33.6,"logons":0.9,"aas":3.8}
+{"t":"wl","m":"20:54","redo":2.4,"txn":50.4,"logons":0.9,"aas":5.8}
+{"t":"wl","m":"20:55","redo":2.2,"txn":46.2,"logons":0.9,"aas":5.3}
+{"t":"wl","m":"20:56","redo":2.0,"txn":42.0,"logons":0.9,"aas":4.8}
+{"t":"wl","m":"20:57","redo":2.1,"txn":44.1,"logons":0.9,"aas":5.0}
+{"t":"alert","side":"primary","ts":"20:36:41.208","msg":"Thread 1 advanced to log sequence 114493 (LGWR switch), current SCN: 0x00000a1b2c3d4e5f\n  Current log# 2 seq# 114493 mem# 0: +REDO/PRODDB/ONLINELOG/group_2.262.1130000001"}
+{"t":"alert","side":"primary","ts":"20:38:58.734","msg":"LGWR (PID:10224042): ORA-16198: Received timed out error from KSR"}
+{"t":"alert","side":"primary","ts":"20:38:58.734","msg":"LGWR (PID:10224042): Attempting LAD:2 network reconnect (16198)"}
+{"t":"alert","side":"primary","ts":"20:38:58.735","msg":"LGWR (PID:10224042): LAD:2 network reconnect abandoned"}
+{"t":"alert","side":"primary","ts":"20:38:58.736","msg":"Errors in file /u01/app/oracle/diag/rdbms/proddb/proddb1/trace/proddb1_lgwr_10224042.trc:\nORA-16198: Timeout incurred on internal channel during remote archival"}
+{"t":"alert","side":"primary","ts":"20:38:58.740","msg":"LGWR (PID:10224042): LAD:2 is UNSYNCHRONIZED"}
+{"t":"alert","side":"primary","ts":"20:43:58.020","msg":"ARC1 (PID:16974138): LAD:2 network reconnect"}
+{"t":"alert","side":"primary","ts":"20:43:59.310","msg":"LGWR (PID:10224042): LAD:2 new SYNC connection established"}
+{"t":"alert","side":"primary","ts":"20:48:20.402","msg":"TMON (PID:7340090): ARC1 (PID:16974138) hung for 260 s, killed"}
+{"t":"alert","side":"primary","ts":"20:48:21.118","msg":"TMON (PID:7340090): ARC2 (PID:16908582) hung for 261 s, killed"}
+{"t":"alert","side":"primary","ts":"20:48:23.540","msg":"FAL archive of T-1.S-114495 to LAD:2 failed, error 16198"}
+{"t":"alert","side":"primary","ts":"20:49:06.811","msg":"FAL archive of T-1.S-114495 to LAD:2 failed, error 16198"}
+{"t":"alert","side":"primary","ts":"20:52:10.004","msg":"Thread 1 advanced to log sequence 114495 (LGWR switch)"}
+{"t":"alert","side":"primary","ts":"20:53:27.905","msg":"LGWR (PID:10224042): LAD:2 is SYNCHRONIZED"}
+{"t":"alhist","side":"primary","ts":"2026-10-16 20:41:12","msg":"LGWR (PID:10224042): ORA-16198: Received timed out error from KSR"}
+{"t":"alhist","side":"primary","ts":"2026-10-16 20:41:12","msg":"LGWR (PID:10224042): LAD:2 is UNSYNCHRONIZED"}
+{"t":"alhist","side":"primary","ts":"2026-10-23 20:39:55","msg":"LGWR (PID:10224042): ORA-16198: Received timed out error from KSR"}
+{"t":"alhist","side":"primary","ts":"2026-10-23 20:39:55","msg":"LGWR (PID:10224042): LAD:2 is UNSYNCHRONIZED"}
+{"t":"alhist","side":"primary","ts":"2026-10-30 20:44:31","msg":"LGWR (PID:10224042): ORA-16198: Received timed out error from KSR"}
+{"t":"alhist","side":"primary","ts":"2026-10-30 20:44:31","msg":"LGWR (PID:10224042): LAD:2 is UNSYNCHRONIZED"}
+{"t":"alhist","side":"primary","ts":"2026-11-06 20:38:07","msg":"LGWR (PID:10224042): ORA-16198: Received timed out error from KSR"}
+{"t":"alhist","side":"primary","ts":"2026-11-06 20:38:07","msg":"LGWR (PID:10224042): LAD:2 is UNSYNCHRONIZED"}
+{"t":"arch","side":"primary","dest":2,"thr":1,"seq":114493,"first":"20:31:02","next":"20:36:41","done":"20:36:41","creator":"LGWR","reg":"LGWR","fal":"NO","mb":454.0}
+{"t":"arch","side":"primary","dest":2,"thr":1,"seq":114494,"first":"20:36:41","next":"20:52:10","done":"20:52:10","creator":"LGWR","reg":"LGWR","fal":"NO","mb":470.0}
+{"t":"arch","side":"primary","dest":2,"thr":1,"seq":114495,"first":"20:52:10","next":"20:53:24","done":"20:53:25","creator":"ARCH","reg":"ARCH","fal":"YES","mb":393.6}
+{"t":"lsnr","side":"primary","m":"20:35","code":"0","n":44}
+{"t":"lsnr","side":"primary","m":"20:36","code":"0","n":49}
+{"t":"lsnr","side":"primary","m":"20:37","code":"0","n":41}
+{"t":"lsnr","side":"primary","m":"20:38","code":"0","n":29}
+{"t":"lsnr","side":"primary","m":"20:39","code":"0","n":14}
+{"t":"lsnr","side":"primary","m":"20:40","code":"0","n":30}
+{"t":"lsnr","side":"primary","m":"20:41","code":"0","n":13}
+{"t":"lsnr","side":"primary","m":"20:42","code":"0","n":18}
+{"t":"lsnr","side":"primary","m":"20:43","code":"0","n":27}
+{"t":"lsnr","side":"primary","m":"20:44","code":"0","n":29}
+{"t":"lsnr","side":"primary","m":"20:45","code":"0","n":25}
+{"t":"lsnr","side":"primary","m":"20:46","code":"0","n":22}
+{"t":"lsnr","side":"primary","m":"20:47","code":"0","n":26}
+{"t":"lsnr","side":"primary","m":"20:48","code":"0","n":30}
+{"t":"lsnr","side":"primary","m":"20:49","code":"0","n":26}
+{"t":"lsnr","side":"primary","m":"20:50","code":"0","n":23}
+{"t":"lsnr","side":"primary","m":"20:51","code":"0","n":47}
+{"t":"lsnr","side":"primary","m":"20:52","code":"0","n":45}
+{"t":"lsnr","side":"primary","m":"20:53","code":"0","n":43}
+{"t":"lsnr","side":"primary","m":"20:54","code":"0","n":45}
+{"t":"lsnr","side":"primary","m":"20:55","code":"0","n":40}
+{"t":"lsnr","side":"primary","m":"20:56","code":"0","n":47}
+{"t":"lsnr","side":"primary","m":"20:57","code":"0","n":54}
+{"t":"lsnr_ip","side":"primary","ip":"192.0.2.21","code":"0","n":412}
+{"t":"lsnr_ip","side":"primary","ip":"192.0.2.22","code":"0","n":377}
+{"t":"trace","side":"primary","ts":"20:38:58.734","file":"proddb1_lgwr_10224042.trc","msg":"Error 16198 for LNO:2 to 'proddb_s_dgmgrl'"}
+{"t":"trace","side":"primary","ts":"20:38:58.734","file":"proddb1_lgwr_10224042.trc","msg":"krsw_ksr_receive: Current time <11/13/2026 20:38:58> exceeds begin time <11/13/2026 20:38:28> by  <30> seconds, return timed out error"}
+{"t":"trace","side":"primary","ts":"20:38:58.734","file":"proddb1_lgwr_10224042.trc","msg":"krsw_ksr_status: Received error 16198 on receiving channel messages"}
+{"t":"trace","side":"primary","ts":"20:38:58.734","file":"proddb1_lgwr_10224042.trc","msg":"ORA-16198: Received timed out error from KSR"}
+{"t":"trace","side":"primary","ts":"20:39:42.061","file":"proddb1_lgwr_10224042.trc","msg":"krsu_upi_status: Error 16198 detaching RFS from standby instance at host 'proddb_s_dgmgrl'"}
+{"t":"trace","side":"primary","ts":"20:48:20.401","file":"proddb1_arc1_16974138.trc","msg":"krsi_verify_network: Error 3113 verifying archive destination LAD:2"}
+{"t":"net","side":"primary","peer":"198.51.100.12","port":"1526","os":"AIX","rtt":"0.41","loss":"0%","retr":3,"secs":10,"sendq":0,"at":"09:12:58"}
+{"t":"cid_hit","side":"primary","ts":"13-NOV-2026 20:40:07","ip":"192.0.2.21","code":"0","cid":"1VrT+1FJors/6ILi8IHn5k=="}
+</script>
+<script type="text/plain" class="dgr-bundle" data-file="sample_standby.jsonl">
+{"t":"bundle","side":"standby","host":"stby-host","from":"2026-11-13 20:35:00","to":"2026-11-13 20:58:00","collected":"2026-11-14 09:10:02","cidcheck":"no","v":1}
+{"t":"meta","side":"standby","db":"PRODDB","uniq":"proddb_s","role":"PHYSICAL STANDBY","open":"MOUNTED","pmode":"MAXIMUM AVAILABILITY","plevel":"MAXIMUM AVAILABILITY","inst":"proddb1","host":"stby-host.example","ver":"19.30.0.0.0","plat":"AIX-Based Systems (64-bit)","from":"2026-11-13 20:35:00","to":"2026-11-13 20:58:00","gen":"2026-11-14 09:10:03","tz":"+01:00"}
+{"t":"alert","side":"standby","ts":"20:39:09.112","msg":"\n***********************************************************************\n\nFatal NI connect error 12170.\n\n  VERSION INFORMATION:\n\tTNS for IBM/AIX RISC System/6000: Version 19.0.0.0.0 - Production\n  Time: 13-NOV-2026 20:39:09\n  Tracing not turned on.\n  Tns error struct:\n    ns main err code: 12535\n\nTNS-12535: TNS:operation timed out\n    ns secondary err code: 12560\n    nt main err code: 0\n    nt secondary err code: 0\n    nt OS err code: 0\n  Client address: (ADDRESS=(PROTOCOL=tcp)(HOST=198.51.100.11)(PORT=40112))"}
+{"t":"alert","side":"standby","ts":"20:39:09.140","msg":"rfs (PID:21299312): Standby redo log 11 for T-1.S-114494: 2048 blocks marked corrupt in the incomplete write"}
+{"t":"alert","side":"standby","ts":"20:39:09.141","msg":"rfs (PID:21299312): Possible network disconnect with primary database"}
+{"t":"alert","side":"standby","ts":"20:43:58.105","msg":"rfs (PID:22872070): Foreground-client RFS connected from primary database proddb"}
+{"t":"alert","side":"standby","ts":"20:43:59.402","msg":"rfs (PID:22872072): Primary database is in MAXIMUM AVAILABILITY mode, level RESYNCHRONIZATION"}
+{"t":"alert","side":"standby","ts":"20:53:22.963","msg":"rfs (PID:23200112): Foreground-client RFS connected from primary database proddb"}
+{"t":"alert","side":"standby","ts":"20:53:25.204","msg":"rfs (PID:23200112): Opened log for T-1.S-114495 dbid 2934781120 branch 1112345678, received by FAL"}
+{"t":"alert","side":"standby","ts":"20:53:27.950","msg":"rfs (PID:22872072): Primary database is in MAXIMUM AVAILABILITY mode, level SYNCHRONIZED"}
+{"t":"arch","side":"standby","dest":1,"thr":1,"seq":114493,"first":"20:31:02","next":"20:36:41","done":"20:36:41","creator":"ARCH","reg":"RFS","fal":"NO","mb":445.4}
+{"t":"arch","side":"standby","dest":1,"thr":1,"seq":114494,"first":"20:36:41","next":"20:52:10","done":"20:52:11","creator":"ARCH","reg":"RFS","fal":"NO","mb":425.3}
+{"t":"arch","side":"standby","dest":1,"thr":1,"seq":114495,"first":"20:52:10","next":"20:53:24","done":"20:53:25","creator":"ARCH","reg":"RFS","fal":"YES","mb":439.2}
+{"t":"srl","thr":1,"grp":10,"seq":0,"st":"UNASSIGNED","mb":1024}
+{"t":"srl","thr":1,"grp":11,"seq":114496,"st":"ACTIVE","mb":1024}
+{"t":"srl","thr":1,"grp":12,"seq":0,"st":"UNASSIGNED","mb":1024}
+{"t":"srl","thr":1,"grp":13,"seq":0,"st":"UNASSIGNED","mb":1024}
+{"t":"dgstat","name":"transport lag","value":"+00 00:00:00","unit":"day(2) to second(0) interval"}
+{"t":"dgstat","name":"apply lag","value":"+00 00:00:01","unit":"day(2) to second(0) interval"}
+{"t":"lsnr","side":"standby","m":"20:38","code":"12514","n":3}
+{"t":"lsnr","side":"standby","m":"20:39","code":"12514","n":6}
+{"t":"lsnr","side":"standby","m":"20:40","code":"12514","n":5}
+{"t":"lsnr","side":"standby","m":"20:41","code":"12514","n":5}
+{"t":"lsnr","side":"standby","m":"20:42","code":"12514","n":4}
+{"t":"lsnr","side":"standby","m":"20:43","code":"12514","n":5}
+{"t":"lsnr","side":"standby","m":"20:44","code":"12514","n":4}
+{"t":"lsnr","side":"standby","m":"20:45","code":"12514","n":4}
+{"t":"lsnr","side":"standby","m":"20:46","code":"12514","n":3}
+{"t":"lsnr","side":"standby","m":"20:47","code":"12514","n":4}
+{"t":"lsnr","side":"standby","m":"20:48","code":"12514","n":3}
+{"t":"lsnr","side":"standby","m":"20:49","code":"12514","n":2}
+{"t":"lsnr","side":"standby","m":"20:50","code":"12514","n":1}
+{"t":"lsnr","side":"standby","m":"20:43","code":"0","n":1}
+{"t":"lsnr","side":"standby","m":"20:53","code":"0","n":2}
+{"t":"lsnr_ip","side":"standby","ip":"192.0.2.21","code":"12514","n":21}
+{"t":"lsnr_ip","side":"standby","ip":"192.0.2.22","code":"12514","n":17}
+{"t":"lsnr_ip","side":"standby","ip":"192.0.2.23","code":"12514","n":11}
+{"t":"lsnr_ip","side":"standby","ip":"198.51.100.11","code":"0","n":3}
+{"t":"lsnr_ref","side":"standby","ts":"20:38:19","ip":"192.0.2.23","code":"12514","cid":"1VrT+1FJors/6ILi8IHn5k==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:38:41","ip":"192.0.2.22","code":"12514","cid":"xsC7tVO/HbkQfyy/KV5zjR==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:38:55","ip":"192.0.2.23","code":"12514","cid":"j1twdTKWTddB+XhkAS1voQ==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:39:32","ip":"192.0.2.22","code":"12514","cid":"G6yyzyN9zHYIa4UOrGNATM==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:39:39","ip":"192.0.2.23","code":"12514","cid":"DJawTgsu8PO+799nKSNrh9==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:39:41","ip":"192.0.2.23","code":"12514","cid":"UCauSDmLhuVtcqcYezdZ/t==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:39:43","ip":"192.0.2.23","code":"12514","cid":"DDj8hYs5suKcNd8Zra9A9s==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:39:47","ip":"192.0.2.21","code":"12514","cid":"KPxZ9W3qLy7zKUVQDT7S8s==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:39:54","ip":"192.0.2.23","code":"12514","cid":"QCBNR3YbDgbleph1QHt61Q==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:40:01","ip":"192.0.2.22","code":"12514","cid":"4XATWS8PHp9NHfYjFM5DI4==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:40:09","ip":"192.0.2.23","code":"12514","cid":"Zj59fhZ5R1Py4oJe2JbmPT==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:40:32","ip":"192.0.2.22","code":"12514","cid":"uSgR7cMy+UcU3zr1ZtoLuC==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:40:33","ip":"192.0.2.23","code":"12514","cid":"64CxqlIOdNKhiFXiQ2hzT/==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:40:55","ip":"192.0.2.21","code":"12514","cid":"pLjHX2JiCLhKcIhP6Br1iQ==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:41:07","ip":"192.0.2.23","code":"12514","cid":"hGXZnnal5WisCgEBCY8f5N==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:41:10","ip":"192.0.2.23","code":"12514","cid":"3/ynbdrZRzsGQBJg3UHKwk==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:41:15","ip":"192.0.2.21","code":"12514","cid":"flF6XUi5AhuqpfEnbtXAqw==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:41:33","ip":"192.0.2.22","code":"12514","cid":"8jZfALhLSzFyCmmdKTxp/T==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:41:45","ip":"192.0.2.23","code":"12514","cid":"SF2RCdKDFRuNw5GCf+hA6I==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:42:32","ip":"192.0.2.23","code":"12514","cid":"LI8gJhead6/wJ9kFZJSqgm==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:42:34","ip":"192.0.2.21","code":"12514","cid":"RB9H+iMb+lk777PZnK8Cl6==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:42:57","ip":"192.0.2.23","code":"12514","cid":"5ixaaJLShuQjOud/+yDUA+==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:42:59","ip":"192.0.2.22","code":"12514","cid":"5zmS1swoPqApryPZBlgvIy==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:43:04","ip":"192.0.2.23","code":"12514","cid":"2jGjNGkTfi3oYv2DzaKG05==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:43:23","ip":"192.0.2.21","code":"12514","cid":"Rk+GQV81rkmghzem9yPVUJ==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:43:37","ip":"192.0.2.23","code":"12514","cid":"/c5q52RYfLWrLoevhZC0x0==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:43:55","ip":"192.0.2.23","code":"12514","cid":"awirH/juQbLifxz53nCQE2==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:43:59","ip":"192.0.2.23","code":"12514","cid":"8+AJy75fNcTTN6KFAQdEmQ==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:44:16","ip":"192.0.2.21","code":"12514","cid":"OMJmYxhcABm6jof8efD0nH==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:44:27","ip":"192.0.2.22","code":"12514","cid":"Y/1Kgd2vd/Er1uyZAlIa/Z==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:44:33","ip":"192.0.2.21","code":"12514","cid":"Yd7chlN/Xc+1HSyGbDS1GH==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:44:40","ip":"192.0.2.22","code":"12514","cid":"y5oOKVqYX7Enwvq4VNAKjK==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:45:07","ip":"192.0.2.22","code":"12514","cid":"awtn3LG8Zv5Ypu8D0fzFwE==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:45:26","ip":"192.0.2.22","code":"12514","cid":"IHgYIruiqFhojmAIDdN87x==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:45:35","ip":"192.0.2.23","code":"12514","cid":"3/Q/XBmTepo6uKZyUf0IE9==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:45:56","ip":"192.0.2.23","code":"12514","cid":"pU2NJhKaM1/5WdR16ePllj==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:46:16","ip":"192.0.2.21","code":"12514","cid":"hZ4fXfeTkYpIygfdM7ENA8==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:46:17","ip":"192.0.2.21","code":"12514","cid":"5vFldPGYYJvW5hANsbEvrS==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:46:23","ip":"192.0.2.22","code":"12514","cid":"agEaBp0vXnJaE/9I0MyTLU==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:47:17","ip":"192.0.2.21","code":"12514","cid":"n1Gnt11CuZyzaA3U2OLzu6==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:47:18","ip":"192.0.2.22","code":"12514","cid":"QBGSyLvVSskUVINx+ZmQF9==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:47:26","ip":"192.0.2.21","code":"12514","cid":"GxLUczZ8XbFzUxtPTfYFEp==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:47:44","ip":"192.0.2.21","code":"12514","cid":"x6n1nf2xv54WCA+7e56W8z==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:48:04","ip":"192.0.2.21","code":"12514","cid":"3uL4FFQKoKGwRDIOYQ+kVc==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:48:08","ip":"192.0.2.21","code":"12514","cid":"sgUpj6Sg9aheovEZXzUjpw==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:48:22","ip":"192.0.2.22","code":"12514","cid":"hOGu5NgyvhwvSuqK4dWGlg==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:49:40","ip":"192.0.2.22","code":"12514","cid":"oAEcTl31uGQ+dFCGAtmNtc==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:49:55","ip":"192.0.2.21","code":"12514","cid":"mRau8URBfT5MISizhBHs4/==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"20:50:10","ip":"192.0.2.23","code":"12514","cid":"AFHDzXeUHNBZS0Z1WnImG9==","svc":"APP_RW"}
+{"t":"trace","side":"standby","ts":"20:39:09.110","file":"proddb1_rfs_21299312.trc","msg":"TNS-12535: TNS:operation timed out"}
+{"t":"trace","side":"standby","ts":"20:39:09.110","file":"proddb1_rfs_21299312.trc","msg":"    nt secondary err code: 0"}
+{"t":"alhist","side":"standby","ts":"2026-10-30 20:44:42","msg":"TNS-12535: TNS:operation timed out"}
+{"t":"net","side":"standby","peer":"198.51.100.11","port":"1526","os":"AIX","rtt":"0.43","loss":"0%","retr":1,"secs":10,"sendq":0,"at":"09:10:31"}
+</script>
+<script>
+(() => {
+'use strict';
+/* ================= helpers ================= */
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const ts = (s) => { const p = String(s).split(':'); return +p[0] * 3600 + +(p[1] || 0) * 60 + parseFloat(p[2] || 0); };
+const pad = (n) => String(n).padStart(2, '0');
+const clock = (t, ms) => { const h = Math.floor(t / 3600), m = Math.floor(t % 3600 / 60), s = t % 60;
+  return pad(h) + ':' + pad(m) + ':' + (ms ? s.toFixed(3).padStart(6, '0') : pad(Math.floor(s))); };
+const dur = (sec) => sec >= 3600 ? Math.floor(sec / 3600) + ' h ' + Math.round(sec % 3600 / 60) + ' min'
+  : sec >= 60 ? Math.floor(sec / 60) + ' min ' + Math.round(sec % 60) + ' s' : sec >= 1 ? sec.toFixed(1) + ' s' : Math.round(sec * 1000) + ' ms';
+const nice = (v) => { if (!(v > 0)) return 1; const p = 10 ** Math.floor(Math.log10(v)); for (const m of [1, 2, 2.5, 5, 10]) if (m * p >= v) return m * p; return 10 * p; };
+const fmtN = (v) => v >= 100 ? Math.round(v) : v >= 10 ? v.toFixed(1).replace(/\.0$/, '') : v.toFixed(2).replace(/\.?0+$/, '');
+const P = {
+  gauge: '<path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/>',
+  alert: '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
+  gantt: '<path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M7 8h6"/><path d="M10 12h8"/><path d="M7 16h5"/>',
+  bars: '<path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>',
+  activity: '<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',
+  file: '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/>',
+  history: '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/>',
+  swap: '<path d="m16 3 4 4-4 4"/><path d="M20 7H4"/><path d="m8 21-4-4 4-4"/><path d="M4 17h16"/>',
+  network: '<rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/>',
+  settings: '<path d="M20 7h-9"/><path d="M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/>',
+  server: '<rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><path d="M6 6h.01"/><path d="M6 18h.01"/>',
+  clock: '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
+  timer: '<path d="M10 2h4"/><path d="m12 14 3-3"/><circle cx="12" cy="14" r="8"/>',
+  xcircle: '<circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/>',
+  userx: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="m17 8 5 5"/><path d="m22 8-5 5"/>',
+  check: '<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>',
+  info: '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>',
+  minus: '<circle cx="12" cy="12" r="10"/><path d="M8 12h8"/>',
+  dashed: '<path d="M10.1 2.18a9.93 9.93 0 0 1 3.8 0"/><path d="M17.6 3.71a9.95 9.95 0 0 1 2.69 2.7"/><path d="M21.82 10.1a9.93 9.93 0 0 1 0 3.8"/><path d="M20.29 17.6a9.95 9.95 0 0 1-2.7 2.69"/><path d="M13.9 21.82a9.94 9.94 0 0 1-3.8 0"/><path d="M6.4 20.29a9.95 9.95 0 0 1-2.69-2.7"/><path d="M2.18 13.9a9.93 9.93 0 0 1 0-3.8"/><path d="M3.71 6.4a9.95 9.95 0 0 1 2.7-2.69"/>',
+  printer: '<path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>',
+  moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
+  search: '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>'
+};
+const I = (k, cls) => `<svg class="ic${cls ? ' ' + cls : ''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[k]}</svg>`;
+const st = (k, label) => `<span class="st ${k}">${I({ crit: 'alert', good: 'check', warn: 'info', info: 'minus' }[k])}${esc(label)}</span>`;
+const empty = (msg) => `<div class="empty">${esc(msg)}</div>`;
+const SIDE = { primary: 'Primary', standby: 'Standby' };
+const hostBadge = (side) => `<span class="badge host ${side === 'primary' ? 'pri' : 'stby'}"><span class="dot"></span>${SIDE[side] || esc(side)}</span>`;
+
+/* ================= load bundles ================= */
+const bundles = [];
+document.querySelectorAll('script.dgr-bundle').forEach(el => {
+  const b = { file: el.dataset.file || '', side: '', host: '', hdr: null, lines: [], warn: [] };
+  el.textContent.split('\n').forEach(raw => {
+    const l = raw.trim(); if (!l) return;
+    if (l[0] === '{') { try { const o = JSON.parse(l); if (o.t === 'bundle') { b.hdr = o; b.side = o.side; b.host = o.host; } b.lines.push(o); return; } catch (e) { /* not JSON */ } }
+    if (/ORA-\d|SP2-\d|ERROR at line/.test(l)) b.warn.push(l);
+  });
+  b.lines.forEach(o => { if (!o.side) o.side = b.side; });
+  bundles.push(b);
+});
+const ALL = bundles.flatMap(b => b.lines);
+const of = (t, side) => ALL.filter(o => o.t === t && (!side || o.side === side));
+const first = (t, side) => of(t, side)[0] || null;
+const HAS = { primary: bundles.some(b => b.side === 'primary'), standby: bundles.some(b => b.side === 'standby') };
+
+const MP = first('meta', 'primary'), MS = first('meta', 'standby');
+const HDR = bundles.map(b => b.hdr).filter(Boolean);
+const W0 = (MP || MS || HDR[0] || {}).from || '', W1 = (MP || MS || HDR[0] || {}).to || '';
+const d0 = W0 ? ts(W0.slice(11)) : 0, d1 = W1 ? ts(W1.slice(11)) : 86400;
+const IVL = MP && MP.ash === 'V' ? 1 : 10;
+const DESTS = of('dest', 'primary');
+const DEST = DESTS.find(x => /^(SYNCHRONOUS|PARALLELSYNC)$/.test(x.mode || '')) || DESTS[0] || null;
+const NETTO = DEST && DEST.net_timeout != null ? +DEST.net_timeout : null;
+const modeLabel = (d) => !d ? '' : d.mode === 'ASYNCHRONOUS' ? 'ASYNC' : d.affirm === 'NO' ? 'FASTSYNC (SYNC NOAFFIRM)' : 'SYNC AFFIRM';
+const inWin = (s) => s >= d0 && s <= d1;
+
+/* ================= derive ================= */
+// foreground per minute, as average sessions
+const perMin = 60 / IVL;
+const FG = of('fg', 'primary').map(o => ({ m: o.m, s: ts(o.m + ':00'), lgwr: o.lgwr / perMin, other: o.other / perMin, cpu: o.cpu / perMin })).sort((a, b) => a.s - b.s);
+const FG10 = of('fg10', 'primary').map(o => ({ b: o.b, s: ts(o.b), n: o.n / (10 / IVL) })).filter(o => o.n > 0).sort((a, b) => a.s - b.s);
+const blocked = FG10.length ? { a: FG10[0].s, b: FG10[FG10.length - 1].s + 10 } : null;
+
+// transport spans
+const TX = of('tx', 'primary').map(o => ({ p: o.p || '?', ev: o.ev || '?', seq: o.seq, tw: +o.tw || 0, t: ts(o.ts) }))
+  .sort((a, b) => a.p < b.p ? -1 : a.p > b.p ? 1 : a.t - b.t);
+const SPANS = []; let cur = null;
+for (const r of TX) {
+  if (cur && cur.p === r.p && cur.seq === r.seq && cur.ev === r.ev && r.t - cur.last <= IVL * 1.6 + 0.5) { cur.last = r.t; cur.n++; cur.tw = Math.max(cur.tw, r.tw); }
+  else { if (cur) SPANS.push(cur); cur = { p: r.p, ev: r.ev, seq: r.seq, a: r.t, last: r.t, n: 1, tw: r.tw }; }
+}
+if (cur) SPANS.push(cur);
+SPANS.forEach(s => {
+  s.lower = !(s.tw > 0);
+  s.dur = s.tw > 0 ? s.tw / 1e6 : (s.n > 1 ? s.last - s.a + IVL : 0);
+  s.b = Math.max(s.last + IVL, s.a + Math.min(s.dur, 3600));
+  if (s.tw > 0 && s.dur > s.last - s.a) s.a = Math.max(d0, Math.min(s.a, s.last - s.dur + IVL));
+  s.kind = s.dur >= 1 ? 'stall' : s.dur >= 0.1 ? 'slow' : 'normal';
+  s.lane = /^(LGWR|LG\d)/.test(s.p) ? 'lgwr' : /^(NSS|TT)/.test(s.p) ? 'nss' : /^ARC/.test(s.p) ? 'arch' : 'other';
+});
+const SYNCEV = ['SYNC Remote Write', 'Redo Transport MISC'];
+const STALL = ['lgwr', 'nss'].map(l => SPANS.filter(s => SYNCEV.includes(s.ev) && s.lane === l).sort((a, b) => b.dur - a.dur)[0]).find(s => s && s.dur > 0) || null;
+
+// alerts
+const kindOf = (m) => (/(^|[^N])SYNCHRONIZED/.test(m) && !/UNSYNCHRONIZED/.test(m)) ? 'ok'
+  : /ORA-\d|TNS-\d|UNSYNCHRONIZED|\bhung\b|\bkill|[Ee]rror|corrupt|disconnect|timed out|[Tt]imeout|[Ff]ailed|terminat/.test(m) ? 'key' : 'info';
+const AL = of('alert').map(o => ({ side: o.side, t: o.ts, s: ts(o.ts), msg: String(o.msg || ''), kind: kindOf(String(o.msg || '')) }))
+  .sort((a, b) => a.s - b.s || (a.side < b.side ? -1 : 1)).map((a, i) => Object.assign(a, { i }));
+const ORA = AL.filter(a => a.side === 'primary' && /ORA-16198/.test(a.msg));
+
+// destination state from the primary alert log
+const STATES = (() => {
+  const ev = []; AL.filter(a => a.side === 'primary').forEach(a => {
+    const k = /UNSYNCHRONIZED/.test(a.msg) ? 'U' : /(^|[^N])SYNCHRONIZED/.test(a.msg) ? 'S' : null;
+    if (k && (!ev.length || ev[ev.length - 1].k !== k)) ev.push({ k, s: a.s, t: a.t });
+  });
+  if (!ev.length) return [];
+  const out = []; let state = ev[0].k === 'U' ? 'SYNCHRONIZED' : 'UNSYNCHRONIZED', start = d0, startT = clock(d0);
+  ev.forEach(e => { const ns = e.k === 'U' ? 'UNSYNCHRONIZED' : 'SYNCHRONIZED'; if (ns !== state) { out.push({ a: start, b: e.s, at: startT, bt: e.t, st: state }); state = ns; start = e.s; startT = e.t; } });
+  out.push({ a: start, b: d1, at: startT, bt: clock(d1), st: state, open: true });
+  return out.filter(x => x.b > x.a);
+})();
+const UNSYNC = STATES.find(x => x.st === 'UNSYNCHRONIZED') || null;
+
+// listener
+const LS = (side) => { const m = {}; of('lsnr', side).forEach(o => { const k = o.m; m[k] = m[k] || { ok: 0, ref: 0 }; if (o.code === '0') m[k].ok += o.n; else m[k].ref += o.n; }); return m; };
+const LSN = { standby: LS('standby'), primary: LS('primary') };
+const REF = of('lsnr_ref', 'standby');
+const refusedTotal = Object.values(LSN.standby).reduce((a, x) => a + x.ref, 0);
+const HITS = {}; of('cid_hit').forEach(h => { if (h.cid && !HITS[h.cid]) HITS[h.cid] = h; });
+const cidChecked = HDR.some(h => h.side === 'primary' && h.cidcheck === 'yes');
+const WL = of('wl', 'primary').map(o => ({ m: o.m, s: ts(o.m + ':00'), redo: o.redo, txn: o.txn, logons: o.logons, aas: o.aas })).sort((a, b) => a.s - b.s);
+
+// archiver events from the alert logs
+const ARCEV = AL.filter(a => /FAL/.test(a.msg) && (/error|fail|ORA-/i.test(a.msg) || /receiv|archived|resolv|deliver/i.test(a.msg)))
+  .map(a => ({ s: a.s, t: a.t, msg: a.msg.split('\n')[0], k: /error|fail|ORA-/i.test(a.msg) ? 'crit' : 'good', i: a.i }));
+const ARCHUNG = SPANS.filter(s => s.lane === 'arch' && s.dur >= 60);
+const arcAlertHung = AL.filter(a => /ARC\d/.test(a.msg) && /\bhung\b|\bkill|terminat/i.test(a.msg));
+
+/* ================= shell: sidebar, header ================= */
+const NAV = [['Overview', [['summary', 'Summary', 'gauge'], ['signals', 'Signals', 'alert'], ['timeline', 'Timeline', 'gantt']]],
+             ['Primary', [['commits', 'Commit waits', 'bars'], ['lgwr', 'LGWR and transport', 'activity'], ['config', 'Configuration', 'settings']]],
+             ['Both sides', [['alerts', 'Alert logs', 'file'], ['history', 'History and traces', 'history'], ['shipping', 'Redo shipping', 'swap'], ['listener', 'Listener logins', 'network'], ['network', 'Network and OS', 'server']]]];
+$('#sidebar').innerHTML = `<div class="sbi"><div class="brand"><div class="logo">DG</div><div><b>dgstallscripts</b><span>SYNC stall report</span></div></div>` +
+  NAV.map(([g, items]) => `<div class="navgroup"><div class="gl">${g}</div>${items.map(([id, l, ic]) => `<a href="#${id}" class="${id === 'summary' ? 'on' : ''}">${I(ic)}${l}</a>`).join('')}</div>`).join('') + '</div>';
+$('#printBtn').innerHTML = I('printer') + 'Print';
+$('#printBtn').addEventListener('click', () => window.print());
+$('#themeBtn').innerHTML = I('moon');
+$('#themeBtn').addEventListener('click', () => { const c = document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  document.documentElement.dataset.theme = c === 'dark' ? 'light' : 'dark'; });
+const dbName = (MP && MP.uniq) || (MS && MS.uniq) || 'Data Guard';
+document.title = `${dbName} · DG SYNC stall · ${W0.slice(0, 16)}`;
+$('#crumbs').innerHTML = `<span>Reports</span><span class="sep">/</span><span>${esc(dbName)}</span><span class="sep">/</span><span class="cur">${esc(W0.slice(0, 16))} – ${esc(W1.slice(11, 16))}</span>`;
+const who = (m, side) => m ? `${m.uniq} on ${String(m.host || '').split('.')[0]}` : (HDR.find(h => h.side === side) || {}).host || `no ${side} bundle`;
+$('#sub').textContent = `${who(MP, 'primary')} → ${who(MS, 'standby')} · ${W0} to ${W1.slice(11)}${MP && MP.tz ? ' (UTC' + MP.tz + ')' : ''}`;
+$('#badges').innerHTML = [
+  MP && (MP.ver + (MP.plat ? ' · ' + MP.plat.replace(/[- ]?Based Systems.*| \(64-bit\)| x86 64-bit/, '') : '')),
+  DEST && modeLabel(DEST), MP && MP.pmode, DEST && ('LAD:' + DEST.id),
+  MP && (MP.ash === 'V' ? 'ASH 1 s samples' : 'AWR ASH 10 s samples')
+].filter(Boolean).map(l => `<span class="badge">${esc(l)}</span>`).join('');
+
+/* ================= notices ================= */
+const notes = [];
+if (!bundles.length) notes.push(['No data in this report', ['Build it with sh/make_report.sh and the bundles written by sh/collect.sh.']]);
+if (bundles.length && !HAS.primary) notes.push(['No primary bundle', ['Commit waits, LGWR, configuration and the primary alert log are empty. Run sh/collect.sh primary.']]);
+if (bundles.length && !HAS.standby) notes.push(['No standby bundle', ['The standby alert log, redo arrival and listener refusals are empty. Run sh/collect.sh standby.']]);
+bundles.filter(b => b.warn.length).forEach(b => notes.push([`Queries that failed in ${b.file}`, b.warn.slice(0, 6)]));
+$('#notices').innerHTML = notes.map(([t, items]) => `<div class="notice">${I('info')}<div><b>${esc(t)}</b><ul>${items.map(i => `<li>${esc(i)}</li>`).join('')}</ul></div></div>`).join('');
+if (!notes.length) $('#notices').style.display = 'none';
+
+/* ================= stat cards ================= */
+const STATS = [
+  ['crit', 'Commits blocked', 'clock', blocked ? dur(blocked.b - blocked.a) : 'None', blocked ? `${clock(blocked.a)} → ${clock(blocked.b)}, behind LGWR` : (HAS.primary ? 'No log file sync behind LGWR' : 'No primary data')],
+  ['crit', 'Longest SYNC write', 'timer', STALL ? (STALL.lower ? '≥ ' : '') + dur(STALL.dur) : '–', STALL ? `${STALL.p} at ${clock(STALL.a)}${NETTO != null ? ' · NET_TIMEOUT ' + NETTO + ' s' : ''}` : 'No SYNC waits sampled'],
+  ['warn', 'Out of sync', 'swap', UNSYNC ? dur(UNSYNC.b - UNSYNC.a) + (UNSYNC.open ? '+' : '') : 'No', UNSYNC ? `${UNSYNC.at.slice(0, 8)} → ${UNSYNC.open ? 'past the window' : UNSYNC.bt.slice(0, 8)}` : 'No UNSYNCHRONIZED in the primary alert log'],
+  ['', 'ORA-16198', 'xcircle', String(AL.filter(a => /16198/.test(a.msg)).length), ORA.length ? 'first at ' + ORA[0].t : 'none in the window'],
+  ['', 'Refused at standby', 'userx', HAS.standby ? String(refusedTotal) : '–', HAS.standby ? (REF.length ? `TNS-${REF[0].code}, ${REF[0].ts.slice(0, 5)}–${REF[REF.length - 1].ts.slice(0, 5)}` : 'no refused logins') : 'No standby bundle']
+];
+$('#summary').innerHTML = STATS.map(([c, k, ic, v, s]) => `<div class="card stat ${c}"><div class="top"><span>${esc(k)}</span>${I(ic)}</div><div class="v">${esc(v)}</div><div class="s">${esc(s)}</div></div>`).join('');
+
+/* ================= signals ================= */
+const SIG = [], RULED = [], NC = [];
+const near = (a, s, w) => Math.abs(a.s - s) <= w;
+const TRWAIT = of('trace', 'primary').map(t => { const m = String(t.msg).match(/exceeds begin time.*?by\s*<(\d+)>\s*seconds/); return m ? { s: ts(t.ts), n: +m[1], file: t.file } : null; }).filter(Boolean);
+if (ORA.length) {
+  const o = ORA[0], stalled = STALL && STALL.dur >= 1;
+  const sb = AL.filter(a => a.side === 'standby' && /TNS-12535|TNS-12170|TNS-12609|ORA-03135|ORA-03113/.test(a.msg) && near(a, o.s, 300));
+  const osErr = sb.map(a => (a.msg.match(/nt OS err code:\s*(\d+)/) || a.msg.match(/nt secondary err code:\s*(\d+)/) || [])[1]).find(x => x != null);
+  const trw = TRWAIT.find(t => Math.abs(t.s - o.s) <= 60);
+  const ev = [];
+  if (stalled) ev.push([`${STALL.p} ${STALL.lower ? '≥ ' : ''}${dur(STALL.dur)}`, '#lgwr']);
+  ev.push([`ORA-16198 ${o.t}`, 'a' + o.i]);
+  if (trw) ev.push([`${trw.file.replace(/^.*_(lgwr|nss\d*|tt\d+)_.*$/, '$1').toUpperCase()} trace: no reply for ${trw.n} s`, '#traces']);
+  if (sb.length) ev.push([`${(sb[0].msg.match(/TNS-\d+|ORA-\d+/) || ['standby'])[0]}${osErr != null ? ' OS err ' + osErr : ''}`, 'a' + sb[0].i]);
+  const waited = stalled ? STALL.dur : trw ? trw.n : null;
+  const tt = waited != null && NETTO != null && waited >= NETTO * 0.75 ? 'One write waited until NET_TIMEOUT, then the destination was dropped' : 'A SYNC write timed out and the destination was dropped';
+  const d = osErr === '0' ? 'Points to: the connection stopped carrying traffic without being reset. OS error 0 means no OS-level error was reported.'
+    : osErr ? `Points to: a network failure the OS saw. Look up errno ${osErr} in /usr/include/errno.h on the standby.`
+    : 'Points to: the remote end stopped answering. Check the standby alert log and listener at the same second.';
+  SIG.push({ t: tt, d, ev });
+  if (!stalled) NC.push(['LGWR samples', 'ASH has no LGWR wait in the window; the trace and alert log carry the evidence']);
+} else if (HAS.primary) RULED.push(['SYNC write stall', STALL ? `longest SYNC wait was ${dur(STALL.dur)}, no ORA-16198` : 'no ORA-16198 and no SYNC Remote Write waits sampled']);
+const after = ORA.length ? ORA[0].s : (STALL ? STALL.b : null);
+const newOk = after != null ? SPANS.find(s => s.ev === 'SYNC Remote Write' && s.lane === 'lgwr' && s.a > after && s.dur < 0.05 && (!UNSYNC || s.a < UNSYNC.b)) : null;
+if (newOk && (ARCHUNG.length || arcAlertHung.length)) {
+  const ev = [[`SYNC ${dur(newOk.dur || 0.001)} at ${clock(newOk.a)}`, '#timeline']];
+  if (ARCHUNG.length) ev.push([`${ARCHUNG.map(s => s.p).join('/')} hung ${dur(ARCHUNG[0].dur)}`, '#lgwr']);
+  if (arcAlertHung.length) { const m = arcAlertHung[0].msg; ev.push([`${(m.match(/ARC\d+/) || ['ARC'])[0]} ${(m.match(/hung[^,\n]*|kill\w*|terminat\w*/i) || ['hung'])[0]}`.slice(0, 40), 'a' + arcAlertHung[0].i]); }
+  const falBad = ARCEV.filter(e => e.k === 'crit'); if (falBad.length) ev.push([`FAL failed ×${falBad.length}`, 'a' + falBad[0].i]);
+  SIG.push({ t: 'A new SYNC connection worked while older archiver connections hung', d: 'Points to: a problem with particular connections rather than a path that was down. Check firewall, NAT or load-balancer session logs for those flows.', ev });
+}
+if (refusedTotal > 0) {
+  const ids = [...new Set(REF.map(r => r.cid).filter(Boolean))], hit = ids.filter(c => HITS[c]);
+  const ev = [[`${refusedTotal} × TNS-${REF[0] ? REF[0].code : '?'}`, '#listener']];
+  if (cidChecked && ids.length) ev.push([`${hit.length} of ${ids.length} on primary`, '#cidCard']);
+  else if (!ids.length) ev.push(['no CONNECTION_ID logged', '#cidCard']);
+  SIG.push({ t: 'Application clients were refused at the standby listener', d: 'Points to: those clients could not reach the primary at that moment.' + (cidChecked && hit.length ? ` ${hit.length} of them reached the primary later.` : ''), ev });
+} else if (HAS.standby) RULED.push(['Client failover to the standby', 'no refused logins at the standby listener']);
+if (blocked && UNSYNC) SIG.push({ t: 'Commits were blocked for seconds; the standby stayed out of sync much longer', d: 'Two durations from one cause: NET_TIMEOUT bounds the commit stall, REOPEN and the gap set the unsynchronized window.',
+  ev: [[`${dur(blocked.b - blocked.a)} blocked`, '#commits'], [`${dur(UNSYNC.b - UNSYNC.a)} unsynchronized`, '#timeline']] });
+// ruled out / not checked
+const lfpw = SPANS.filter(s => s.ev === 'log file parallel write');
+if (lfpw.length) { const mx = Math.max(...lfpw.map(s => s.dur));
+  if (mx >= 0.5) SIG.push({ t: 'Local redo writes were slow as well', d: 'Points to: primary redo log I/O, not only the standby. Check the online redo log disks.', ev: [[`log file parallel write ${dur(mx)}`, '#lgwr']], warn: true });
+  else RULED.push(['Local redo I/O on the primary', `log file parallel write peaked at ${dur(mx)}`]); }
+else if (HAS.primary) NC.push(['Local redo I/O', 'no log file parallel write samples']);
+if (STALL && STALL.dur >= 1) { const pre = SPANS.filter(s => s.lane === 'lgwr' && s.ev === 'SYNC Remote Write' && s.a < STALL.a && STALL.a - s.a <= 180).sort((a, b) => b.a - a.a)[0];
+  if (pre) RULED.push(['Idle timeout on a firewall', `the connection carried redo at ${clock(pre.a)}, ${dur(STALL.a - pre.a)} before the stall`]);
+  else NC.push(['Idle timeout on a firewall', 'no SYNC samples in the 3 minutes before the stall']); }
+if (HAS.standby && ORA.length) { const sbl = AL.filter(a => a.side === 'standby' && a.s >= ORA[0].s - 60 && a.s <= ORA[0].s + 180);
+  if (sbl.length) RULED.push(['Standby host froze', `the standby logged at ${sbl[0].t.slice(0, 8)}, around the drop`]); else NC.push(['Standby host froze', 'nothing in the standby alert log around the drop; check its OS logs']); }
+if (!HAS.standby) NC.push(['Standby side', 'no standby bundle']);
+$('#sigs').innerHTML = SIG.length ? SIG.map(s => `<div class="alert${s.warn ? ' warn' : ''}">${I('alert')}<div class="at">${esc(s.t)}</div><div class="ad">${esc(s.d)}</div>
+  <div class="ae">${s.ev.map(([l, h]) => `<span class="badge mono" data-go="${h}">${esc(l)}</span>`).join('')}</div></div>`).join('')
+  : empty(bundles.length ? 'No signal from the reading table matched this window.' : 'No data.');
+$('#ruled').innerHTML = (RULED.length ? '<div class="rh">Ruled out</div>' + RULED.map(([t, w]) => `<div class="r">${I('check')}<div>${esc(t)} <span>· ${esc(w)}</span></div></div>`).join('') : '') +
+  (NC.length ? '<div class="rh" style="margin-top:8px">Not checked</div>' + NC.map(([t, w]) => `<div class="r">${I('dashed', 'nc')}<div>${esc(t)} <span>· ${esc(w)}</span></div></div>`).join('') : '');
+if (!RULED.length && !NC.length) $('#ruled').style.display = 'none';
+
+/* ================= alert log table ================= */
+let alMode = 'all', alQuery = '';
+function drawAlerts() {
+  const q = alQuery.toLowerCase();
+  const rows = AL.filter(a => (alMode === 'all' || (alMode === 'key' && a.kind !== 'info') || alMode === a.side) && (!q || a.msg.toLowerCase().includes(q)));
+  $('#alog').innerHTML = rows.length ? `<table><thead><tr><th style="width:120px">Time</th><th style="width:96px">Host</th><th>Message</th></tr></thead><tbody>${
+    rows.map(a => `<tr id="a${a.i}" class="${a.kind === 'key' ? 'key' : a.kind === 'ok' ? 'ok' : ''}"><td class="mono">${esc(a.t)}</td><td>${hostBadge(a.side)}</td><td class="msg">${esc(a.msg)}</td></tr>`).join('')}</tbody></table>`
+    : empty(AL.length ? 'No messages match the filter.' : 'No alert log messages in the window.');
+}
+$('#alFilter').innerHTML = '<div class="tabs" role="tablist">' + [['all', 'All'], ['key', 'Incident'], ['primary', 'Primary'], ['standby', 'Standby']]
+  .map(([k, l]) => `<button class="tab" role="tab" data-al="${k}" aria-selected="${k === 'all'}">${l}</button>`).join('') + '</div>' +
+  `<label class="search">${I('search')}<input class="input" type="search" placeholder="Filter messages…" aria-label="Filter messages"></label>`;
+$('#alFilter').addEventListener('click', e => { const b = e.target.closest('[data-al]'); if (!b) return; alMode = b.dataset.al;
+  document.querySelectorAll('[data-al]').forEach(x => x.setAttribute('aria-selected', x === b)); drawAlerts(); });
+$('#alFilter input').addEventListener('input', e => { alQuery = e.target.value; drawAlerts(); });
+drawAlerts();
+function goAlert(id) {
+  if (!document.getElementById(id)) { alMode = 'all'; alQuery = ''; $('#alFilter input').value = ''; document.querySelectorAll('[data-al]').forEach(x => x.setAttribute('aria-selected', x.dataset.al === 'all')); drawAlerts(); }
+  const row = document.getElementById(id); if (!row) return;
+  $('#alerts').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  $('#alog').scrollTop = row.offsetTop - 48;
+  row.classList.remove('flash'); void row.offsetWidth; row.classList.add('flash');
+}
+document.addEventListener('click', e => { const c = e.target.closest('[data-go]'); if (!c) return; const g = c.dataset.go;
+  if (g.startsWith('#')) { const el = document.querySelector(g); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); } else goAlert(g); });
+
+/* ================= tooltip + legend helpers ================= */
+function tipFor(host) { let t = host.querySelector('.tip'); if (!t) { t = document.createElement('div'); t.className = 'tip'; host.appendChild(t); } return t; }
+function placeTip(tip, host, x, y) { tip.style.display = 'block'; const w = tip.offsetWidth, hw = host.clientWidth;
+  tip.style.left = Math.max(0, Math.min(hw - w, x + 14 > hw - w ? x - w - 14 : x + 14)) + 'px'; tip.style.top = Math.max(0, y - 12) + 'px'; }
+const row = (k, v, c) => `<div class="r">${c ? `<i style="background:var(${c})"></i>` : ''}<span>${esc(k)}</span><b>${esc(v)}</b></div>`;
+const legend = (items) => items.map(([c, l]) => `<span><i style="background:var(${c})"></i>${esc(l)}</span>`).join('');
+function hover(svg, host, fn) {
+  const tip = tipFor(host);
+  svg.addEventListener('mousemove', e => { const r = svg.getBoundingClientRect(); const html = fn(e, r); if (!html) { tip.style.display = 'none'; return; } tip.innerHTML = html; placeTip(tip, host, e.clientX - r.left, e.clientY - r.top); });
+  svg.addEventListener('mouseleave', () => { tip.style.display = 'none'; fn(null); });
+}
+const roundTop = (x, y, w, h, r, fill) => { r = Math.min(r, w / 2, h); return r > 0.5 ? `<path d="M${x} ${y + h}V${y + r}q0 -${r} ${r} -${r}h${w - 2 * r}q${r} 0 ${r} ${r}V${y + h}z" fill="${fill}"/>` : `<rect x="${x}" y="${y}" width="${w}" height="${Math.max(0, h)}" fill="${fill}"/>`; };
+
+/* ================= timeline ================= */
+const EVC = { 'SYNC Remote Write': '--s2', 'log file parallel write': '--s3' };
+const ZOOMS = [['Whole window', d0, d1]];
+if (STALL && STALL.dur >= 1) ZOOMS.push(['Stall', Math.max(d0, STALL.a - 60), Math.min(d1, STALL.b + 60)]);
+if (UNSYNC) ZOOMS.push(['Out of sync', Math.max(d0, UNSYNC.a - 60), Math.min(d1, UNSYNC.b + 60)]);
+let zoom = 0;
+$('#tlZoom').innerHTML = ZOOMS.map((z, i) => `<button class="tab" role="tab" data-z="${i}" aria-selected="${i === 0}">${z[0]}</button>`).join('');
+if (ZOOMS.length < 2) $('#tlZoom').style.display = 'none';
+$('#tlZoom').addEventListener('click', e => { const b = e.target.closest('[data-z]'); if (!b) return; zoom = +b.dataset.z;
+  document.querySelectorAll('[data-z]').forEach(x => x.setAttribute('aria-selected', x === b)); drawTimeline(); });
+$('#tlLegend').innerHTML = legend([['--s1', 'Commits waiting on LGWR'], ['--s2', 'SYNC Remote Write'], ['--s3', 'log file parallel write'], ['--s7', 'Redo Transport *, other'], ['--crit', 'Hung, failed, unsynchronized'], ['--good', 'Synchronized, delivered, accepted']]);
+const ARCPROCS = [...new Set(SPANS.filter(s => s.lane === 'arch').map(s => s.p))].sort().slice(0, 4);
+
+function drawTimeline() {
+  const host = $('#tl');
+  if (!bundles.length) { host.innerHTML = empty('No data.'); return; }
+  const W = Math.max(320, host.clientWidth), narrow = W < 560;
+  const LW = narrow ? 92 : 128, R = 4, PW = W - LW - R;
+  const [, z0, z1] = ZOOMS[zoom];
+  const X = t => LW + (t - z0) / Math.max(1, z1 - z0) * PW;
+  const lanes = [];
+  if (AL.length) lanes.push(['alerts', 'Alert log', 34]);
+  if (FG10.length || HAS.primary) lanes.push(['commits', 'Commits waiting', 46]);
+  if (SPANS.some(s => s.lane === 'lgwr')) lanes.push(['lgwr', 'LGWR', 24]);
+  if (SPANS.some(s => s.lane === 'nss')) lanes.push(['nss', 'NSS / TT', 24]);
+  if (ARCPROCS.length || ARCEV.length) lanes.push(['arch', 'Archivers', Math.max(24, ARCPROCS.length * 12 + 10)]);
+  if (HAS.primary) lanes.push(['dest', 'Destination', 24]);
+  if (Object.keys(LSN.standby).length) lanes.push(['lsnr', 'Standby logins', 40]);
+  if (WL.length) lanes.push(['redo', 'Redo MB/s', 40]);
+  let y = 64; const L = {};
+  lanes.forEach(([k, n, h]) => { L[k] = { y, h, n }; y += h + 10; });
+  const H = y + 2, span = z1 - z0;
+  const step = [1, 2, 5, 10, 30, 60, 120, 300, 600, 900, 1800, 3600].find(s => PW / (span / s) >= (narrow ? 64 : 80)) || 3600;
+  let s = `<defs><clipPath id="tlc"><rect x="${LW}" y="0" width="${PW}" height="${H}"/></clipPath>
+    <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="var(--crit)" fill-opacity=".14"/><line x1="0" y1="0" x2="0" y2="6" stroke="var(--crit)" stroke-width="2"/></pattern></defs>`;
+  lanes.forEach(([k], i) => { const l = L[k];
+    if (i % 2 === 0) s += `<rect x="${LW}" y="${l.y - 5}" width="${PW}" height="${l.h + 10}" fill="var(--muted-bg)" fill-opacity=".45"/>`;
+    s += `<text x="0" y="${l.y + l.h / 2 + 4}" font-size="12" fill="var(--muted-fg)">${l.n}</text>`; });
+  for (let t = Math.ceil(z0 / step) * step; t <= z1; t += step) {
+    s += `<line x1="${X(t)}" x2="${X(t)}" y1="52" y2="${H}" stroke="var(--bd)"/>`;
+    s += `<text x="${X(t)}" y="46" text-anchor="middle" font-size="11.5" fill="var(--muted-fg)">${clock(t).slice(0, step < 60 ? 8 : 5)}</text>`;
+  }
+  s += `<g clip-path="url(#tlc)">`;
+  if (L.dest) {
+    const l = L.dest;
+    if (!STATES.length) s += `<rect x="${LW}" y="${l.y + 2}" width="${PW}" height="${l.h - 4}" rx="5" fill="var(--muted-bg)"/><text x="${LW + PW / 2}" y="${l.y + l.h / 2 + 4}" text-anchor="middle" font-size="11" fill="var(--muted-fg)">no state change logged</text>`;
+    STATES.forEach(x => { const bad = x.st !== 'SYNCHRONIZED', x0 = X(x.a), x1 = X(x.b);
+      s += `<rect x="${x0}" y="${l.y + 2}" width="${Math.max(1, x1 - x0 - 2)}" height="${l.h - 4}" rx="5" fill="var(${bad ? '--crit' : '--good'})" fill-opacity="${bad ? .9 : .16}" data-tip="${esc(x.st + '|' + x.at + ' → ' + (x.open ? 'end of window' : x.bt) + '|' + dur(x.b - x.a))}"/>`;
+      const vx0 = Math.max(x0, LW), vx1 = Math.min(x1, W - R);
+      if (vx1 - vx0 > 110) s += `<text x="${(vx0 + vx1) / 2}" y="${l.y + l.h / 2 + 4}" text-anchor="middle" font-size="11" font-weight="600" fill="${bad ? 'var(--crit-fg)' : 'var(--good)'}" pointer-events="none">${x.st}</text>`; });
+  }
+  if (L.commits) {
+    const cl = L.commits, mx = Math.max(1, ...FG10.map(f => f.n));
+    FG10.forEach(f => { const x0 = X(f.s), w = Math.max(1, X(f.s + 10) - x0 - 1.5), h = f.n / mx * (cl.h - 4);
+      s += `<rect x="${x0}" y="${cl.y + cl.h - h}" width="${w}" height="${h}" rx="2" fill="var(--s1)" data-tip="${esc('Commits waiting on LGWR|' + f.b + ' (10 s)|' + fmtN(f.n) + ' sessions on average')}"/>`; });
+    if (!FG10.length) s += `<text x="${LW + 8}" y="${cl.y + cl.h / 2 + 4}" font-size="11" fill="var(--muted-fg)">no commits waiting on LGWR</text>`;
+  }
+  SPANS.forEach(sp => { const lane = L[sp.lane]; if (!lane) return;
+    const x0 = X(sp.a), x1 = X(sp.b), w = Math.max(2, x1 - x0 - 1); let yy = lane.y + 3, hh = lane.h - 6;
+    if (sp.lane === 'arch') { const k = ARCPROCS.indexOf(sp.p); if (k < 0) return; hh = 8; yy = lane.y + 5 + k * 12; }
+    const isArc = sp.lane === 'arch' && sp.dur >= 60;
+    const fill = isArc ? 'url(#hatch)' : sp.kind === 'stall' ? 'var(--crit)' : `var(${EVC[sp.ev] || '--s7'})`;
+    s += `<rect x="${x0}" y="${yy}" width="${w}" height="${hh}" rx="3" fill="${fill}" fill-opacity="${sp.kind === 'normal' ? .5 : 1}" ${isArc ? 'stroke="var(--crit)" stroke-width="1"' : ''} data-tip="${esc(sp.p + ' · ' + sp.ev + '|' + clock(sp.a) + ' → ' + clock(sp.b) + '|' + (sp.dur ? (sp.lower ? '≥ ' : '') + dur(sp.dur) : 'under 1 ms') + (sp.seq != null ? '|seq# ' + sp.seq + (sp.n > 1 ? ', ' + sp.n + ' samples' : '') : ''))}"/>`; });
+  if (L.arch) ARCEV.forEach(e => { const x = X(e.s), cy = L.arch.y + L.arch.h / 2;
+    s += `<path d="M${x} ${cy - 7}l7 7l-7 7l-7 -7z" fill="var(${e.k === 'good' ? '--good' : '--crit'})" stroke="var(--card-bg)" stroke-width="2" style="cursor:pointer" data-alert="a${e.i}" data-tip="${esc('FAL|' + e.t + '|' + e.msg.slice(0, 120))}"/>`; });
+  if (L.lsnr) { const ll = L.lsnr, ms = Object.entries(LSN.standby), mx = Math.max(1, ...ms.map(([, v]) => v.ok + v.ref));
+    ms.forEach(([m, v]) => { const t = ts(m + ':00'), x0 = X(t), w = Math.max(1, X(t + 60) - x0 - 2), hr = v.ref / mx * (ll.h - 4), ho = v.ok / mx * (ll.h - 4);
+      if (v.ref) s += `<rect x="${x0}" y="${ll.y + ll.h - hr}" width="${w}" height="${hr}" rx="2" fill="var(--s2)" data-tip="${esc('Standby listener|' + m + '|' + v.ref + ' refused, ' + v.ok + ' accepted')}"/>`;
+      if (v.ok) s += `<rect x="${x0}" y="${ll.y + ll.h - hr - ho - (v.ref ? 2 : 0)}" width="${w}" height="${ho}" rx="2" fill="var(--good)" data-tip="${esc('Standby listener|' + m + '|' + v.ok + ' accepted, ' + v.ref + ' refused')}"/>`; }); }
+  if (L.redo) { const rl = L.redo, mx = nice(Math.max(...WL.map(w => w.redo || 0))); let path = '';
+    WL.forEach((w, i) => { const x = X(w.s + 30), yv = rl.y + rl.h - (w.redo || 0) / mx * (rl.h - 4); path += (i ? 'L' : 'M') + x.toFixed(1) + ' ' + yv.toFixed(1); });
+    s += `<path d="${path}" fill="none" stroke="var(--fg)" stroke-opacity=".7" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+    s += `<text x="${W - R - 2}" y="${rl.y + 10}" text-anchor="end" font-size="10.5" fill="var(--muted-fg)">max ${fmtN(mx)}</text>`; }
+  if (L.alerts) { const al = L.alerts;
+    AL.forEach(a => { const x = X(a.s), cy = al.y + (a.side === 'primary' ? 9 : 25), c = a.kind === 'key' ? '--crit' : a.kind === 'ok' ? '--good' : '--muted-fg';
+      s += `<circle cx="${x}" cy="${cy}" r="${a.kind === 'info' ? 3.5 : 5}" fill="var(${c})" stroke="var(--card-bg)" stroke-width="2" style="cursor:pointer" data-alert="a${a.i}" data-tip="${esc(SIDE[a.side] + ' alert log|' + a.t + '|' + a.msg.split('\n')[0].slice(0, 140))}"/>`; }); }
+  s += `</g>`;
+  if (L.alerts && !narrow) s += `<text x="${LW - 8}" y="${L.alerts.y + 13}" text-anchor="end" font-size="10.5" fill="var(--muted-fg)">pri</text><text x="${LW - 8}" y="${L.alerts.y + 29}" text-anchor="end" font-size="10.5" fill="var(--muted-fg)">stby</text>`;
+  const marks = []; if (ORA.length) marks.push([ORA[0].s, ORA[0].t, 'ORA-16198', '--crit']); if (UNSYNC && !UNSYNC.open) marks.push([UNSYNC.b, UNSYNC.bt, 'SYNCHRONIZED', '--good']);
+  marks.forEach(([t, tl, lbl, c], k) => { const x = X(t); if (x < LW || x > W - R) return;
+    s += `<line x1="${x}" x2="${x}" y1="${4 + k * 15}" y2="${H}" stroke="var(${c})" stroke-width="1.25" stroke-dasharray="4 3" pointer-events="none"/>`;
+    const txt = lbl + ' ' + String(tl).slice(0, narrow ? 8 : 12), right = x + txt.length * 7.2 < W - R;
+    s += `<text x="${x + (right ? 6 : -6)}" y="${13 + k * 15}" text-anchor="${right ? 'start' : 'end'}" font-size="11.5" font-weight="600" fill="var(--fg)">${esc(txt)}</text>`; });
+  s += `<line id="tlx" x1="0" x2="0" y1="52" y2="${H}" stroke="var(--fg)" stroke-opacity=".5" stroke-width="1" visibility="hidden" pointer-events="none"/>`;
+  host.innerHTML = `<svg viewBox="0 0 ${W} ${H}" height="${H}" role="img" aria-label="Incident timeline">${s}</svg>`;
+  const svg = host.querySelector('svg'), cx = svg.querySelector('#tlx');
+  hover(svg, host, (e, r) => {
+    if (!e) { cx.setAttribute('visibility', 'hidden'); return ''; }
+    const px = (e.clientX - r.left) * W / r.width;
+    if (px < LW || px > W - R) { cx.setAttribute('visibility', 'hidden'); return ''; }
+    const t = z0 + (px - LW) / PW * (z1 - z0);
+    cx.setAttribute('x1', px); cx.setAttribute('x2', px); cx.setAttribute('visibility', 'visible');
+    const mark = e.target.closest('[data-tip]');
+    if (mark) { const [h, ...rest] = mark.getAttribute('data-tip').split('|'); return `<div class="h">${esc(h)}</div>` + rest.map(x => `<div class="r"><span>${esc(x)}</span></div>`).join(''); }
+    const dst = STATES.find(d => t >= d.a && t < d.b), mm = clock(t).slice(0, 5);
+    const fg = FG10.find(f => t >= f.s && t < f.s + 10), lg = SPANS.find(x => x.lane === 'lgwr' && t >= x.a && t < x.b);
+    const ls = LSN.standby[mm], rd = WL.find(w => w.m === mm);
+    return `<div class="h">${clock(t)}</div>` + (L.dest ? row('Destination', dst ? dst.st.toLowerCase() : 'unknown', dst && dst.st !== 'SYNCHRONIZED' ? '--crit' : '--good') : '') +
+      (L.commits ? row('Commits on LGWR', fg ? fmtN(fg.n) : 0, '--s1') : '') + (L.lgwr ? row('LGWR', lg ? lg.ev : 'not sampled', '--s2') : '') +
+      (L.lsnr ? row('Refused logins', ls ? ls.ref : 0, '--s2') : '') + (L.redo ? row('Redo', rd ? fmtN(rd.redo || 0) + ' MB/s' : '–', '--fg') : '');
+  });
+  svg.addEventListener('click', e => { const a = e.target.closest('[data-alert]'); if (a) goAlert(a.dataset.alert); });
+}
+
+/* ================= commit waits per minute ================= */
+const FGS = [['--s1', 'log file sync, blocked by LGWR', 'lgwr'], ['--s2', 'Other waits', 'other'], ['--s3', 'ON CPU', 'cpu']];
+$('#fgLegend').innerHTML = legend(FGS);
+if (MP) $('#fgNote').innerHTML = `Average foreground sessions per minute from ${MP.ash === 'V' ? 'ASH (1 s samples)' : 'AWR ASH (10 s samples)'}. Blue is <code>log file sync</code> blocked by LGWR: commits waiting for the standby.`;
+function drawFg() {
+  const host = $('#fg');
+  if (!FG.length) { host.innerHTML = empty(HAS.primary ? 'No foreground ASH samples in the window (or no Diagnostics Pack data).' : 'No primary bundle.'); return; }
+  const W = Math.max(320, host.clientWidth), H = 220, L = 34, B = 22, T = 16, PW = W - L, PH = H - B - T;
+  const m0 = Math.floor(d0 / 60) * 60, n = Math.max(1, Math.round((d1 - m0) / 60)), bw = PW / n;
+  const byS = {}; FG.forEach(f => byS[f.s] = f);
+  const max = nice(Math.max(...FG.map(f => f.lgwr + f.other + f.cpu))), Y = v => T + PH - v / max * PH;
+  let s = '';
+  for (let k = 0; k <= 4; k++) { const v = max * k / 4; s += `<line x1="${L}" x2="${W}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--bd)" ${k ? 'stroke-dasharray="3 3"' : ''}/><text x="${L - 8}" y="${Y(v) + 4}" text-anchor="end" font-size="11" fill="var(--muted-fg)">${fmtN(v)}</text>`; }
+  const every = Math.max(1, Math.ceil(n * 44 / PW));
+  for (let i = 0; i < n; i++) { const t = m0 + i * 60, d = byS[t], x = L + i * bw + Math.min(3, bw * .15), w = Math.max(1, bw - 2 * Math.min(3, bw * .15));
+    if (d) { let acc = 0; const segs = FGS.map(g => d[g[2]]); const top = segs.reduce((a, v, k) => v > 0 ? k : a, -1);
+      segs.forEach((v, k) => { if (!(v > 0)) return; const y0 = Y(acc + v), h = Math.max(0, Y(acc) - Y(acc + v) - (acc ? 2 : 0)); acc += v; if (h <= 0) return;
+        s += k === top ? roundTop(x, y0, w, h, 4, `var(${FGS[k][0]})`) : `<rect x="${x}" y="${y0}" width="${w}" height="${h}" fill="var(${FGS[k][0]})"/>`; }); }
+    s += `<rect x="${L + i * bw}" y="${T}" width="${bw}" height="${PH}" fill="transparent" data-t="${t}"/>`;
+    if (i % every === 0) s += `<text x="${L + i * bw + bw / 2}" y="${H - 4}" text-anchor="middle" font-size="11" fill="var(--muted-fg)">${clock(t).slice(0, 5)}</text>`; }
+  const pk = FG.reduce((a, f) => f.lgwr > a.lgwr ? f : a, FG[0]);
+  if (pk.lgwr > 0) { const i = (pk.s - m0) / 60; s += `<text x="${L + i * bw + bw / 2}" y="${Y(pk.lgwr + pk.other + pk.cpu) - 6}" text-anchor="middle" font-size="12" font-weight="600" fill="var(--fg)">${fmtN(pk.lgwr)}</text>`; }
+  host.innerHTML = `<svg viewBox="0 0 ${W} ${H}" height="${H}" role="img" aria-label="Foreground sessions per minute">${s}</svg>`;
+  hover(host.querySelector('svg'), host, (e) => { if (!e) return ''; const b = e.target.closest('[data-t]'); if (!b) return ''; const t = +b.dataset.t, d = byS[t];
+    return `<div class="h">${clock(t).slice(0, 5)}</div>` + (d ? FGS.map(([c, l, k]) => row(l, fmtN(d[k]), c)).join('') : row('No samples', '', '')); });
+}
+
+/* ================= longest waits ================= */
+(() => {
+  const top = SPANS.filter(s => s.lane !== 'other').sort((a, b) => b.dur - a.dur).slice(0, 8).filter(s => s.dur > 0);
+  $('#waits').innerHTML = top.length ? `<table><thead><tr><th>Process</th><th>Event</th><th>From</th><th class="num">Length</th><th></th></tr></thead><tbody>${top.map(s =>
+    `<tr><td style="font-weight:500">${esc(s.p)}</td><td>${esc(s.ev)}</td><td class="mono">${clock(s.a)}</td><td class="num" style="font-weight:600">${(s.lower ? '≥ ' : '') + dur(s.dur)}</td><td>${s.kind === 'stall' ? st('crit', 'stall') : s.kind === 'slow' ? st('warn', 'slow') : st('info', 'normal')}</td></tr>`).join('')}</tbody></table>`
+    : empty(HAS.primary ? 'No LGWR, transport or archiver waits sampled in the window.' : 'No primary bundle.');
+})();
+
+/* ================= histogram ================= */
+const shortB = (b) => String(b).replace(/ microseconds?/, ' µs').replace(/ milliseconds?/, ' ms').replace(/ seconds?/, ' s').replace(/ minutes?/, ' min');
+const HIST = {
+  window: of('hist_awr', 'primary').filter(o => o.ev === 'SYNC Remote Write').sort((a, b) => a.ms - b.ms).map(o => ({ l: o.ms >= 1000 ? Math.round(o.ms / 1000) + ' s' : o.ms >= 1 ? Math.round(o.ms) + ' ms' : Math.round(o.ms * 1000) + ' µs', n: o.n, stall: o.ms > 1000, rng: o.b + '–' + o.e })),
+  startup: of('hist_su', 'primary').filter(o => o.ev === 'SYNC Remote Write').sort((a, b) => a.us - b.us).map(o => ({ l: shortB(o.b), n: o.n, stall: o.us > 1e6 }))
+};
+let histMode = HIST.window.some(h => h.n > 0) ? 'window' : 'startup';
+$('#histTabs').innerHTML = [['window', 'Window (AWR)'], ['startup', 'Since startup']].map(([k, l]) => `<button class="tab" role="tab" data-h="${k}" aria-selected="${k === histMode}">${l}</button>`).join('');
+$('#histTabs').addEventListener('click', e => { const b = e.target.closest('[data-h]'); if (!b) return; histMode = b.dataset.h;
+  document.querySelectorAll('[data-h]').forEach(x => x.setAttribute('aria-selected', x === b)); drawHist(); });
+function drawHist() {
+  const host = $('#hist');
+  let data = HIST[histMode]; while (data.length && !(data[0].n > 0)) data = data.slice(1);
+  if (!data.some(d => d.n > 0)) { host.innerHTML = empty(histMode === 'window' ? 'No AWR histogram for the snapshots covering the window.' : 'No SYNC Remote Write waits since startup.'); return; }
+  const W = Math.max(300, host.clientWidth), H = 230, L = 36, B = 38, T = 20, PW = W - L, PH = H - B - T;
+  const lmax = Math.ceil(Math.log10(Math.max(...data.map(d => d.n)) + 1)), bw = PW / data.length;
+  const Y = v => T + PH - (v > 0 ? Math.log10(v) + 0.3 : 0) / (lmax + 0.3) * PH;
+  let s = '';
+  for (let p = 0; p <= lmax; p++) { const v = 10 ** p; s += `<line x1="${L}" x2="${W}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--bd)" stroke-dasharray="3 3"/><text x="${L - 8}" y="${Y(v) + 4}" text-anchor="end" font-size="11" fill="var(--muted-fg)">${v >= 1e6 ? v / 1e6 + 'M' : v >= 1000 ? v / 1000 + 'k' : v}</text>`; }
+  const sec = data.findIndex(d => d.stall);
+  if (sec >= 0) { s += `<rect x="${L + sec * bw}" y="${T}" width="${(data.length - sec) * bw}" height="${PH}" rx="6" fill="var(--crit)" fill-opacity=".06"/>`;
+    s += `<text x="${Math.min(L + sec * bw + 6, W - 80)}" y="${T - 6}" font-size="11.5" font-weight="600" fill="var(--crit)">≥ 1 s: stalls</text>`; }
+  const every = Math.max(1, Math.ceil(data.length * 58 / PW));
+  data.forEach((d, i) => { const x = L + i * bw + 2, w = Math.max(2, bw - 4), y0 = Y(d.n);
+    if (d.n > 0) s += roundTop(x, y0, w, T + PH - y0, 3, `var(${d.stall ? '--crit' : '--s1'})`);
+    s += `<rect x="${L + i * bw}" y="${T}" width="${bw}" height="${PH}" fill="transparent" data-i="${i}"/>`;
+    if (i % every === 0 || i === data.length - 1) s += `<text x="${L + i * bw + bw / 2}" y="${H - 20}" text-anchor="middle" font-size="10.5" fill="var(--muted-fg)">${esc(d.l)}</text>`; });
+  const foot = histMode === 'window' && data[0].rng ? `AWR snapshots ${data[0].rng}` : 'cumulative since instance startup';
+  s += `<text x="${W}" y="${H - 2}" text-anchor="end" font-size="11" fill="var(--muted-fg)">${esc(foot)}${STALL ? ' · longest wait in window ' + esc(dur(STALL.dur)) : ''}${NETTO != null ? ' · NET_TIMEOUT ' + NETTO + ' s' : ''}</text>`;
+  host.innerHTML = `<svg viewBox="0 0 ${W} ${H}" height="${H}" role="img" aria-label="SYNC Remote Write histogram">${s}</svg>`;
+  hover(host.querySelector('svg'), host, (e) => { if (!e) return ''; const b = e.target.closest('[data-i]'); if (!b) return ''; const d = data[+b.dataset.i];
+    return `<div class="h">Up to ${esc(d.l)}</div>` + row('Waits', d.n.toLocaleString(), d.stall ? '--crit' : '--s1'); });
+}
+
+/* ================= history and traces ================= */
+(() => {
+  const days = MP ? '' : '';
+  const hist = of('alhist').filter(h => !(h.ts.slice(0, 10) === W0.slice(0, 10) && inWin(ts(h.ts.slice(11))))).sort((a, b) => a.ts < b.ts ? 1 : -1).slice(0, 80);
+  $('#ahist').innerHTML = hist.length ? `<table><thead><tr><th style="width:160px">When</th><th style="width:96px">Host</th><th>Message</th></tr></thead><tbody>${hist.map(h =>
+    `<tr><td class="mono">${esc(h.ts)}</td><td>${hostBadge(h.side)}</td><td class="msg">${esc(h.msg.split('\n')[0])}</td></tr>`).join('')}</tbody></table>` : empty(bundles.length ? 'No earlier Data Guard or network errors found.' : 'No data.');
+  const days2 = [...new Set(hist.map(h => h.ts.slice(0, 10)))];
+  if (hist.length) $('#histNote').textContent = `${hist.length} messages on ${days2.length} day${days2.length > 1 ? 's' : ''} outside this window. The same time of day each time points to something scheduled.`;
+  const tr = of('trace').sort((a, b) => ts(a.ts) - ts(b.ts));
+  $('#trc').innerHTML = tr.length ? `<table><thead><tr><th style="width:110px">Time</th><th style="width:96px">Host</th><th>Trace line</th></tr></thead><tbody>${tr.map(t =>
+    `<tr><td class="mono">${esc(String(t.ts).slice(0, 12))}</td><td>${hostBadge(t.side)}</td><td class="msg"><span style="color:var(--muted-fg)">${esc(t.file)}</span>\n${esc(t.msg)}</td></tr>`).join('')}</tbody></table>` : empty(bundles.length ? 'No errors or timeouts in the background traces in this window.' : 'No data.');
+})();
+
+/* ================= redo shipping ================= */
+(() => {
+  const sb = of('arch', 'standby'), pr = of('arch', 'primary');
+  const rows = sb.length ? sb.map(r => ({ ...r, where: 'standby' })) : pr.map(r => ({ ...r, where: 'primary' }));
+  $('#ship').innerHTML = rows.length ? `<table><thead><tr><th>Sequence</th><th>First change</th><th>Next change</th><th>${sb.length ? 'Received on standby' : 'Archived to standby'}</th><th>By</th><th>FAL</th><th class="num">MB</th></tr></thead><tbody>${rows.map(r =>
+    `<tr><td style="font-weight:500">${r.thr}-${r.seq}</td><td class="mono">${esc(r.first)}</td><td class="mono">${esc(r.next)}</td><td class="mono" style="font-weight:600">${esc(r.done)}</td><td>${esc(r.creator)}${r.reg && r.reg !== r.creator ? ' → ' + esc(r.reg) : ''}</td><td>${r.fal === 'YES' ? st('warn', 'Yes, gap') : '<span style="color:var(--muted-fg)">No</span>'}</td><td class="num">${r.mb ?? ''}</td></tr>`).join('')}</tbody></table>`
+    : empty(bundles.length ? 'No archived log completed in the window.' : 'No data.');
+})();
+
+/* ================= listener ================= */
+const LSIDES = ['standby', 'primary'].filter(sd => Object.keys(LSN[sd]).length);
+let lsSide = LSIDES[0] || 'standby';
+$('#lsTabs').innerHTML = LSIDES.map(sd => `<button class="tab" role="tab" data-ls="${sd}" aria-selected="${sd === lsSide}">${SIDE[sd]}</button>`).join('');
+if (LSIDES.length < 2) $('#lsTabs').style.display = 'none';
+$('#lsTabs').addEventListener('click', e => { const b = e.target.closest('[data-ls]'); if (!b) return; lsSide = b.dataset.ls;
+  document.querySelectorAll('[data-ls]').forEach(x => x.setAttribute('aria-selected', x === b)); drawLs(); });
+$('#lsLegend').innerHTML = legend([['--s2', 'Refused'], ['--good', 'Accepted']]);
+function drawLs() {
+  const host = $('#ls'), data = LSN[lsSide];
+  if (!Object.keys(data).length) { host.innerHTML = empty(bundles.length ? 'No listener log in the bundles (use -l with collect.sh).' : 'No data.'); return; }
+  const W = Math.max(300, host.clientWidth), H = 210, L = 30, B = 22, T = 8, PW = W - L, PH = H - B - T;
+  const m0 = Math.floor(d0 / 60) * 60, n = Math.max(1, Math.round((d1 - m0) / 60)), bw = PW / n;
+  const max = nice(Math.max(...Object.values(data).map(v => v.ok + v.ref))), Y = v => T + PH - v / max * PH;
+  let s = '';
+  for (let k = 0; k <= 3; k++) { const v = max * k / 3; s += `<line x1="${L}" x2="${W}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--bd)" ${k ? 'stroke-dasharray="3 3"' : ''}/><text x="${L - 8}" y="${Y(v) + 4}" text-anchor="end" font-size="11" fill="var(--muted-fg)">${fmtN(v)}</text>`; }
+  const every = Math.max(1, Math.ceil(n * 44 / PW));
+  for (let i = 0; i < n; i++) { const t = m0 + i * 60, m = clock(t).slice(0, 5), d = data[m] || { ok: 0, ref: 0 }, x = L + i * bw + Math.min(2, bw * .15), w = Math.max(1, bw - 2 * Math.min(2, bw * .15));
+    if (d.ref) s += roundTop(x, Y(d.ref), w, Y(0) - Y(d.ref), 3, 'var(--s2)');
+    if (d.ok) s += roundTop(x, Y(d.ref + d.ok), w, Y(d.ref) - Y(d.ref + d.ok) - (d.ref ? 2 : 0), 3, 'var(--good)');
+    s += `<rect x="${L + i * bw}" y="${T}" width="${bw}" height="${PH}" fill="transparent" data-m="${m}"/>`;
+    if (i % every === 0) s += `<text x="${L + i * bw + bw / 2}" y="${H - 4}" text-anchor="middle" font-size="11" fill="var(--muted-fg)">${m}</text>`; }
+  host.innerHTML = `<svg viewBox="0 0 ${W} ${H}" height="${H}" role="img" aria-label="Listener logins per minute">${s}</svg>`;
+  hover(host.querySelector('svg'), host, (e) => { if (!e) return ''; const b = e.target.closest('[data-m]'); if (!b) return ''; const d = data[b.dataset.m] || { ok: 0, ref: 0 };
+    return `<div class="h">${SIDE[lsSide]} · ${b.dataset.m}</div>` + row('Refused', d.ref, '--s2') + row('Accepted', d.ok, '--good'); });
+}
+(() => {
+  if (!REF.length) { $('#cid').innerHTML = empty(HAS.standby ? 'No refused logins at the standby listener.' : 'No standby bundle.'); return; }
+  const by = {}; REF.forEach(r => { const k = r.cid || (r.ts + r.ip); if (!by[k]) by[k] = r; });
+  const rows = Object.values(by).slice(0, 60);
+  if (!cidChecked) $('#cidNote').textContent = 'Refused at the standby. To check them on the primary, run collect.sh primary with -c <standby bundle>.';
+  $('#cid').innerHTML = `<table><thead><tr><th>CONNECTION_ID</th><th>Refused</th><th>Client</th><th>Service</th><th>On the primary</th></tr></thead><tbody>${rows.map(r => {
+    const h = r.cid && HITS[r.cid];
+    const prim = !cidChecked ? '<span style="color:var(--muted-fg)">not checked</span>' : !r.cid ? st('info', 'no ID logged') : h ? st(h.code === '0' ? 'good' : 'warn', `${h.code === '0' ? 'accepted' : 'refused ' + h.code} ${String(h.ts).slice(-8)}`) : st('info', 'not found');
+    return `<tr><td class="mono">${esc(r.cid || '–')}</td><td class="mono">${esc(r.ts)}</td><td class="mono">${esc(r.ip)}</td><td>${esc(r.svc)}</td><td>${prim}</td></tr>`; }).join('')}</tbody></table>` +
+    (Object.keys(by).length > rows.length ? `<div class="empty">${Object.keys(by).length - rows.length} more not shown</div>` : '');
+})();
+
+/* ================= configuration ================= */
+(() => {
+  const rows = [];
+  if (DEST) {
+    rows.push(['Destination', `LAD:${DEST.id} → ${DEST.dest}${DEST.uniq ? ' (' + DEST.uniq + ')' : ''}`, 'info', DESTS.length > 1 ? `${DESTS.length} standby destinations; this is the SYNC one` : 'The standby redo is shipped to']);
+    rows.push(['Transport mode', modeLabel(DEST), 'info', DEST.affirm === 'NO' ? 'The standby acknowledges on receipt; its disk is out of the commit path' : DEST.mode === 'ASYNCHRONOUS' ? 'Commits never wait for the standby' : 'Commits wait for the standby redo log write']);
+    rows.push(['NET_TIMEOUT', `${DEST.net_timeout} s${+DEST.net_timeout === 30 ? ' (default)' : ''}`, 'info', `A dead connection blocks commits for up to ${DEST.net_timeout} s`]);
+    rows.push(['REOPEN', `${DEST.reopen} s${+DEST.reopen === 300 ? ' (default)' : ''}`, 'info', `After a drop the destination is retried after ${DEST.reopen} s`]);
+    rows.push(['MAX_FAILURE', String(DEST.max_failure), 'info', +DEST.max_failure === 0 ? 'Unlimited retries' : `Gives up after ${DEST.max_failure} failures`]);
+    rows.push(['State when collected', `${DEST.status}, ${DEST.sync || '?'}, ${DEST.gap || '?'}`, DEST.error ? 'crit' : DEST.synced === 'YES' ? 'good' : 'warn', DEST.error ? DEST.error : DEST.synced === 'YES' ? 'In sync, no gap' : 'Not synchronized when collected']);
+  }
+  if (MP) rows.push(['Protection', `${MP.pmode} / ${MP.plevel}`, MP.pmode === MP.plevel ? 'good' : 'warn', MP.pmode === MP.plevel ? 'Level matches mode' : 'Running below its protection mode when collected']);
+  const lat = of('param', 'primary').find(p => p.name === 'data_guard_sync_latency');
+  if (lat) rows.push(['DATA_GUARD_SYNC_LATENCY', `${lat.value} s`, 'info', 'Only matters with more than one SYNC destination']);
+  const srl = of('srl', 'standby');
+  if (srl.length) { const thr = [...new Set(srl.map(r => r.thr))].filter(t => t > 0); const per = thr.map(t => srl.filter(r => r.thr === t).length); const act = srl.filter(r => r.st === 'ACTIVE').length;
+    rows.push(['Standby redo logs', `${per.join(', ') || srl.length} per thread, ${srl[0].mb} MB, ${act} active`, act >= srl.length ? 'warn' : 'good', act >= srl.length ? 'All in use: archiving on the standby is behind' : 'Free logs available']); }
+  of('dgstat', 'standby').filter(d => /transport lag|apply lag/.test(d.name)).forEach(d => rows.push([d.name[0].toUpperCase() + d.name.slice(1), String(d.value || '–').replace(/^\+00 /, ''), 'info', 'On the standby when collected']));
+  $('#cfg').innerHTML = rows.length ? `<table><thead><tr><th>Setting</th><th>Value</th><th>Status</th><th>What it means here</th></tr></thead><tbody>${rows.map(r =>
+    `<tr><td>${esc(r[0])}</td><td style="font-weight:500">${esc(r[1])}</td><td>${st(r[2], r[2] === 'good' ? 'OK' : r[2] === 'warn' ? 'Check' : r[2] === 'crit' ? 'Error' : 'Note')}</td><td style="color:var(--muted-fg)">${esc(r[3])}</td></tr>`).join('')}</tbody></table>`
+    : empty('No configuration data.');
+})();
+
+/* ================= network ================= */
+(() => {
+  const nets = of('net');
+  $('#network').innerHTML = nets.length ? nets.map(n => `<section class="card"><div class="ch"><div><h2>${esc(SIDE[n.side] || n.side)} → ${esc(n.peer)}</h2><p>collect.sh -p, ${esc(n.secs)} s at ${esc(n.at)} (${esc(n.os)})</p></div></div><div class="cc"><dl class="kv">
+    <dt>Round trip (avg)</dt><dd>${esc(n.rtt)} ms</dd><dt>Packet loss</dt><dd>${esc(n.loss)}</dd><dt>TCP retransmits</dt><dd>+${esc(n.retr)} in ${esc(n.secs)} s</dd><dt>Largest Send-Q to peer:${esc(n.port)}</dt><dd>${esc(n.sendq)} bytes</dd></dl></div></section>`).join('')
+    : `<section class="card" style="grid-column:1/-1"><div class="ch"><div><h2>Network and OS</h2><p>No network check in the bundles. Add <code>-p &lt;peer redo IP&gt;</code> to collect.sh, or run sh/os_net_check.sh for the full check.</p></div></div><div class="cc"></div></section>`;
+})();
+
+/* ================= footer, scroll-spy, draw ================= */
+$('#foot').innerHTML = `Built by dgstallscripts from ${bundles.length ? bundles.map(b => `${esc(b.file)} (${esc(SIDE[b.side] || '?')}, ${esc(b.host)}, collected ${esc(b.hdr ? b.hdr.collected : '?')})`).join('; ') : 'no bundles'}. Times are each host's local time as logged. Read-only.`;
+const links = [...document.querySelectorAll('.navgroup a')];
+const spy = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) links.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id)); }), { rootMargin: '-30% 0px -60% 0px' });
+links.forEach(a => { const el = document.querySelector(a.getAttribute('href')); if (el) spy.observe(el); });
+const drawAll = () => { drawTimeline(); drawFg(); drawHist(); drawLs(); };
+drawAll();
+let rt; new ResizeObserver(() => { clearTimeout(rt); rt = setTimeout(drawAll, 80); }).observe($('.main'));
+})();
+</script>
+</body>
+</html>
