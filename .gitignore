@@ -1,0 +1,5 @@
+# script output
+dg_primary_*.txt
+dg_standby_*.txt
+refused_connection_ids.txt
+.DS_Store
