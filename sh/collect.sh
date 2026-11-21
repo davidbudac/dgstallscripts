@@ -20,14 +20,24 @@
 usage() { sed -n '2,19p' "$0"; exit 1; }
 DIR=$(cd "$(dirname "$0")/.." && pwd)
 OUT= CONN="/ as sysdba" TRACE= ALERT= LSNR= CIDS= PEER= PORT=1521 DAYS=30
-while getopts o:u:t:a:l:c:p:P:d:h opt; do
-  case $opt in
-    o) OUT=$OPTARG ;; u) CONN=$OPTARG ;; t) TRACE=$OPTARG ;; a) ALERT=$OPTARG ;; l) LSNR=$OPTARG ;;
-    c) CIDS=$OPTARG ;; p) PEER=$OPTARG ;; P) PORT=$OPTARG ;; d) DAYS=$OPTARG ;; *) usage ;;
-  esac
+# options may come before, between or after the three positional arguments
+N=0 A1= A2= A3=
+while [ $# -gt 0 ]; do
+  OPTIND=1
+  while getopts o:u:t:a:l:c:p:P:d:h opt; do
+    case $opt in
+      o) OUT=$OPTARG ;; u) CONN=$OPTARG ;; t) TRACE=$OPTARG ;; a) ALERT=$OPTARG ;; l) LSNR=$OPTARG ;;
+      c) CIDS=$OPTARG ;; p) PEER=$OPTARG ;; P) PORT=$OPTARG ;; d) DAYS=$OPTARG ;; *) usage ;;
+    esac
+  done
+  shift $((OPTIND - 1))
+  [ $# -gt 0 ] || break
+  N=$((N + 1))
+  case $N in 1) A1=$1 ;; 2) A2=$1 ;; 3) A3=$1 ;; *) usage ;; esac
+  shift
 done
-shift $((OPTIND - 1))
-[ $# -eq 3 ] || usage
+[ $N -eq 3 ] || usage
+set -- "$A1" "$A2" "$A3"
 SIDE=$1
 case $SIDE in primary|standby) ;; *) usage ;; esac
 
