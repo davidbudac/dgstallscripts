@@ -3,7 +3,7 @@
 #   fail  the connect fails, as with a wrong password
 #   meta  connects, writes the meta line and one coverage record, then a statement fails (ORA-00942 lands in the spool, as it would)
 #   clock as meta, and the SQL also wrote a clock record
-#   list / list1219  (collect.sh list) print the file STUB_LIST, or the ORA-01219 a mounted standby gives for v$diag_alert_ext
+#   list / list1219  (collect.sh list) print the file STUB_LIST, or what a mounted standby gives for v$diag_alert_ext: the echoed line, the marker, "ERROR at line 20:" and then the ORA-01219 line
 #   list also answers sql/list_sources.sql (oldest ASH sample and AWR snapshot): the file STUB_SRC, or ASH 2026-11-14 03:51:20 and AWR 2026-10-21 10:00:00 without it;
 #   listsrcfail  as list, but the AWR statement fails (ORA-01219, as on a mounted standby) after the ASH one succeeded;  listsrcdown  as list, but sql/list_sources.sql cannot connect (ORA-01017)
 #   STUB_ARGS=file  the arguments of the call are written there
@@ -19,7 +19,7 @@ esac
 SIDE= SCRIPT= NARG=0 HD=30
 for a in "$@"; do
   [ -n "$SCRIPT" ] && { NARG=$((NARG + 1)); [ $NARG = 3 ] && HD=$a; }   # json_*.sql: from, to, then the history days
-  case $a in @*list_alerts.sql) if [ "$STUB_MODE" = list1219 ]; then printf 'ORA-01219: database or pluggable database not open: queries allowed on fixed tables or views only\n'; else cat "$STUB_LIST"; fi; exit 0 ;; esac
+  case $a in @*list_alerts.sql) if [ "$STUB_MODE" = list1219 ]; then printf '       from   v$diag_alert_ext\n              *\nERROR at line 20:\nORA-01219: database or pluggable database not open: queries allowed on fixed tables or views only\n'; else cat "$STUB_LIST"; fi; exit 0 ;; esac
   case $a in @*list_sources.sql)
     case $STUB_MODE in
       listsrcdown) printf 'ERROR:\nORA-01017: invalid username/password; logon denied\n\n\nSP2-0157: unable to CONNECT to ORACLE after 3 attempts, exiting SQL*Plus\n' ;;
@@ -72,7 +72,7 @@ if [ "$STUB_MODE" = full ]; then
       rec alsync \
         '{"t":"alsync","side":"primary","ts":"2026-11-06 20:53:27","msg":"LGWR (PID:4242): RT_PMODE: LAD:2              changing to                             level SYNCHRONIZED"}' \
         '{"t":"alsync","side":"primary","ts":"2026-11-14 00:09:59","msg":"LGWR (PID:4242): LAD:2 is SYNCHRONIZED"}'
-      cvr alsync '"2026-10-21 12:00:01"' '"2026-11-19 09:00:00"' 2 300 false "v\$diag_alert_ext, lookback $HD days, newest 300 kept; lines that end an UNSYNCHRONIZED period of a destination (LAD:n is SYNCHRONIZED, LAD:n level SYNCHRONIZED)" "v\$diag_alert_ext, lookback $HD days, newest 300 kept; lines that end an UNSYNCHRONIZED period of a destination (LAD:n is SYNCHRONIZED, LAD:n level SYNCHRONIZED)"
+      cvr alsync '"2026-10-21 12:00:01"' '"2026-11-19 09:00:00"' 2 300 false "v\$diag_alert_ext, lookback $HD days, newest 300 kept; lines that end an UNSYNCHRONIZED period of a destination (LAD:n is SYNCHRONIZED, LAD:n level SYNCHRONIZED)" "the pass over v\$diag_alert_ext failed"
     fi
     if want alhist; then   # not a newer statement, but the same pass as alsync: the primary with -a then has both kinds of both
       rec alhist \
@@ -105,5 +105,6 @@ if [ "$STUB_MODE" = full ]; then
     cvr act:rman '"2026-11-01 23:30:00"' '"2026-11-13 23:30:00"' 1 500 false "$RMAN" "the v\$rman_status statement failed"
   fi
 fi
+[ "$STUB_MODE" = full ] && echo 'ERROR at line 1:' >> "$OUT"   # as sqlplus prints it: where, then what (full mode only: the other modes' bundles are golden files)
 echo 'ORA-00942: table or view does not exist' >> "$OUT"
 exit 0

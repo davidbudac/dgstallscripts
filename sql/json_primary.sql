@@ -175,7 +175,7 @@ select json_object('t' value 'cov', 'side' value 'primary', 'src' value 'alsync'
          'first' value case when '&al_first' = '-' then null else '&al_first' end,
          'last' value case when '&al_last' = '-' then null else '&al_last' end,
          'n' value greatest(&al_sync, 0), 'cap' value 300, 'capped' value case when &al_sync > 300 then 'true' else 'false' end format json,
-         'note' value 'v$diag_alert_ext, lookback &hist_days days, newest 300 kept; lines that end an UNSYNCHRONIZED period of a destination (LAD:n is SYNCHRONIZED, LAD:n level SYNCHRONIZED)' returning varchar2(4000))
+         'note' value case when &al_sync < 0 then 'the pass over v$diag_alert_ext failed' else 'v$diag_alert_ext, lookback &hist_days days, newest 300 kept; lines that end an UNSYNCHRONIZED period of a destination (LAD:n is SYNCHRONIZED, LAD:n level SYNCHRONIZED)' end returning varchar2(4000))
 from   dual;
 
 -- UTC offset the host used inside the window, from the alert log rows there (no row, no record: collect.sh then tries other sources)
@@ -905,12 +905,16 @@ from   x
 where  fr = 1 or rn <= 2000
 order  by a, name;
 
-select count(*) aj_n, count(case when cnt <= 24 * &hist_days then 1 end) aj_runs,
-       (select nvl(to_char(cast(min(actual_start_date) at time zone to_char(systimestamp, 'TZH:TZM') as date), 'YYYY-MM-DD HH24:MI:SS'), '-') from cdb_scheduler_job_run_details) aj_first,
-       (select nvl(to_char(cast(max(actual_start_date) at time zone to_char(systimestamp, 'TZH:TZM') as date), 'YYYY-MM-DD HH24:MI:SS'), '-') from cdb_scheduler_job_run_details) aj_last
-from  (select count(*) over (partition by con_id, owner, job_name) cnt
-       from   cdb_scheduler_job_run_details
-       where  actual_start_date > systimestamp - numtodsinterval(&hist_days, 'DAY'));
+-- two one-row inline views, joined: c counts the lookback, f is the span of the whole view. f is not written as scalar subqueries beside count() (a bare one there is ORA-00937),
+-- and not as max(( ... )) either, which is null when the lookback holds no row although the view holds older ones.
+select c.aj_n, c.aj_runs, f.aj_first, f.aj_last
+from  (select count(*) aj_n, count(case when cnt <= 24 * &hist_days then 1 end) aj_runs
+       from  (select count(*) over (partition by con_id, owner, job_name) cnt
+              from   cdb_scheduler_job_run_details
+              where  actual_start_date > systimestamp - numtodsinterval(&hist_days, 'DAY'))) c,
+      (select nvl(to_char(cast(min(actual_start_date) at time zone to_char(systimestamp, 'TZH:TZM') as date), 'YYYY-MM-DD HH24:MI:SS'), '-') aj_first,
+              nvl(to_char(cast(max(actual_start_date) at time zone to_char(systimestamp, 'TZH:TZM') as date), 'YYYY-MM-DD HH24:MI:SS'), '-') aj_last
+       from   cdb_scheduler_job_run_details) f;
 
 select json_object('t' value 'cov', 'side' value 'primary', 'src' value 'act', 'kind' value 'job',
          'st' value case when &aj_n < 0 then 'error' when &aj_n > 0 then 'ok' else 'empty' end,

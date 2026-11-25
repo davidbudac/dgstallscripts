@@ -158,7 +158,7 @@ with the standby's own listener port from `lsnrctl status` (`Listening Endpoints
 ## Who waited, workload history, ended UNSYNCHRONIZED periods and scheduled activity
 
 Four record types, all optional, each with its own `cov` record (also when its statement failed, `st` `error`, or does not apply to that side, `skipped`). The statements are in `sql/json_primary.sql` and `sql/json_standby.sql`; each stands alone, so a failure costs that record
-type and its `cov`, never the `meta` line or another record. **They have been checked against the stubbed tests only and have not yet been run on a live 19c database.**
+type and its `cov`, never the `meta` line or another record. On 2026-11-25 their statements were run against Oracle 19.27.0.0.0 (a CDB root, primary READ WRITE, physical standby MOUNTED) and returned rows; the count statement of the job source failed with ORA-00937 and was corrected. Not exercised there: a host whose UTC offset is not zero, a PDB-level connection, the in-memory path of `lfs_by` with rows, RAC.
 
 - `lfs_by`* (in the window, the ASH source in use, `meta.ash`): the `FOREGROUND` samples on `log file sync`, counted three ways. `dim` is `service`, `module` or `machine`; `name` is the value (at most 64 characters, `null` when the column is null; for `service` the name from
   `v$active_services` found by `service_hash` = `name_hash`, else `hash <number>`); `n` samples; `lg` of those, the samples whose blocking session was LGWR (the test of `lfs`); `sess` distinct `session_id, session_serial#`; `a`, `z` first and last sample time. **They are sample counts**: one per session per
@@ -277,6 +277,8 @@ on the standby `awr_snap sysmetric lfs lfs_by wl_hist alert_sql dest_hist base_h
 **How the report uses `cov`.** A source supports "none" or "ruled out" for an interval only when its record exists, `st` is `ok` or `empty`, `first` is at or
 before the start of the interval, `last` is at or after its end (a text log may end earlier when the bundle was collected after the interval: nothing was logged since),
 and `capped` is false. Anything else is shown as "Not checked" with the reason. Bundles with no `cov` records (v1) give coverage unknown, so nothing is ruled out on absence.
+For the lookback sources `lfs_by`, `wl_hist`, `alsync` and `act` an `error` record means the statement failed: the report reads it as "not checked" with the note of the record, never as "none" or "not covered", also when records of that source arrived (the row statement of the job source can run when its count statement fails; the records are still drawn, nothing is said about what they cover).
+A capped lookback source (`capped` true; the newest records are kept) holds from its oldest kept record on, which the report takes from the records themselves, not from `first`; the Coverage table shows it as "kept from" beside `first`/`last`.
 Exit status of `collect.sh` is 1 when sqlplus connected nowhere (no meta line); the log scans still run.
 
 ## v1 bundles (`"v":1`)

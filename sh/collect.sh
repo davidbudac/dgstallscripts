@@ -59,6 +59,10 @@ trap 'rm -f "$TMP".*' 0 1 2 15
 now() { if [ -n "$DGR_NOW" ]; then echo "$DGR_NOW" | tr T ' '; else date '+%Y-%m-%d %H:%M:%S'; fi; }
 clean() { tr -d '\000-\010\013\014\016-\037'; }   # drop control bytes except tab, newline, CR
 cutoff() { awk -v now="$(now)" -v d="$DAYS" "$DATEAWK"'BEGIN { print fmt(ep(now) - d * 86400) }'; }   # DAYS days before now (host clock time)
+# What sqlplus output (stdin) says went wrong: the first ORA- or SP2- line, else the first "ERROR ..." line. "ERROR at line N:" only says where, and the bare "ERROR:" header says nothing:
+# neither is picked when an ORA- or SP2- line is there. errlines N prints up to N such lines (ORA-, SP2- and TNS- lines; "ERROR ..." lines only when there are none).
+errline() { awk '/ORA-|SP2-/ { print; found = 1; exit } !e && /ERROR/ && !/^ERROR:$/ { e = $0 } END { if (!found && e != "") print e }'; }
+errlines() { awk -v n="$1" '/ORA-|SP2-|TNS-/ { if (a < n) p[++a] = $0; next } /ERROR/ && !/^ERROR:$/ { if (b < n) q[++b] = $0 } END { if (a) for (i = 1; i <= a; i++) print p[i]; else for (i = 1; i <= b; i++) print q[i] }'; }
 
 # ================================================================ list: past incidents and the commands to collect them
 if [ $MODE = list ]; then
@@ -76,23 +80,24 @@ if [ $MODE = list ]; then
     "$SQLPLUS" -S -L "$CONN" @"$DIR/sql/list_alerts.sql" "$DAYS" </dev/null > "$TMP.lsq" 2>&1
     awk -F'\t' 'NF >= 3 && $1 ~ /^[12][0-9][0-9][0-9]-[01][0-9]-[0-3][0-9] [0-2][0-9]:[0-5][0-9]:[0-5][0-9]$/' "$TMP.lsq" > "$TMP.lst"
     if [ ! -s "$TMP.lst" ] && grep -qE 'ORA-|SP2-|ERROR' "$TMP.lsq"; then
-      echo "list: could not read v\$diag_alert_ext: $(grep -E 'ORA-|SP2-|ERROR' "$TMP.lsq" | grep -v '^ERROR:$' | head -1)" >&2
+      echo "list: could not read v\$diag_alert_ext: $(errline < "$TMP.lsq")" >&2
       echo "list: on a standby, or when the database is not open, give the text alert log with -a <file>" >&2
       exit 1
     fi
-    # how far back the in-memory ASH and AWR reach: two small SELECTs of their own; a failed one is "not checked" with its error
-    "$SQLPLUS" -S -L "$CONN" @"$DIR/sql/list_sources.sql" </dev/null > "$TMP.lss" 2>&1
   else
     echo "list: sqlplus not found; give the text alert log with -a <file>" >&2; exit 1
   fi
-  # Which sources of this host still hold an episode: the in-memory ASH and AWR (oldest row, read once above), the sysstat daily file of each day of the window
+  # Which sources of this host still hold an episode: the in-memory ASH and AWR (oldest row, read once here), the sysstat daily file of each day of the window
   # (the directories and file names of the collection itself) and the alert log the episodes were read from. Anything that cannot be read is "not checked" with the reason.
+  # The ASH and AWR query runs with -a as well as without it (it needs sqlplus, not v$diag_alert_ext: on a mounted standby ASH answers and AWR gives ORA-01219);
+  # two small SELECTs of their own, a failed one is "not checked" with its first ORA- or SP2- line.
   LSASH= LSAWR=
-  if [ -n "$ALERT" ]; then LSASH="!no database connection"; LSAWR=$LSASH
+  if ! command -v "$SQLPLUS" >/dev/null 2>&1; then LSASH="!sqlplus not found"; LSAWR=$LSASH
   else
+    "$SQLPLUS" -S -L "$CONN" @"$DIR/sql/list_sources.sql" </dev/null > "$TMP.lss" 2>&1
     for K in ASH AWR; do
       V=$(awk -F'\t' -v k="$K" '$0 == "SRC:" k { on = 1; next } /^SRC:/ { on = 0 } on && $1 == k && NF >= 2 { print $2; exit } on && /ORA-|SP2-/ { if (e == "") e = $0 } END { if (e != "") print "!" substr(e, 1, 100) }' "$TMP.lss" | head -1)
-      if [ -z "$V" ]; then V="!$(grep -E 'ORA-|SP2-' "$TMP.lss" | head -1 | cut -c1-100)"; [ "$V" = "!" ] && V="!no answer from sqlplus"; fi
+      if [ -z "$V" ]; then V="!$(errline < "$TMP.lss" | cut -c1-100)"; [ "$V" = "!" ] && V="!no answer from sqlplus"; fi
       if [ "$K" = ASH ]; then LSASH=$V; else LSAWR=$V; fi
     done
   fi
@@ -234,7 +239,7 @@ EOF
     note "database: done"
     cov database ok "" "" 1 "" 0 "sqlplus connected, meta written"
   else
-    E=$({ cat "$TMP.sql"; grep -v '^{' "$OUT"; } | grep -E 'ORA-|SP2-|TNS-|ERROR' | grep -v '^ERROR:$' | head -3 | tr '\n' '|' | sed 's/|$//; s/|/ | /g')
+    E=$({ cat "$TMP.sql"; grep -v '^{' "$OUT"; } | errlines 3 | tr '\n' '|' | sed 's/|$//; s/|/ | /g')
     [ -n "$E" ] || E=$(grep . "$TMP.sql" | head -3 | tr '\n' '|' | sed 's/|$//; s/|/ | /g')
     [ -n "$E" ] || E="sqlplus exit $RC, no output"
     echo "database: FAILED: $E" >&2
@@ -258,7 +263,7 @@ fi
 srccap() { case $SIDE:$1 in *:alhist|*:alsync) echo 300 ;; *:lfs) echo 200 ;; *:lfs_by) echo 15 ;; *:wl_hist) echo 1500 ;; *:ashgap) echo 50 ;; *:dgstatus) echo 500 ;; standby:tx) echo 5000 ;; esac; }
 srckind() { case $SIDE:$1 in primary:alhist|primary:alsync) echo ',"kind":"sql"' ;; standby:ash) echo ',"kind":"V"' ;; esac; }
 actcap() { case $1 in rman) echo 500 ;; job) echo 2000 ;; logsw) echo 5000 ;; esac; }
-ERR1=$(grep -v '^{' "$OUT" | grep -E 'ORA-|SP2-|ERROR' | head -1 | cut -c1-200)
+ERR1=$(grep -v '^{' "$OUT" | errline | cut -c1-200)
 for s in $SQLSRC; do
   [ "$SIDE" = standby ] && { [ "$s" = alhist ] || [ "$s" = alsync ]; } && continue
   CAP=$(srccap $s); X=$(srckind $s)
@@ -744,9 +749,18 @@ fi
 echo "Bundle written: $OUT" >&2
 awk -F'"t":"' 'NF > 1 { split($2, a, "\""); c[a[1]]++ } END { for (k in c) printf "  %-9s %d lines\n", k, c[k] }' "$OUT" | sort >&2
 echo "Coverage (what each source held in the window):" >&2
-grep '"t":"cov"' "$OUT" | sed -n 's/.*"src":"\([^"]*\)".*"st":"\([^"]*\)","first":[^,]*,"last":[^,]*,"n":\([0-9]*\),"cap":[^,]*,"capped":\([a-z]*\),.*/\1 \2 \3 \4/p' \
-  | awk '{ printf "  %-10s %-8s %d%s\n", $1, $2, $3, ($4 == "true" ? "  CAPPED, see the note in the cov record" : "") }' >&2
-BAD=$(grep -v '^{' "$OUT" | grep -E 'ORA-|SP2-|ERROR' | head -5)
+# one line per cov record: src, or src/kind when the record has a kind (act/job, sar/ETCP), so that the records of one source can be told apart
+grep '"t":"cov"' "$OUT" | awk '
+  { s = $0
+    if (!match(s, /"src":"[^"]*"/)) next
+    src = substr(s, RSTART + 7, RLENGTH - 8); rest = substr(s, RSTART + RLENGTH)
+    if (match(rest, /^,"kind":"[^"]*"/)) src = src "/" substr(rest, 10, RLENGTH - 10)
+    if (!match(s, /"st":"[^"]*"/)) next
+    st = substr(s, RSTART + 6, RLENGTH - 7)
+    if (!match(s, /"n":[0-9]+/)) next
+    n = substr(s, RSTART + 4, RLENGTH - 4) + 0
+    printf "  %-13s %-8s %d%s\n", src, st, n, (s ~ /"capped":true/ ? "  CAPPED, see the note in the cov record" : "") }' >&2
+BAD=$(grep -v '^{' "$OUT" | errlines 5)
 [ -n "$BAD" ] && { echo "Some queries reported errors (they are listed in the report):" >&2; echo "$BAD" | sed 's/^/  /' >&2; }
 
 # ---- what to run next

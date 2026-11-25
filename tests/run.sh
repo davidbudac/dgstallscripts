@@ -19,8 +19,8 @@
 #                  (Linux with sar, chronyc, ntpq, getent, netstat, ping, sysctl, lsnrctl; AIX with no, lssrc, ntpq; a bare host with none of them):
 #                  listener server-to-server connections, endpoints from tnsnames.ora, sqlnet.ora timeouts, sar parsing from canned output, clock state,
 #                  derived peer, the sampler log; `collect.sh list`; the next-command hints; make_report.sh defaults; net_sampler.sh; the history pattern list
-#   cards          extract.py --cards: "Episodes side by side", "Who waited" and the activity bars of the day-and-hour grid (the example, `full`, `hist`, v1, pre-phase-3 and
-#                  the scenarios without the lookback and impact records), the grouped entries of the explanation tables, and that none of it is in the hand-over texts
+#   cards          extract.py --cards: "Episodes side by side", "Who waited" and the activity bars of the day-and-hour grid (the example, `full`, `hist`, `stfail` (statements that failed),
+#                  `capped` (sources cut at their cap), v1, pre-phase-3 and the scenarios without the lookback and impact records), the grouped entries of the explanation tables, and that none of it is in the hand-over texts
 #   new records    collect.sh with the stub's `full` mode: lfs_by, wl_hist, alsync and act (rman, job, logsw) kept, a failing or omitted statement an error cov record,
 #                  the standby side, the text alert log path of alsync, caps; lints of the SQL files (every &variable defined, no blank line in a statement, a cov record per record type,
 #                  the sync pattern equal in the SQL files and sh/dglib.sh)
@@ -190,6 +190,12 @@ if [ $HAVE_PY = 1 ] && sh "$T/gate.sh" --have-chrome; then
     claims "scenario $sc: the claims are the expected ones" "$W/g_$sc.txt" "scenario_$sc.txt"
     hand g_$sc "$sc"; parts g_$sc "$sc"
     no_l "$W/g_$sc.txt" 'Points to:|Commits blocked|remote end stopped answering' "scenario $sc: none of the retired claims"
+    no_l "$W/g_$sc.txt" 'NaN|undefined|Invalid Date' "scenario $sc: no NaN, undefined or Invalid Date in the claims"
+  done
+  # lookback records that failed (stfail) or were cut at their cap (capped): rendered for the cards only, so no hand-over, parts or claim file of their own
+  for sc in stfail capped; do
+    render g_$sc "$W/gen/${sc}_primary.jsonl" "$W/gen/${sc}_standby.jsonl"
+    nojs g_$sc "scenario $sc"
     no_l "$W/g_$sc.txt" 'NaN|undefined|Invalid Date' "scenario $sc: no NaN, undefined or Invalid Date in the claims"
   done
   # quiet window: three isolated 1 s samples of log file sync are ordinary commit activity, not a blocked period
@@ -542,9 +548,9 @@ PY
   has_l "$W/g_two.ui" '^sequence mark click: #inc[12]-o[0-9]+ -> li flashed$' "ui: a click on a mark of the sequence jumps to its Observed row"
   has_l "$W/g_two.ui" '^explanation title click: #en-[0-9]+-[a-z-]+ -> div flashed$' "ui: a click on a title of the explanation table jumps to its entry in Signals"
   # ---- the cards of the lookback and impact records (extract.py --cards): episodes side by side, who waited, the activity bars of the day-and-hour grid, the grouped entries of the explanation table
-  for sc in full hist two quiet; do cards g_$sc $sc; done
+  for sc in full hist two quiet stfail capped; do cards g_$sc $sc; done
   for sc in noash drift lost tzoff rtpmode rac late waitcov sbgap; do python3 "$T/extract.py" "$W/g_$sc.dom" --cards > "$W/g_$sc.cards"; done
-  for n in v2 v1 pre3 g_full g_hist g_two g_quiet g_sbgap; do no_l "$W/$n.cards" 'NaN|undefined|Invalid Date' "cards, $n: no NaN, undefined or Invalid Date"; done
+  for n in v2 v1 pre3 g_full g_hist g_two g_quiet g_sbgap g_stfail g_capped; do no_l "$W/$n.cards" 'NaN|undefined|Invalid Date' "cards, $n: no NaN, undefined or Invalid Date"; done
   # the example: the incident first, then the episodes of the history, newest first
   [ "$(grep -o '^  EPROW [a-z0-9]*' "$W/v2.cards" | tr '\n' ' ')" = '  EPROW inc1   EPROW h3   EPROW h2   EPROW h1   EPROW h0 ' ] && pass "episodes, example: the incident of the window first, then the four episodes of the history, newest first" || fail "episodes, example: row order" "$(grep -o '^  EPROW [a-z0-9]*' "$W/v2.cards" | tr '\n' ' ')"
   has_l "$W/v2.cards" '^  EPROW inc1 \| 2026-11-13 Fri / 20:38:01 / this window, incident 1 \|' "episodes, example: the incident is marked as this window's, with date, weekday and time of day"
@@ -602,11 +608,44 @@ PY
   has_l "$W/g_full.cards" '^  WHOWL: Per-minute workload \(wl\): no records in these bundles\.$' "full: without wl records the impact card says so instead of comparing"
   has_l "$W/g_full.cards" '^  EPROW h6 .*APP.EXPORT_REPORTS, 10:02:00 to 10:07:00, SUCCEEDED' "full: a job run that was running at the start of an episode is listed"
   # hist: capped, failed and not covered
-  has_l "$W/g_hist.cards" '^  EPROW inc1 .*RMAN \(primary\): BACKUP ARCHIVELOG, 09:57:30 to 10:02:10, COMPLETED; BACKUP DB INCR, 09:58:00 to running, RUNNING / RMAN \(standby\): not covered / job: not covered / log switch: thread 1 sequence [0-9]+, -25 s$' "hist: a command with no end time started within the 10 minutes is \"running\"; a failed read is not covered"
+  has_l "$W/g_hist.cards" '^  EPROW inc1 .*RMAN \(primary\): BACKUP ARCHIVELOG, 09:57:30 to 10:02:10, COMPLETED; BACKUP DB INCR, 09:58:00 to running, RUNNING / RMAN \(standby\): not checked \(statement failed\) / job: not checked \(statement failed\) / log switch: thread 1 sequence [0-9]+, -25 s$' "hist: a command with no end time started within the 10 minutes is \"running\"; a failed read is not checked"
   has_l "$W/g_hist.cards" '^  EPROW h1 .*RMAN \(primary\): not covered' "hist: a capped RMAN list holds only from its oldest kept record on: the episode before it is not covered"
   has_l "$W/g_hist.cards" '^  EPROW h0 .*\| not covered \| not covered \| RMAN \(primary\): not covered' "hist: the episode before the alsync history and the AWR is not covered"
-  has_l "$W/g_hist.cards" '^  EPCOUNT: cdb_scheduler_job_run_details: no episode lies inside what the view holds\.$' "hist: a failed job read counts no episode"
+  has_l "$W/g_hist.cards" '^  EPCOUNT: cdb_scheduler_job_run_details: not checked, the cdb_scheduler_job_run_details statement failed\.$' "hist: a failed job read counts no episode and says why"
+  has_l "$W/g_hist.cards" '^  EPCOUNT: v\$rman_status on the standby: not checked, the statement failed \(ORA-00942: table or view does not exist\)\.$' "hist: a failed read whose note names no statement gets the words and the note"
   has_l "$W/g_hist.cards" '^  WHOCAP: .*Capped: 44 groups found, the 15 with the most samples kept per list\.$' "hist: the impact card states a capped lfs_by"
+  # stfail: a statement that failed is "not checked", wherever its source is shown; never "none", never "not covered"
+  no_l "$W/g_stfail.cards" '^  (EPROW|EPCOUNT).*(not covered|: none( /|$))' "stfail: no cell and no count says none or not covered for a source whose statement failed"
+  [ "$(grep -o 'not checked (statement failed)' "$W/g_stfail.cards" | wc -l | tr -d ' ')" = 47 ] && pass "stfail: every cell of a failed source reads not checked (statement failed): five in the incident's row, six in each of the seven rows of the history" || fail "stfail: the cells that say not checked (statement failed)" "$(grep -c 'not checked (statement failed)' "$W/g_stfail.cards") lines"
+  has_l "$W/g_stfail.cards" '^  EPCOUNT: cdb_scheduler_job_run_details: not checked, the cdb_scheduler_job_run_details statement failed\.$' "stfail: the job count line says not checked and why (the note of the cov record), whatever the records say"
+  has_l "$W/g_stfail.cards" '^  EPCOUNT: v\$rman_status on the primary: not checked, the v\$rman_status statement failed\.$' "stfail: ... the same for the RMAN list of the primary"
+  has_l "$W/g_stfail.cards" '^  EPCOUNT: v\$rman_status on the standby: not checked, the v\$rman_status statement failed\.$' "stfail: ... and of the standby"
+  has_l "$W/g_stfail.cards" '^  EPCOUNT: v\$log_history: not checked, the v\$log_history statement failed\.$' "stfail: ... the log switches"
+  has_l "$W/g_stfail.cards" '^  EPCOUNT: wl_hist: not checked, the dba_hist_sysmetric_summary statement failed\.$' "stfail: ... the workload history"
+  has_l "$W/g_stfail.cards" '^  EPCOUNT: alsync on the primary: not checked, the pass over v\$diag_alert_ext failed\.$' "stfail: ... the alsync pass"
+  no_l "$W/g_stfail.cards" 'covers\.|covers on the|no episode lies inside' "stfail: no count line claims a coverage for a failed source"
+  has_l "$W/g_stfail.cards" '^  WHOLISTS: Not checked: lfs_by, the statement over ASH failed\.$' "stfail: who waited says not checked and why when lfs_by failed"
+  has_l "$W/g_stfail.cards" '^RECURBARS: 0 RMAN bars, 1 job bars;' "stfail: the job records that arrived are still drawn in the day-and-hour grid (a source whose cov record is an error, no records for the others)"
+  python3 "$T/extract.py" "$W/g_stfail.dom" --parts > "$W/g_stfail.parts"; python3 "$T/extract.py" "$W/g_stfail.dom" > "$W/g_stfail.txt"
+  for pair in 'primary/act/job' 'primary/act/rman' 'primary/act/logsw' 'standby/act/rman' 'primary/wl_hist' 'primary/alsync/sql' 'primary/lfs_by'; do
+    has_l "$W/g_stfail.txt" "^COV: $pair \\| error \\| – – – \\| 0 / cap [0-9]+ \\| not checked, the .*(failed)" "stfail, coverage: $pair is an error row that says not checked and why"
+    has_l "$W/g_stfail.parts" "^REACH: $pair \\| not checked$" "stfail, coverage: $pair does not say it reached the window or was read as collected"
+  done
+  # capped: a capped source holds from its oldest kept record on: before it not covered, inside it an answer, and the count line says it was cut
+  has_l "$W/g_capped.cards" '^  EPROW h1 .*\| RMAN \(primary\): not covered / RMAN \(standby\): none / job: not covered / log switch: not covered$' "capped: an episode before the oldest kept job run, RMAN command and log switch is not covered by them (the standby's uncapped RMAN list answers)"
+  has_l "$W/g_capped.cards" '^  EPROW h2 .*/ job: none / log switch: not covered$' "capped: ... the job list holds from 11-13 09:30: an episode after it with no job run in its ten minutes is none, not not covered"
+  has_l "$W/g_capped.cards" '^  EPROW h6 .*\| RMAN \(primary\): BACKUP ARCHIVELOG, 09:57:40 to 10:02:02, COMPLETED / RMAN \(standby\): none / job: APP.EXPORT_REPORTS, 10:02:00 to 10:07:00, SUCCEEDED / log switch: none$' "capped: ... an episode inside every kept span gets its names"
+  has_l "$W/g_capped.cards" '^  EPROW h5 .*\| not covered \| average 1.6 MB/s' "capped: alsync and wl_hist: an episode that starts before the oldest kept line (alsync) is not covered, one inside the kept AWR intervals has its redo rate"
+  has_l "$W/g_capped.cards" '^  EPROW h2 .*\| not covered \| not covered \| ' "capped: wl_hist: an episode before the oldest kept interval is not covered"
+  has_l "$W/g_capped.cards" 'started within 10 minutes before 2 of the 6 episodes that cdb_scheduler_job_run_details covers\. cdb_scheduler_job_run_details was cut at its cap of 2000 run records and holds from 2026-11-13 09:30 on\.$' "capped: the job count line counts the six episodes inside the kept span and says the source was cut at its cap"
+  has_l "$W/g_capped.cards" '^  EPCOUNT: A log switch within 60 s of the start: 2 of 4 episodes that v\$log_history covers\. v\$log_history was cut at its cap of 5000 records and holds from 2026-11-16 00:17 on\.$' "capped: ... the log-switch count line too"
+  has_l "$W/g_capped.cards" 'episodes that v\$rman_status covers on the primary\. v\$rman_status on the primary was cut at its cap of 500 records and holds from 2026-11-16 02:00 on\.$' "capped: ... and the RMAN count line of the primary"
+  no_l "$W/g_capped.cards" 'covers on the standby\..*cut at' "capped: ... but not the standby's RMAN list, which was not cut"
+  has_l "$W/g_capped.cards" 'alsync on the primary was cut at its cap of 300 lines and holds from 2026-11-18 10:09 on\.$' "capped: ... the alsync count line"
+  has_l "$W/g_capped.cards" '^  EPCOUNT: wl_hist was cut at its cap of 1500 intervals and holds from 2026-11-17 00:00 on\.$' "capped: ... and one line for the workload history"
+  python3 "$T/extract.py" "$W/g_capped.dom" > "$W/g_capped.txt"
+  has_l "$W/g_capped.txt" '^COV: primary/act/job \| ok \| 10-21 14:46 – 11-20 14:30 kept from 11-13 09:30 \| 5400 / cap 2000 capped \|' "capped, coverage: a capped source shows the oldest record it kept beside what its view holds"
+  no_l "$W/g_capped.txt" '^COV: standby/act/rman .*kept from' "capped, coverage: a source that was not cut has no such line"
   # records absent: the same bundles as before render as before, with a plain not collected
   for sc in two quiet noash drift lost tzoff rtpmode rac late waitcov; do
     has_l "$W/g_$sc.cards" '^EP: Not collected: no alsync, wl_hist or act records in these bundles' "episodes, scenario $sc: not collected, no table"
@@ -620,7 +659,7 @@ PY
   has_l "$W/g_quiet.cards" '^WHOTABS: Window$' "who waited, quiet window: one tab (hidden)"
   has_l "$W/v1.cards" '^  WHOWL txn \| ' "who waited, v1: the per-minute workload is compared (wl is in a v1 bundle)"
   # nothing of this reaches the hand-over texts
-  for n in v2 g_full g_hist g_sbgap; do python3 "$T/extract.py" "$W/$n.dom" --net > "$W/$n.nn"; python3 "$T/extract.py" "$W/$n.dom" --ticket > "$W/$n.tt"; no_l "$W/$n.nn" 'RMAN|lfs_by|alsync|wl_hist|log switch|Who waited|Episodes side by side|BACKUP' "hand-over, $n: the network text holds nothing from the new records"; no_l "$W/$n.tt" 'RMAN|lfs_by|alsync|wl_hist|log switch|Who waited|Episodes side by side|BACKUP|impact' "hand-over, $n: the ticket text holds nothing from the new records, and no impact"; done
+  for n in v2 g_full g_hist g_sbgap g_stfail g_capped; do python3 "$T/extract.py" "$W/$n.dom" --net > "$W/$n.nn"; python3 "$T/extract.py" "$W/$n.dom" --ticket > "$W/$n.tt"; no_l "$W/$n.nn" 'RMAN|lfs_by|alsync|wl_hist|log switch|Who waited|Episodes side by side|BACKUP' "hand-over, $n: the network text holds nothing from the new records"; no_l "$W/$n.tt" 'RMAN|lfs_by|alsync|wl_hist|log switch|Who waited|Episodes side by side|BACKUP|impact' "hand-over, $n: the ticket text holds nothing from the new records, and no impact"; done
 else
   [ $HAVE_PY = 0 ] || skip "render tests: Chrome not found (set CHROME=/path/to/chrome)"
 fi
@@ -927,6 +966,10 @@ collect_tests() {   # SHELL LABEL
   # STUB_MODE=full: the stub writes what the new statements write (shapes of sql/json_primary.sql and sql/json_standby.sql); collect.sh keeps it and adds nothing for those sources
   STUB_MODE=full SQLPLUS=$W/sqlplus $CB "$SH" "$R/sh/collect.sh" primary "$WIN1" "$WIN2" -t trace -l listener_primary.log -o fullp.jsonl 2> errF1
   has errF1 'database: done' "collect.sh ($L): the full stub: database: done"
+  # the Coverage list the run prints: one line per cov record, src/kind where the record has a kind (the three act sources and the four sar sources are not the same line four times)
+  for k in act/rman act/job act/logsw ash/V alhist/sql alsync/sql sar/ETCP sar/TCP sar/DEV sar/EDEV; do has errF1 "^  $k  *[a-z]*  *[0-9]*" "collect.sh ($L): the coverage list at the end has a line for $k"; done
+  for k in lfs_by wl_hist database trace; do has errF1 "^  $k  *[a-z]*  *[0-9]*" "collect.sh ($L): ... and a line for $k, which has no kind, under its own name"; done
+  [ "$(grep -c '^  act/' errF1)" = 3 ] && pass "collect.sh ($L): ... three act lines, told apart" || fail "collect.sh ($L): the act lines of the coverage list" "$(grep '^  act' errF1)"
   fmt "collect.sh ($L): primary bundle with the records of every newer statement" fullp.jsonl allow-ora
   cnt fullp.jsonl '"t":"meta"' 1 "collect.sh ($L): the full stub: one meta line"
   cnt fullp.jsonl '"t":"lfs_by"' 7 "collect.sh ($L): the seven lfs_by records of the statement are kept"
@@ -977,7 +1020,11 @@ collect_tests() {   # SHELL LABEL
   n=$(grep -cE '"t":"(lfs_by|wl_hist|alsync|alhist)"' fullo2.jsonl); if [ "$n" = 0 ]; then pass "collect.sh ($L): the omitted sources have no records"; else fail "collect.sh ($L): $n records of omitted sources"; fi
   fmt "collect.sh ($L): bundle with five sources missing" fullo2.jsonl allow-ora
   # the count statement failed: the SQL writes the error cov record itself (n 0, no first or last, the statement named in the note) and no records
-  STUB_ERR="wl_hist act:rman" STUB_MODE=full SQLPLUS=$W/sqlplus $CB "$SH" "$R/sh/collect.sh" primary "$WIN1" "$WIN2" -t trace -l listener_primary.log -o fullerr.jsonl 2> /dev/null
+  STUB_ERR="wl_hist act:rman" STUB_MODE=full SQLPLUS=$W/sqlplus $CB "$SH" "$R/sh/collect.sh" primary "$WIN1" "$WIN2" -t trace -l listener_primary.log -o fullerr.jsonl 2> errF2
+  has errF2 '^  act/rman  *error  *0' "collect.sh ($L): the coverage list at the end shows which act source failed: act/rman error"
+  has errF2 '^  act/job  *ok  *43201' "collect.sh ($L): ... while act/job, which did not, is ok"
+  has errF2 '^  ORA-00942: table or view does not exist' "collect.sh ($L): the queries that reported errors are listed by their ORA- line"
+  nof errF2 'ERROR at line' "collect.sh ($L): ... without the ERROR at line N: lines that only say where"
   cnt fullerr.jsonl '"src":"wl_hist"' 1 "collect.sh ($L): a failed count statement: one wl_hist cov record, the SQL's; collect.sh adds none"
   cnt fullerr.jsonl '"src":"act","kind":"rman"' 1 "collect.sh ($L): ... and one for act rman"
   hasf fullerr.jsonl '"src":"wl_hist","st":"error","first":null,"last":null,"n":0,"cap":1500,"capped":false,"note":"the dba_hist_sysmetric_summary statement failed"' "collect.sh ($L): ... the wl_hist error record keeps the note of the SQL"
@@ -1062,6 +1109,8 @@ collect_tests() {   # SHELL LABEL
   STUB_MODE=list1219 SQLPLUS=$W/sqlplus $CB "$SH" "$R/sh/collect.sh" list > /dev/null 2> list4.err; echo $? > listrc4
   if [ "$(cat listrc4)" = 1 ]; then pass "collect.sh list ($L): a mounted standby (ORA-01219) exits 1"; else fail "collect.sh list ($L): ORA-01219 exit $(cat listrc4)"; fi
   has list4.err 'ORA-01219' "collect.sh list ($L): ... shows the Oracle error"
+  has list4.err '^list: could not read v.diag_alert_ext: ORA-01219: database or pluggable database not open' "collect.sh list ($L): ... the first ORA- line, not the ERROR at line N: line before it"
+  nof list4.err 'ERROR at line' "collect.sh list ($L): ... and no ERROR at line N: line"
   has list4.err 'give the text alert log with -a' "collect.sh list ($L): ... and points to -a"
   SQLPLUS=$NOSQL $CB "$SH" "$R/sh/collect.sh" list > /dev/null 2> list5.err; echo $? > listrc5
   has list5.err 'sqlplus not found; give the text alert log with -a' "collect.sh list ($L): neither sqlplus nor -a: says what to do"
@@ -1083,11 +1132,27 @@ collect_tests() {   # SHELL LABEL
   mkdir -p sadir_list; : > sadir_list/sa20261106
   env SA_DIR=$D/sadir_list $CB "$SH" "$R/sh/collect.sh" list -a alert_list.log > list8.out 2> /dev/null
   cnt list8.out '^  still held on this host:' 3 "collect.sh list ($L): one line per episode that says which sources on this host still hold it"
-  hasf list8.out '  still held on this host: ASH (in memory): not checked (no database connection); AWR: not checked (no database connection); sysstat: 2026-11-06 '"$D"'/sadir_list/sa20261106; alert log: holds the episode (read from text alert log alert_list.log)' "collect.sh list -a ($L): without a database connection the database sources are 'not checked (no database connection)'; the sysstat file of the day and the alert log are reported"
+  hasf list8.out '  still held on this host: ASH (in memory): not checked (sqlplus not found); AWR: not checked (sqlplus not found); sysstat: 2026-11-06 '"$D"'/sadir_list/sa20261106; alert log: holds the episode (read from text alert log alert_list.log)' "collect.sh list -a ($L): without sqlplus the database sources are 'not checked (sqlplus not found)'; the sysstat file of the day and the alert log are reported"
   hasf list8.out 'sysstat: 2026-11-13 no file in '"$D"'/sadir_list, 2026-11-14 no file in '"$D"'/sadir_list; alert log' "collect.sh list -a ($L): an episode across midnight names each day, and a day with no sysstat file says so"
   grep -v '^  still held on this host' list8.out > list8.base; grep -v '^  still held on this host' list1.out > list1.base
   same "collect.sh list ($L): every other line of the output is unchanged by the added line" list8.base list1.base
-  nof list8.out 'ASH (in memory): holds' "collect.sh list -a ($L): without a connection it never says what the database sources hold"
+  nof list8.out 'ASH (in memory): holds' "collect.sh list -a ($L): without sqlplus it never says what the database sources hold"
+  cnt list8.out 'ASH (in memory): not checked (sqlplus not found); AWR: not checked (sqlplus not found);' 3 "collect.sh list -a ($L): without sqlplus the reason is sqlplus not found, not a guess about the connection"
+  nof list8.out 'no database connection' "collect.sh list -a ($L): ... and no line claims there is no database connection"
+  # -a with sqlplus: the ASH and AWR query runs as without -a (it needs sqlplus, not v$diag_alert_ext); a mounted standby answers ASH and raises ORA-01219 for AWR
+  STUB_MODE=listsrcfail SQLPLUS=$W/sqlplus $CB "$SH" "$R/sh/collect.sh" list -a alert_list.log > list8c.out 2> /dev/null; echo $? > list8c.rc
+  cnt list8c.out 'AWR: not checked (ORA-01219: database or pluggable database not open: queries allowed on fixed tables or views only);' 3 "collect.sh list -a ($L): sqlplus is there: AWR is not checked with the ORA-01219 line (not the ERROR at line N: line above it), in every episode"
+  hasf list8c.out 'ASH (in memory): holds none of the window (oldest sample 2026-11-14 03:51:20); AWR: not checked (ORA-01219' "collect.sh list -a ($L): ... and ASH, which answers on a mounted standby, is reported"
+  cnt list8c.out '^Episode' 3 "collect.sh list -a ($L): ... the episodes come from the text alert log as before"
+  hasf list8c.out 'alert log: holds the episode (read from text alert log alert_list.log)' "collect.sh list -a ($L): ... and the alert log source is still the text file"
+  if [ "$(cat list8c.rc)" = 0 ]; then pass "collect.sh list -a ($L): a failed source query does not change the exit status"; else fail "collect.sh list -a ($L): exit $(cat list8c.rc) after a failed source query"; fi
+  STUB_MODE=list SQLPLUS=$W/sqlplus $CB "$SH" "$R/sh/collect.sh" list -a alert_list.log > list8d.out 2> /dev/null
+  hasf list8d.out 'ASH (in memory): holds none of the window (oldest sample 2026-11-14 03:51:20); AWR: holds the whole window (oldest snapshot 2026-10-21 10:00:00);' "collect.sh list -a ($L): both queries answer: the same wording as without -a"
+  STUB_MODE=listsrcdown SQLPLUS=$W/sqlplus $CB "$SH" "$R/sh/collect.sh" list -a alert_list.log > list8e.out 2> /dev/null
+  cnt list8e.out 'ASH (in memory): not checked (ORA-01017: invalid username/password; logon denied); AWR: not checked (ORA-01017: invalid username/password; logon denied);' 3 "collect.sh list -a ($L): sqlplus that cannot connect: the first ORA- line is the reason of both"
+  cnt list8e.out '^Episode' 3 "collect.sh list -a ($L): ... and the episodes are still listed"
+  grep -v '^  still held on this host' list8c.out > list8c.base
+  same "collect.sh list -a ($L): every other line of the output is the same with or without sqlplus" list8c.base list1.base
   newstate
   $CL "$SH" "$R/sh/collect.sh" list -a alert_list.log > list8b.out 2> /dev/null
   hasf list8b.out 'sysstat: 2026-11-13 '"$D"'/sadir/sa13, 2026-11-14 '"$D"'/sadir/sa14 is dated 2026-10-14;' "collect.sh list ($L): a reused saDD file is checked against the date in its banner (sa14 holds 2026-10-14, not 2026-11-14)"
@@ -1272,6 +1337,19 @@ for f in json_primary json_standby; do
   out=$(grep -nE '^[[:space:]]*--.*;[[:space:]]*$' "$R/sql/$f.sql" | cut -c1-120)
   if [ -z "$out" ]; then pass "sql lint: no comment line of $f.sql ends with a semicolon (SQL*Plus could take it for the end of a statement)"; else fail "sql lint: a comment line of $f.sql ends with a semicolon" "$out"; fi
 done
+# A select list with an aggregate and a bare scalar subquery and no GROUP BY is ORA-00937 (not a single-group group function). The stub does not run SQL, only a database finds it: tests/sql_lint.py does.
+if [ $HAVE_PY = 1 ]; then
+  printf 'select count(*) n,\n       (select max(x) from t) m\nfrom   (select 1 x from dual);\n' > "$W/a_bad.sql"
+  printf 'select count(*) n,\n       max((select max(x) from t)) m\nfrom   (select 1 x from dual);\nselect (select 1 from dual) a, count(*) over () c from dual;\nselect d, count(*), (select 1 from dual) q from t group by d;\nselect json_object(%s value (select count(*) from t)) j, (select count(*) from t) n from dual;\n' "'t'" > "$W/a_good.sql"
+  ab1=$(python3 "$T/sql_lint.py" "$W/a_bad.sql")
+  if [ -z "$(python3 "$T/sql_lint.py" "$W/a_good.sql")" ] && says "$ab1" 'a_bad.sql:1: aggregate beside a scalar subquery with no GROUP BY (ORA-00937)'; then
+    pass "sql lint: the aggregate check finds a scalar subquery beside count() with no GROUP BY, and accepts max((select ...)), an analytic count, a GROUP BY and subqueries beside no aggregate"
+  else fail "sql lint: the aggregate check itself is wrong" "$(python3 "$T/sql_lint.py" "$W/a_good.sql"; echo "$ab1")"; fi
+  for f in json_primary json_standby list_alerts list_sources; do
+    out=$(python3 "$T/sql_lint.py" "$R/sql/$f.sql")
+    if [ -z "$out" ]; then pass "sql lint: no select of $f.sql has an aggregate beside a bare scalar subquery without GROUP BY (ORA-00937)"; else fail "sql lint: ORA-00937 pattern in $f.sql" "$out"; fi
+  done
+fi
 NS_OK="define n = -1\ncolumn n new_value n noprint\nselect json_object('t' value 'lfs_by', 'x' value 1) from dual;\nselect json_object('t' value 'cov', 'side' value 'primary', 'src' value 'lfs_by',\n  'st' value case when &n < 0 then 'error' when &n > 0 then 'ok' else 'empty' end) from dual;\nselect json_object('t' value 'act', 'kind' value 'job') from dual;\nselect json_object('t' value 'cov', 'src' value 'act', 'kind' value 'job',\n  'st' value case when &n < 0 then 'error' else 'ok' end) from dual;\n"
 printf "$NS_OK" > "$W/n_good.sql"
 printf "$NS_OK" | sed "s/'kind' value 'job',\$/'kind' value 'rman',/" > "$W/n_kind.sql"

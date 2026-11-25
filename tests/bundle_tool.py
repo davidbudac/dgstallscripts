@@ -14,7 +14,7 @@
                                     (quiet two noash drift lost tzoff rtpmode rac full sbgap late: `full` is a Linux pair with the primary at UTC+01:00 and the standby
                                     at UTC+00:00 and every record of the newer collector inside the window, `sbgap` the same with a gap in the standby's ASH sampler
                                     inside the wait, `late` instances that started after the window, `hist` a window older than the newest history lines, `waitcov` an ASH gap check that ends
-                                    shortly after the SYNC wait); fictional names, documentation addresses 192.0.2.x / 198.51.100.x
+                                    shortly after the SYNC wait, `stfail` the statements of the newer sources failing (the job read with its records), `capped` every lookback source cut at its cap); fictional names, documentation addresses 192.0.2.x / 198.51.100.x
 """
 import json, re, sys
 from datetime import datetime, timedelta
@@ -746,6 +746,57 @@ def sc_hist():
     return p, s
 
 
+def sc_stfail():
+    """`full` with the statements of the newer sources failing, as in the first live run: the job read has its records (the row statement ran) but its count statement failed, so its cov record is st error;
+    the RMAN reads of both hosts, the log-switch read, the workload history, the alsync pass of the primary and lfs_by wrote no records and an error cov record (the notes the SQL writes). The report must say
+    'not checked' for every one of them: never 'none' (the source did not hold the interval) and never 'not covered' (it was not read at all). The records that did arrive may still be drawn."""
+    p, s = sc_full()
+
+    def fail(b, src, note, cap, kind=None):
+        b.recs[:] = [o for o in b.recs if not (o['t'] == src and (src != 'act' or o.get('kind') == kind))]   # only act records carry a kind
+        b.setcov(src, 'error', None, None, 0, cap, False, note, **({'kind': kind} if kind else {}))
+    p.setcov('act', 'error', None, None, 0, 2000, False, 'the cdb_scheduler_job_run_details statement failed', kind='job')
+    fail(p, 'act', 'the v$rman_status statement failed', 500, 'rman')
+    fail(s, 'act', 'the v$rman_status statement failed', 500, 'rman')
+    fail(p, 'act', 'the v$log_history statement failed', 5000, 'logsw')
+    fail(p, 'wl_hist', 'the dba_hist_sysmetric_summary statement failed', 1500)
+    fail(p, 'alsync', 'the pass over v$diag_alert_ext failed', 300, 'sql')
+    fail(p, 'lfs_by', 'the statement over ASH failed', 15)
+    s.setcov('alsync', 'skipped', note='alert log not readable: /u01/app/oracle/diag/rdbms/proddb_s/proddb1/trace/alert_proddb1.log', kind='text')
+    return p, s
+
+
+def sc_capped():
+    """`full` with every lookback source that has a cap cut at it: the newest records were kept and the oldest rows of the view were not, so the cov record's first is older than the oldest kept record.
+    A capped source holds from its oldest kept record on: the episodes before that are 'not covered', the ones inside it get an answer (a name or 'none'), and the count lines say the source was cut.
+    Oldest kept: job runs 11-13 09:30 (2000 of 5400 run records, one frequent job summarised), RMAN commands of the primary 11-16 (500 of 520), log switches 11-16 (5000 of 6200),
+    alsync lines 11-18 (300 of 340), wl_hist intervals 11-17 (1500 of 1800). The standby's RMAN list is not capped. The episodes: 11-06, 11-12, 11-13, 11-14 03:12, 11-16, 11-18 and 11-19 (10:04 unless
+    noted) and the incident of the window, 11-20 10:05."""
+    p, s = sc_full()
+
+    def newest(src, kind, field, since):   # keep the records of that source (and kind) from `since` on
+        p.recs[:] = [o for o in p.recs if not (o['t'] == src and o.get('kind') == kind and o[field] < since)]
+    newest('act', 'rman', 'a', '2026-11-16 00:00:00')
+    newest('act', 'logsw', 'a', '2026-11-16 00:00:00')
+    newest('alsync', None, 'ts', '2026-11-18 00:00:00')
+    newest('wl_hist', None, 'b', '2026-11-17 00:00')
+    p.recs[:] = [o for o in p.recs if not (o['t'] == 'act' and o.get('kind') == 'job')]
+    for name, a, secs in (('APP.NIGHTLY_CLEANUP', '2026-11-13 09:30:00', 180), ('APP.EXPORT_REPORTS', '2026-11-19 10:02:00', 300), ('APP.EXPORT_REPORTS', '2026-11-20 09:58:00', 150)):
+        p.add('act', kind='job', name=name, con=0, a=a, z=at(a, secs), st='SUCCEEDED', freq=False, n=1)
+    p.add('act', kind='job', name='APP.POLL_QUEUE', con=0, a='2026-10-21 14:46:00', z='2026-11-20 14:30:00', st=None, freq=True, n=2880)
+    last = lambda k: max(o['a'] for o in p.recs if o['t'] == 'act' and o.get('kind') == k)
+    p.setcov('act', 'ok', '2026-10-21 14:46:00', '2026-11-20 14:30:00', 5400, 2000, True,
+             'cdb_scheduler_job_run_details, lookback 30 days, newest 2000 run records kept, a job with more than 24 runs a day is one summary record; n = all rows in the lookback; first/last = the oldest and newest start the view holds, in the UTC offset this host has now', kind='job')
+    p.setcov('act', 'ok', '2026-11-08 02:00:01', last('rman'), 520, 500, True, 'v$rman_status, rows of type COMMAND, lookback 30 days, newest 500 kept; first/last = the oldest and newest start time the view holds', kind='rman')
+    p.setcov('act', 'ok', '2026-11-10 00:17:00', last('logsw'), 6200, 5000, True, 'v$log_history, lookback 30 days, newest 5000 kept; first/last = the oldest and newest first_time the view holds', kind='logsw')
+    p.setcov('alsync', 'ok', '2026-11-08 00:00:05', '2026-11-20 13:59:40', 340, 300, True,
+             'v$diag_alert_ext, lookback 30 days, newest 300 kept; lines that end an UNSYNCHRONIZED period of a destination (LAD:n is SYNCHRONIZED, LAD:n level SYNCHRONIZED)', kind='sql')
+    s.setcov('alsync', 'skipped', note='alert log not readable: /u01/app/oracle/diag/rdbms/proddb_s/proddb1/trace/alert_proddb1.log', kind='text')
+    p.setcov('wl_hist', 'ok', '2026-10-21 00:00:00', '2026-11-20 14:00:00', 1800, 1500, True,
+             'dba_hist_sysmetric_summary, group 2, lookback 30 days, one record per AWR snapshot interval, newest 1500 kept; first/last = the span the view holds, n = intervals in the lookback')
+    return p, s
+
+
 def sc_waitcov():
     """The ASH sampler-gap check ends shortly after the SYNC wait that timed out (the samples read stop at 10:06:20) while ASH itself holds the whole incident interval, as in a live case: the check has an answer
     for the wait and none for the rest of the incident interval"""
@@ -758,7 +809,7 @@ def sc_waitcov():
     return p, s
 
 
-SCENARIOS = {'quiet': sc_quiet, 'two': sc_two, 'noash': sc_noash, 'drift': sc_drift, 'lost': sc_lost, 'tzoff': sc_tzoff, 'rtpmode': sc_rtpmode, 'rac': sc_rac, 'full': sc_full, 'sbgap': lambda: sc_full(gap=True), 'late': sc_late, 'hist': sc_hist, 'waitcov': sc_waitcov}
+SCENARIOS = {'quiet': sc_quiet, 'two': sc_two, 'noash': sc_noash, 'drift': sc_drift, 'lost': sc_lost, 'tzoff': sc_tzoff, 'rtpmode': sc_rtpmode, 'rac': sc_rac, 'full': sc_full, 'sbgap': lambda: sc_full(gap=True), 'late': sc_late, 'hist': sc_hist, 'waitcov': sc_waitcov, 'stfail': sc_stfail, 'capped': sc_capped}
 
 
 def gen(outdir):

@@ -52,8 +52,8 @@ COV: primary/alert_text | skipped | – – – | 0 | not requested; pass -a to 
 COV: primary/alhist/sql | ok | 10-21 12:00 – 11-20 11:59 | 10 / cap 300 | not a window source
 COV: primary/alsync/sql | ok | 11-04 00:00 – 11-20 11:59 | 4 / cap 300 | not a window source
 COV: primary/wl_hist | ok | 11-04 00:00 – 11-20 12:00 | 396 / cap 1500 | not a window source
-COV: primary/act/rman | ok | 10-01 02:00 – 11-20 09:57 | 620 / cap 500 capped | not a window source
-COV: primary/act/job | error | – – – | 0 / cap 2000 | not a window source
+COV: primary/act/rman | ok | 10-01 02:00 – 11-20 09:57 kept from 11-08 09:57 | 620 / cap 500 capped | not a window source
+COV: primary/act/job | error | – – – | 0 / cap 2000 | not checked, the cdb_scheduler_job_run_details statement failed
 COV: primary/act/logsw | ok | 10-27 00:00 – 11-20 12:41 | 159 / cap 5000 | not a window source
 COV: primary/dgstatus | empty | 11-10 07:00 – 11-20 11:59 | 0 / cap 500 | yes
 COV: primary/trace | ok | 10-11 10:00 – 11-10 11:00 | 1 / cap 400 | yes
@@ -85,7 +85,7 @@ COV: standby/alert_sql | skipped | – – – | 0 | not collected on the standb
 COV: standby/alert_text | ok | 10-11 10:00 – 11-10 11:00 | 62 | yes
 COV: standby/alhist/text | ok | 10-11 10:00 – 11-10 11:00 | 0 / cap 300 | not a window source
 COV: standby/alsync/text | skipped | – – – | 0 | not a window source
-COV: standby/act/rman | error | – – – | 0 / cap 500 | not a window source
+COV: standby/act/rman | error | – – – | 0 / cap 500 | not checked, the statement failed (ORA-00942: table or view does not exist)
 COV: standby/dgstatus | empty | 11-10 07:00 – 11-20 11:59 | 0 / cap 500 | yes
 COV: standby/trace | empty | 10-11 10:00 – 11-10 11:00 | 0 / cap 400 | yes
 COV: standby/listener | ok | 10-11 10:00 – 11-10 11:00 | 46 | yes

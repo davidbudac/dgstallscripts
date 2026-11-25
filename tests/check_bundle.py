@@ -30,7 +30,7 @@ for i, line in enumerate(open(path, encoding='utf-8'), 1):
     if not line.strip():
         continue
     if not line.startswith('{'):
-        if not (allow_ora and re.search(r'ORA-|SP2-', line)):
+        if not (allow_ora and re.search(r'ORA-|SP2-|^ERROR at line \d+:$', line)):
             bad.append('line %d: not JSON: %s' % (i, line[:60]))
         continue
     try:

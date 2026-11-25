@@ -2374,6 +2374,7 @@ const ASCOLL = ['database', 'alhist', 'alsync', 'wl_hist', 'act', 'net', 'ep', '
 const NEWSRC = ['lfs_by', 'wl_hist', 'alsync', 'act', 'tx', 'dgstatus', 'dest_hist', 'base_hist', 'rfs_ev', 'rfs_hist', 'dgproc', 'archgap', 'lsnr_srv', 'ep', 'conn', 'sqlnet', 'ostcp', 'ntp', 'sar', 'netsamp'];
 const COVROWS = COVS.filter(r => COVORDER.includes(r.src) && !(NEWSRC.includes(r.src) && r.st === 'skipped' && /^not collected on the (primary|standby)/.test(String(r.note || '')))).sort((x, y) => (x.side < y.side ? -1 : x.side > y.side ? 1 : 0) || COVORDER.indexOf(x.src) - COVORDER.indexOf(y.src));
 function reachOf(r) {
+  if (r.st === 'error' && LBSTMT.includes(r.src)) return 'failed';   // the statement failed: nothing was read, so "as collected" would claim a read
   if (ASCOLL.includes(r.src)) return 'collected';
   const w = WSIDE[r.side]; if (!w || (r.st !== 'ok' && r.st !== 'empty')) return 'na';
   const c = covers(r.side, r.src, w[0], w[1], { log: LOGS.includes(r.src), kind: r.kind });
@@ -2381,7 +2382,7 @@ function reachOf(r) {
   const f = r.first ? ts(r.first) : NaN, l = r.last ? ts(r.last) : NaN;
   return f <= w[1] && l >= w[0] ? 'part' : 'none';
 }
-const REACHN = { whole: 'whole window', part: 'part of it', none: 'not at all', collected: 'as collected', na: 'not applicable' };
+const REACHN = { whole: 'whole window', part: 'part of it', none: 'not at all', collected: 'as collected', na: 'not applicable', failed: 'not checked' };
 /* ================= derive ================= */
 // A claim states what was read, not more. Durations from ASH samples are ranges: `lo` is certain, `hi` is the most it can be.
 const bnd = (lo, hi, exact) => exact ? dur(lo) : lo <= 0 ? 'under ' + dur(hi) : `${dur(lo)} to ${dur(hi)}`;
@@ -2636,19 +2637,28 @@ const ACTR = of('act').map(o => ({ side: o.side, kind: o.kind, name: o.name == n
   freq: o.freq === true || o.freq === 'true', n: o.n == null ? null : +o.n, thr: o.thr, seq: o.seq })).filter(r => Number.isFinite(r.a)).sort((x, y) => x.a - y.a);
 const HASACT = (k) => COVS.some(r => r.src === 'act' && r.kind === k);
 const ACTK = [['rman', 'RMAN', 'v$rman_status'], ['job', 'job', 'cdb_scheduler_job_run_details'], ['logsw', 'log switch', 'v$log_history']];
-// Does a lookback source hold [a, b]? Every cov record of the source (one per side, or per kind) is tried; the first that holds is returned, else the first reason.
+// What a capped lookback source (the newest N records kept) still holds: from its oldest kept record on, not from the oldest row its view holds. The times of the records the bundle kept, per cov record.
+const LBKEPT = { alsync: (r) => ALSYNC.filter(x => x.side === r.side).map(x => x.s), wl_hist: () => WLH.map(x => x.b), act: (r) => ACTR.filter(x => x.side === r.side && x.kind === r.kind && !x.freq).map(x => x.a) };
+const LBFIRST = (r) => { const k = r.capped && r.st === 'ok' && LBKEPT[r.src] ? LBKEPT[r.src](r) : []; return k.length ? Math.min(...k) : null; };   // the oldest kept record of a capped lookback source, else null
+// The newer sources that are one SQL statement each. A cov record with st error means the statement failed: nothing was checked. That reads "not checked" with the record's own note, never "none" and never "not covered".
+const LBSTMT = ['lfs_by', 'wl_hist', 'alsync', 'act'];
+const failTxt = (r) => { const n = String(r.note == null ? '' : r.note).replace(/\s+/g, ' ').trim().slice(0, 160); return !n ? 'the statement failed' : /fail/i.test(n) ? n : `the statement failed (${n})`; };
+// Does a lookback source hold [a, b]? Every cov record of the source (one per side, or per kind) is tried; the first that holds is returned, else the first reason (a failed read before any other).
 //   o.log: the rows are a list of events, not samples: the newest row says nothing about where the view ends, so a bundle collected after b holds the end (as a text log does).
-//   o.kept(rec): the times of the records that were kept; a capped source holds from its oldest kept record on, not from the oldest row of the view.
+//   a capped source holds from its oldest kept record on (LBKEPT).
 function lbHold(src, a, b, o = {}) {
   let bad = null;
+  const keep = (c) => { if (!bad || (c.code === 'error' && bad.code !== 'error')) bad = c; };
   for (const r of COVS.filter(x => x.src === src && (!o.kind || x.kind === o.kind) && (!o.side || x.side === o.side))) {
     const c = covers(r.side, src, a, b, { kind: r.kind, log: !!o.log, capOk: true });
-    if (c.ok && r.capped && o.kept) { const k = o.kept(r); if (!k.length || Math.min(...k) > a) { bad = bad || { ok: false, code: 'capped', why: `${sdName(r.side)} ${SRCN[src] || src}${r.kind ? ' (' + r.kind + ')' : ''} was capped at ${r.cap} records and holds nothing before its oldest kept record ${stamp(k.length ? Math.min(...k) : b)}`, rec: r, side: r.side }; continue; } }
+    if (c.ok && r.capped && LBKEPT[src]) { const k = LBKEPT[src](r); if (!k.length || Math.min(...k) > a) { keep({ ok: false, code: 'capped', why: `${sdName(r.side)} ${SRCN[src] || src}${r.kind ? ' (' + r.kind + ')' : ''} was capped at ${r.cap} records and holds nothing before its oldest kept record ${stamp(k.length ? Math.min(...k) : b)}`, rec: r, side: r.side }); continue; } }
     if (c.ok) return Object.assign({ side: r.side }, c);
-    bad = bad || c;
+    keep(c);
   }
   return bad || { ok: false, code: 'norec', why: `no ${SRCN[src] || src} coverage record` };
 }
+// the answer of a lookback source that does not hold the interval: a failed read is "not checked", everything else "not covered"
+const lbMiss = (h) => ({ nc: true, err: h.code === 'error', why: h.why });
 // endpoints: which host is which, and what the network checks targeted
 fact({ at: null, side: HAS.primary ? 'primary' : 'standby', source: 'bundle headers, meta, v$archive_dest, net records', kind: 'cfg', precision: 'as collected', go: '#network',
   text: `endpoints: ${['primary', 'standby'].filter(sd => HAS[sd]).map(sd => { const m = first('meta', sd) || {}, h = HDR.find(x => x.side === sd) || {}; return `${sd} host ${m.host || h.host || '?'} (instance ${m.inst || '?'}, database ${m.uniq || '?'}${CLK[sd] ? ', UTC' + CLK[sd].utc_off : ''})`; }).join('; ')}${DEST ? `; the primary ships to ${DEST.dest} (LAD:${DEST.id})` : ''}${of('net').length ? '; network checks (collect.sh -p): ' + of('net').map(n => `${n.side} to ${n.peer}:${n.port}`).join(', ') : '; no network check in the bundles'}` });
@@ -3467,8 +3477,8 @@ $('#explBody').innerHTML = INC.length ? INC.map(explBlock).join('') : empty(bund
     const w = WSIDE[r.side], skip = ASCOLL.includes(r.src), c = !skip && w ? covers(r.side, r.src, w[0], w[1], { log: LOGS.includes(r.src), kind: r.kind }) : null;
     const ok = r.st === 'ok' || r.st === 'empty';
     return `<tr data-cov="${r.side}/${r.src}${r.kind ? '/' + r.kind : ''}"><td>${esc(SRCN[r.src] || r.src)}${r.kind ? ' <span class="pill">' + esc(r.kind) + '</span>' : ''}</td><td>${hostBadge(r.side)}</td><td>${st(ok ? 'good' : r.st === 'error' ? 'crit' : 'info', r.st)}</td>
-      <td class="mono">${esc(short(r.first))} – ${esc(short(r.last))}</td><td class="num">${esc(r.n)}${r.cap != null ? ' / cap ' + esc(r.cap) : ''}${r.capped ? ' ' + st('warn', 'capped') : ''}</td>
-      <td>${skip ? '<span class="pill">not a window source</span>' : !ok ? '<span class="pill">' + esc(String(r.note || r.st).slice(0, 80)) + '</span>' : c && c.ok ? st('good', 'yes') : `<span class="pill">${esc(c ? c.why.replace(/^(primary|standby) [^:]*?(holds|was capped)/, '$2') : '')}</span>`}</td>
+      <td class="mono">${esc(short(r.first))} – ${esc(short(r.last))}${LBFIRST(r) != null ? ` <span class="pill">kept from ${esc(stamp(LBFIRST(r)).slice(5, 16))}</span>` : ''}</td><td class="num">${esc(r.n)}${r.cap != null ? ' / cap ' + esc(r.cap) : ''}${r.capped ? ' ' + st('warn', 'capped') : ''}</td>
+      <td>${r.st === 'error' && LBSTMT.includes(r.src) ? `<span class="pill">not checked, ${esc(failTxt(r).slice(0, 100))}</span>` : skip ? '<span class="pill">not a window source</span>' : !ok ? '<span class="pill">' + esc(String(r.note || r.st).slice(0, 80)) + '</span>' : c && c.ok ? st('good', 'yes') : `<span class="pill">${esc(c ? c.why.replace(/^(primary|standby) [^:]*?(holds|was capped)/, '$2') : '')}</span>`}</td>
       <td data-reach="${reachOf(r)}">${{ whole: st('good', REACHN.whole), part: st('warn', REACHN.part), none: st('crit', REACHN.none) }[reachOf(r)] || `<span class="pill">${REACHN[reachOf(r)]}</span>`}</td></tr>`; }).join('')}</tbody></table>`;
   $('#covNote').textContent = '';
 })();
@@ -3770,7 +3780,8 @@ function whoView(w, i) {
   let lists;
   if (!HAS.primary) lists = empty('No primary bundle.');
   else if (!LFBR) lists = empty('Not collected: no lfs_by records in this bundle.');
-  else if (LFBR.st === 'error' || LFBR.st === 'skipped') lists = empty(`Not collected: the lfs_by read ${LFBR.st === 'error' ? 'failed' : 'was skipped'}${LFBR.note ? ' (' + String(LFBR.note).slice(0, 140) + ')' : ''}.`);
+  else if (LFBR.st === 'error') lists = empty(`Not checked: lfs_by, ${failTxt(LFBR)}.`);
+  else if (LFBR.st === 'skipped') lists = empty(`Not collected: the lfs_by read was skipped${LFBR.note ? ' (' + String(LFBR.note).slice(0, 140) + ')' : ''}.`);
   else {
     const grp = (dim, label) => { const g = LFB.filter(x => x.dim === dim).sort((x, y) => y.n - x.n), max = Math.max(1, ...g.map(x => x.n));
       return `<div class="whol" data-who-list="${dim}"><h3>${esc(label)}</h3>${g.length ? g.slice(0, 10).map(x => `<div class="whor"><span class="nm${x.name == null ? ' nul' : ''}" title="${esc(x.name == null ? 'no value' : x.name)}">${x.name == null ? 'no value' : esc(x.name)}</span>` +
@@ -3930,19 +3941,21 @@ function epSync(r) {
     return nx.k === 'S' ? { at: nx.a, after: nx.a - r.s } : { txt: `the state changed to ${stName(nx.k)} at ${clock(nx.a, 8)}` };
   }
   const i = EPS.indexOf(r.ep), nx = EPS[i + 1], end = nx ? nx.s : r.e;
-  const ok = ['primary', 'standby'].filter(sd => lbHold('alsync', r.s, end, { side: sd, log: true, kept: (c) => ALSYNC.filter(x => x.side === c.side).map(x => x.s) }).ok);
-  if (!ok.length) return { nc: true, why: lbHold('alsync', r.s, end, { log: true, kept: (c) => ALSYNC.filter(x => x.side === c.side).map(x => x.s) }).why };
+  const ok = ['primary', 'standby'].filter(sd => lbHold('alsync', r.s, end, { side: sd, log: true }).ok);
+  if (!ok.length) return lbMiss(lbHold('alsync', r.s, end, { log: true }));
   const l = ALSYNC.find(x => ok.includes(x.side) && x.s > r.s && (!nx || x.s < nx.s));
   return l ? { at: l.s, after: l.s - r.s, side: l.side } : { txt: 'no return line in the history' };
 }
 const epRedo = (r) => { if (r.t == null) return { txt: 'start before the window' }; const w = WLH.find(x => x.b <= r.t && r.t < x.e);
-  return w ? { w } : { nc: true, why: lbHold('wl_hist', r.t, r.t, { side: 'primary' }).why }; };
+  if (w) return { w };
+  const h = lbHold('wl_hist', r.t, r.t, { side: 'primary' });
+  return h.ok ? { nc: true, why: 'no interval of dba_hist_sysmetric_summary holds this time' } : lbMiss(h); };
 // what an activity record says about the instant t: running at it, or started up to 10 minutes before it
 function epAct(r, k, side) {
   if (r.t == null) return { txt: 'start before the window' };
   const t = r.t, lo = t - ACT_BEFORE;
-  const h = lbHold('act', k === 'logsw' ? t - SW_NEAR : lo, k === 'logsw' ? t + SW_NEAR : t, { kind: k, side, log: true, kept: (c) => ACTR.filter(x => x.side === c.side && x.kind === k && !x.freq).map(x => x.a) });
-  if (!h.ok) return { nc: true, why: h.why };
+  const h = lbHold('act', k === 'logsw' ? t - SW_NEAR : lo, k === 'logsw' ? t + SW_NEAR : t, { kind: k, side, log: true });
+  if (!h.ok) return lbMiss(h);
   const rs = ACTR.filter(x => x.side === side && x.kind === k && !x.freq);
   if (k === 'logsw') return { m: rs.filter(x => Math.abs(x.a - t) <= SW_NEAR), near: [] };
   const run = (x) => x.a <= t && x.z != null && x.z >= t;   // a command with no end time is listed only when it started within the 10 minutes: nothing says how long it ran
@@ -3960,16 +3973,18 @@ const actTxt = (k, x, t) => k === 'logsw' ? `thread ${x.thr} sequence ${x.seq}, 
     if (EPCOL.act) kinds.forEach(([k]) => COVS.filter(c => c.src === 'act' && c.kind === k && !naSide(c)).forEach(c => { r.ac[k + '|' + c.side] = epAct(r, k, c.side); })); });
   const inc = EPROWS.filter(r => r.inc), hist = EPROWS.filter(r => !r.inc), shown = [...inc, ...hist.slice(0, 60)];
   const nc = (why) => `<span class="nc" title="${esc(why || '')}">not covered</span>`;
+  const miss = (y) => y.err ? `<span class="nc" title="${esc(y.why || '')}">not checked (statement failed)</span>` : nc(y.why);   // a failed read is not checked, not "not covered"
+  const cutTxt = (c, who, noun) => { const k = LBFIRST(c); return c.capped && c.st === 'ok' ? ` ${who} was cut at its cap of ${c.cap} ${noun}${k != null ? ` and holds from ${stamp(k).slice(0, 16)} on` : ''}.` : ''; };
   const cell = (r) => {
     const when = r.t == null ? `<div>before the window</div>` : `<div class="mono">${esc(stamp(r.t).slice(0, 10))} ${wdOf(r.t)}</div><div class="mono">${esc(stamp(r.t).slice(11))}</div>`;
     const first = `<td class="c-start">${when}<div>${r.inc ? `<span class="pill">this window, incident ${r.inc.n}</span>` : `<span class="pill">${r.ep.pos} the window</span>`}</div></td>`;
     const what = `<td class="c-what"><div>${esc(r.what.join('; '))}</div><div>${r.sides.map(hostBadge).join(' ')}</div></td>`;
     const span = `<td class="c-span mono">${r.inc && r.t == null ? esc(clock(r.s, 8)) + ' (window start)' : esc(stamp(r.s).slice(11))} to ${esc(r.inc ? clock(r.e, 8) : stamp(r.e).slice(11))}${r.inc && r.inc.endOpen ? ' (end of the window)' : ''}</td>`;
     let x = first + what + span;
-    if (EPCOL.sync) { const y = r.sy; x += `<td class="c-sync">${y.nc ? nc(y.why) : y.txt ? esc(y.txt) : `<div class="mono">${esc(hmsOf(y.at, r.s))}</div><div>${esc(dur(y.after))} after the first line</div>`}</td>`; }
-    if (EPCOL.redo) { const y = r.rd; x += `<td class="c-redo">${y.nc ? nc(y.why) : y.txt ? esc(y.txt) : `<div>average ${y.w.redo == null ? 'no value' : esc(f2(y.w.redo)) + ' MB/s'}, largest 1 minute ${y.w.redoMax == null ? 'no value' : esc(f2(y.w.redoMax)) + ' MB/s'}</div><div class="mono">${esc(hmOf(y.w.b, r.t))} to ${esc(hmOf(y.w.e, r.t))}</div>`}</td>`; }
+    if (EPCOL.sync) { const y = r.sy; x += `<td class="c-sync">${y.nc ? miss(y) : y.txt ? esc(y.txt) : `<div class="mono">${esc(hmsOf(y.at, r.s))}</div><div>${esc(dur(y.after))} after the first line</div>`}</td>`; }
+    if (EPCOL.redo) { const y = r.rd; x += `<td class="c-redo">${y.nc ? miss(y) : y.txt ? esc(y.txt) : `<div>average ${y.w.redo == null ? 'no value' : esc(f2(y.w.redo)) + ' MB/s'}, largest 1 minute ${y.w.redoMax == null ? 'no value' : esc(f2(y.w.redoMax)) + ' MB/s'}</div><div class="mono">${esc(hmOf(y.w.b, r.t))} to ${esc(hmOf(y.w.e, r.t))}</div>`}</td>`; }
     if (EPCOL.act) x += `<td class="c-act">${kinds.map(([k, lbl]) => Object.keys(r.ac).filter(q => q.startsWith(k + '|')).map(q => { const y = r.ac[q], sd = q.split('|')[1], nm = k === 'rman' ? `${lbl} (${sd})` : lbl;
-      if (y.txt) return `<div>${esc(nm)}: ${esc(y.txt)}</div>`; if (y.nc) return `<div>${esc(nm)}: ${nc(y.why)}</div>`;
+      if (y.txt) return `<div>${esc(nm)}: ${esc(y.txt)}</div>`; if (y.nc) return `<div>${esc(nm)}: ${miss(y)}</div>`;
       return `<div>${esc(nm)}: ${y.m.length ? esc(y.m.slice(0, 3).map(z => actTxt(k, z, r.t)).join('; ')) + (y.m.length > 3 ? ` and ${y.m.length - 3} more` : '') : 'none'}</div>`; }).join('')).join('') || 'not collected'}</td>`;
     return `<tr data-ep="${r.inc ? 'inc' + r.inc.n : 'h' + EPS.indexOf(r.ep)}"${r.inc ? ' class="inc"' : ''}>${x}</tr>`;
   };
@@ -3980,14 +3995,21 @@ const actTxt = (k, x, t) => k === 'logsw' ? `thread ${x.thr} sequence ${x.seq}, 
   const L = [], all = EPROWS.filter(r => r.t != null);
   kinds.forEach(([k, lbl, view]) => COVS.filter(c => c.src === 'act' && c.kind === k && !naSide(c)).forEach(c => {
     const where = k === 'rman' ? ` on the ${c.side}` : '', ok = all.filter(r => r.ac[k + '|' + c.side] && !r.ac[k + '|' + c.side].nc && !r.ac[k + '|' + c.side].txt), n = ok.length;
-    if (k === 'logsw') { L.push(`${n ? `A log switch within ${SW_NEAR} s of the start: ${ok.filter(r => r.ac[k + '|' + c.side].m.length).length} of ${plural(n, 'episode')} that ${view} covers.` : `${view}: no episode lies inside what the view holds.`}`); return; }
+    const cx = cutTxt(c, `${view}${where}`, k === 'job' ? 'run records' : 'records');   // a capped source: the episodes counted are those inside what it kept
+    if (c.st === 'error') { L.push(`${view}${where}: not checked, ${failTxt(c)}.`); return; }
+    if (k === 'logsw') { L.push(`${n ? `A log switch within ${SW_NEAR} s of the start: ${ok.filter(r => r.ac[k + '|' + c.side].m.length).length} of ${plural(n, 'episode')} that ${view} covers.` : `${view}: no episode lies inside what the view holds.`}${cx}`); return; }
     const by = {}; ok.forEach(r => [...new Set(r.ac[k + '|' + c.side].near.map(x => x.name))].forEach(nm => { by[nm] = (by[nm] || 0) + 1; }));
     const top = Object.entries(by).sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1)).slice(0, 3);
-    L.push(!n ? `${view}${where}: no episode lies inside what the view holds.` : top.length ? top.map(([nm, v]) => `${k === 'rman' ? 'An RMAN command' : 'A run of job'} named ${nm || '(no name)'} started within ${ACT_BEFORE / 60} minutes before ${v} of the ${plural(n, 'episode')} that ${view} covers${where}.`).join(' ')
-      : `No ${k === 'rman' ? 'RMAN command' : 'job run'} started within ${ACT_BEFORE / 60} minutes before any of the ${plural(n, 'episode')} that ${view} covers${where}.`);
+    L.push((!n ? `${view}${where}: no episode lies inside what the view holds.` : top.length ? top.map(([nm, v]) => `${k === 'rman' ? 'An RMAN command' : 'A run of job'} named ${nm || '(no name)'} started within ${ACT_BEFORE / 60} minutes before ${v} of the ${plural(n, 'episode')} that ${view} covers${where}.`).join(' ')
+      : `No ${k === 'rman' ? 'RMAN command' : 'job run'} started within ${ACT_BEFORE / 60} minutes before any of the ${plural(n, 'episode')} that ${view} covers${where}.`) + cx);
   }));
   ACTR.filter(x => x.freq).forEach(x => L.push(`Job ${x.name} ran ${x.n} times in the lookback (more than 24 a day on average; first start ${stamp(x.a).slice(0, 16)}, last start ${stamp(x.z == null ? x.a : x.z).slice(0, 16)}): not listed per episode.`));
-  const sc = []; if (EPCOL.sync) { const ok = all.filter(r => r.ep && r.sy && !r.sy.nc), back = ok.filter(r => r.sy.at != null).length; sc.push(ok.length ? `A line that ends the UNSYNCHRONIZED period follows ${back} of the ${plural(ok.length, 'episode')} of the history that alsync covers.` : 'alsync covers none of the episodes of the history.'); }
+  const sc = [];
+  if (EPCOL.sync) { const ok = all.filter(r => r.ep && r.sy && !r.sy.nc), back = ok.filter(r => r.sy.at != null).length, asy = COVS.filter(c => c.src === 'alsync');
+    if (ok.length) sc.push(`A line that ends the UNSYNCHRONIZED period follows ${back} of the ${plural(ok.length, 'episode')} of the history that alsync covers.${asy.map(c => cutTxt(c, `alsync on the ${c.side}`, 'lines')).join('')}`);
+    else if (!asy.some(c => c.st === 'error')) sc.push('alsync covers none of the episodes of the history.');
+    asy.filter(c => c.st === 'error').forEach(c => sc.push(`alsync on the ${c.side}: not checked, ${failTxt(c)}.`)); }
+  if (EPCOL.redo) COVS.filter(c => c.src === 'wl_hist').forEach(c => { if (c.st === 'error') sc.push(`wl_hist: not checked, ${failTxt(c)}.`); else { const x = cutTxt(c, 'wl_hist', 'intervals'); if (x) sc.push(x.trim()); } });
   cnt.innerHTML = [...sc, ...L].map((x, i) => `<p class="exsub" data-ep-count="${i}">${esc(x)}</p>`).join('') + (EPCOL.act ? `<details class="rd"><summary>Reading (1)</summary><p class="exsub" data-ep-reading="1">if an activity starts at the same time as most of the episodes, it is a candidate to look at; coincidence in time does not show that it produced them, and work scheduled outside the database (cron, backups of the host, the network) is not in these views.</p></details>` : '');
 })();
 

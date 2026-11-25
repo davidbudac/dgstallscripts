@@ -31,7 +31,7 @@ REACH: primary/alhist/sql | as collected
 REACH: primary/alsync/sql | as collected
 REACH: primary/wl_hist | as collected
 REACH: primary/act/rman | as collected
-REACH: primary/act/job | as collected
+REACH: primary/act/job | not checked
 REACH: primary/act/logsw | as collected
 REACH: primary/dgstatus | whole window
 REACH: primary/trace | whole window
@@ -63,7 +63,7 @@ REACH: standby/alert_sql | not applicable
 REACH: standby/alert_text | whole window
 REACH: standby/alhist/text | as collected
 REACH: standby/alsync/text | as collected
-REACH: standby/act/rman | as collected
+REACH: standby/act/rman | not checked
 REACH: standby/dgstatus | whole window
 REACH: standby/trace | whole window
 REACH: standby/listener | whole window
