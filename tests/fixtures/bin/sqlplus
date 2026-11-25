@@ -6,13 +6,14 @@
 #   list / list1219  (collect.sh list) print the file STUB_LIST, or what a mounted standby gives for v$diag_alert_ext: the echoed line, the marker, "ERROR at line 20:" and then the ORA-01219 line
 #   list also answers sql/list_sources.sql (oldest ASH sample and AWR snapshot): the file STUB_SRC, or ASH 2026-11-14 03:51:20 and AWR 2026-10-21 10:00:00 without it;
 #   listsrcfail  as list, but the AWR statement fails (ORA-01219, as on a mounted standby) after the ASH one succeeded;  listsrcdown  as list, but sql/list_sources.sql cannot connect (ORA-01017)
-#   STUB_ARGS=file  the arguments of the call are written there
+#   STUB_ARGS=file  the arguments of the call are written there (each call overwrites: the last one stays);  STUB_ARGS_ALL=file  the arguments of every call, one line per call, appended
 #   peer  as meta, plus what the real SQL writes for the endpoints: a dest record (primary) and the fal_server parameter
 #   full  as meta, plus the records and coverage records of the newer statements, in the shapes of sql/json_primary.sql and sql/json_standby.sql:
 #         primary: lfs_by (three dims), wl_hist, alhist and alsync (both kind sql), act rman, act job (with one frequent-job summary, freq true) and act logsw; standby: act rman
 #         STUB_OMIT="act:job lfs_by"  those sources write neither records nor a coverage record (the statement failed before its coverage statement); a source is its name, act as act:KIND
 #         STUB_ERR="wl_hist act:rman"  those sources write no records and the error coverage record the SQL writes when their count statement failed (n 0, no first/last)
 [ -n "$STUB_ARGS" ] && echo "$@" > "$STUB_ARGS"      # tests: what collect.sh passed
+[ -n "$STUB_ARGS_ALL" ] && echo "$@" >> "$STUB_ARGS_ALL"
 case $STUB_MODE in
   fail) printf 'ERROR:\nORA-01017: invalid username/password; logon denied\n\n\nSP2-0157: unable to CONNECT to ORACLE after 3 attempts, exiting SQL*Plus\n'; exit 1 ;;
 esac

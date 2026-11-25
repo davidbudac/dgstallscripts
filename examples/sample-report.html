@@ -286,6 +286,14 @@ details.rd[open] > summary { margin-bottom: 4px; }
 .fn { font-size: 12px; color: var(--muted-fg); margin: 0; } .fn:empty { display: none; }
 .vfoot { font-size: 11.5px; color: var(--muted-fg); text-align: right; margin-top: 4px; }
 .card > .fn { padding: 8px 20px 16px; } .cc > .fn { margin: 10px 0 0; } .cc > .fn:first-child { margin: 0; }
+/* the episode selector: drawn only when the bundles hold several collection windows */
+.epnav { display: flex; gap: 6px; } .epnav a.btn { text-decoration: none; } .epnav .btn[aria-disabled="true"] { opacity: .5; cursor: default; box-shadow: none; }
+.epst td { font-size: 12.5px; padding: 7px 10px; } .epst td div + div { margin-top: 2px; } .epst td:first-child { padding-left: 20px; } .epst td:nth-child(2), .epst td:nth-child(3) { white-space: nowrap; }
+.epst a { color: var(--fg); text-underline-offset: 2px; }
+.epst tr[aria-current="true"] td { background: color-mix(in srgb, var(--muted-bg) 60%, transparent); } .epst tr[aria-current="true"] td:first-child { box-shadow: inset 2px 0 0 var(--prim); }
+.pill.sh { background: var(--muted-bg); color: var(--fg); padding: 2px 8px; border-radius: 99px; }
+.epd > summary { cursor: pointer; padding: 10px 20px 14px; font-size: 12.5px; font-weight: 500; color: var(--muted-fg); } .epd[open] > summary { padding-bottom: 0; }
+@media print { .epnav { display: none; } }
 </style>
 </head>
 <body>
@@ -2285,7 +2293,7 @@ const TSF = { alert: ['ts'], tx: ['ts'], fg: ['m'], fg10: ['b'], wl: ['m'], arch
 const MON = { JAN: '01', FEB: '02', MAR: '03', APR: '04', MAY: '05', JUN: '06', JUL: '07', AUG: '08', SEP: '09', OCT: '10', NOV: '11', DEC: '12' };
 const full = (v, day) => { v = String(v); const m = /^(\d\d)-([A-Za-z]{3})-(\d{4}) (.+)$/.exec(v);
   return /^\d{4}-\d\d-\d\d/.test(v) ? v : m && MON[m[2].toUpperCase()] ? `${m[3]}-${MON[m[2].toUpperCase()]}-${m[1]} ${m[4]}` : day && /^\d\d:\d\d/.test(v) ? day + ' ' + v : v; };
-const bundles = [];
+const allBundles = [];
 document.querySelectorAll('script.dgr-bundle').forEach(el => {
   const b = { file: el.dataset.file || '', side: '', host: '', hdr: null, lines: [], warn: [] };
   el.textContent.split('\n').forEach(raw => {
@@ -2297,11 +2305,72 @@ document.querySelectorAll('script.dgr-bundle').forEach(el => {
   // a v1 time of day belongs to the window's day; net.at is when the check ran, which is the collection day
   const day = String((b.hdr || b.lines.find(o => o.t === 'meta') || {}).from || '').slice(0, 10), cday = String((b.hdr && b.hdr.collected) || '').slice(0, 10) || day;
   b.lines.forEach(o => (TSF[o.t] || []).forEach(f => { if (o[f] != null && o[f] !== '') o[f] = full(o[f], f === 'at' ? cday : day); }));
-  bundles.push(b);
+  allBundles.push(b);
 });
 
-/* ---- clocks: each host logs in its own local time; every standby time is converted to the primary's local time here, so every merged view agrees ---- */
+/* ---- episodes: the bundles of several collection windows are split into sets and the page analyses ONE set (?ep=n in the address, 1 = the oldest), so everything below sees the bundles
+   of one window only, exactly as in a report built from them alone. At most one primary and one standby bundle: one set holding everything (a hand-collected pair may have slightly different
+   windows). Otherwise one set per primary bundle, in the order of the window start; a standby bundle joins the primary bundle with the same header window, else the one whose window
+   overlaps its own most (instants in UTC, ties to the earlier set), else it is a set of its own. Two primary bundles are never pooled. ---- */
 const offSec = (o) => { const m = /^([+-])(\d\d):(\d\d)$/.exec(String(o == null ? '' : o)); return m ? (m[1] === '-' ? -1 : 1) * (+m[2] * 3600 + +m[3] * 60) : null; };
+// The selector at the top of the page, drawn only when there are several sets: one row per set with its window, its bundles and what its alert lines hold (a small function of its own, over the
+// alert records of that set: the first line with a Data Guard error code and the distinct labels found, in time order, each time in the clock of the host that logged it).
+const EPCODES = ['ORA-16198', 'ORA-03135', 'ORA-03113', 'ORA-16055', 'ORA-16191', 'TNS-12535', 'TNS-12170', 'TNS-12609'];
+function drawSets(sets, ep, off, utc) {
+  const logged = (s) => { const hits = []; let any = false;
+    s.bundles.forEach(b => { const o = off(b); b.lines.forEach(r => { if (r.t !== 'alert') return; any = true;
+      const m = String(r.msg == null ? '' : r.msg), L = EPCODES.filter(c => m.includes(c)), u = /LAD:(\d+)/.exec(m);
+      if (m.includes('Possible network disconnect')) L.push('possible network disconnect (standby)');
+      if (u && m.includes('UNSYNCHRONIZED') && !m.includes('reason ASYNC configuration')) L.push(`LAD:${u[1]} UNSYNCHRONIZED`);
+      if (L.length) hits.push({ b, L, t: String(r.ts || ''), at: utc(r.ts, o), i: hits.length }); }); });
+    if (!any) return 'no alert records';
+    if (!hits.length) return 'no Data Guard error line in the window';
+    hits.sort((x, y) => (isNaN(x.at) ? Infinity : x.at) - (isNaN(y.at) ? Infinity : y.at) || x.i - y.i);
+    const h = hits[0], when = (h.t.slice(0, 10) !== s.win.from.slice(0, 10) ? h.t.slice(5, 10) + ' ' : '') + h.t.slice(11, 19);
+    return `first line ${when} (${h.b.side || 'bundle'}): ${[...new Set(hits.flatMap(x => x.L))].join(', ')}`; };
+  const bl = (b) => `<div>${b.side ? hostBadge(b.side) : '<span class="badge host">bundle</span>'} ${esc(b.host)} <span class="mono">${esc(b.file)}</span></div>`;
+  const rows = sets.map((s, i) => { const pr = s.bundles.filter(b => b.side === 'primary'), sb = s.bundles.filter(b => b.side === 'standby'), k = i + 1;
+    return `<tr data-set="${k}"${k === ep ? ' aria-current="true"' : ''}><td class="mono">${k}</td><td class="mono">${esc(s.win.from)} – ${esc(s.win.to)}</td>` +
+      `<td>${pr.length ? pr.map(bl).join('') : '<div class="pill">no primary bundle</div>'}${sb.length ? sb.map(bl).join('') : '<div class="pill">no standby bundle</div>'}${s.bundles.filter(b => b.side !== 'primary' && b.side !== 'standby').map(bl).join('')}</td>` +
+      `<td>${esc(logged(s))}</td><td>${k === ep ? '<span class="pill sh">shown</span>' : `<a href="?ep=${k}" data-ep="${k}">Show</a>`}</td></tr>`; }).join('');
+  const table = `<div class="tbl"><table class="epst"><thead><tr><th>#</th><th>Window</th><th>Bundles</th><th>Alert lines</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  const nav = (k, l) => k >= 1 && k <= sets.length ? `<a class="btn" href="?ep=${k}" data-ep="${k}">${l}</a>` : `<span class="btn" aria-disabled="true">${l}</span>`;
+  const el = document.createElement('section'); el.id = 'epsel'; el.className = 'card';
+  el.innerHTML = `<div class="ch"><div><h2>Episode ${ep} of ${sets.length} in this report</h2><p>The bundles hold ${sets.length} collection windows; one is shown at a time. <code>?ep=&lt;n&gt;</code> in the address chooses it.</p></div>` +
+    `<div class="epnav">${nav(ep - 1, 'Previous')}${nav(ep + 1, 'Next')}</div></div>` + (sets.length > 8 ? `<details class="epd"><summary>All ${sets.length} episodes</summary><div class="cc flush">${table}</div></details>` : `<div class="cc flush">${table}</div>`);
+  el.addEventListener('click', e => { const a = e.target.closest('a[data-ep]'); if (a) a.setAttribute('href', `?ep=${a.dataset.ep}${location.hash}`); });   // the pane or section that is open stays open in the other episode
+  document.getElementById('report').before(el);
+}
+const { sets: SETS, ep: EP } = (() => {
+  const off = (b) => { const c = b.lines.find(o => o.t === 'clock' && o.utc_off != null), m = b.lines.find(o => o.t === 'meta' && o.tz); return offSec(c ? c.utc_off : m ? m.tz : null) || 0; };   // unknown counts as 0
+  const utc = (s, o) => { const m = /^(\d{4})-(\d\d)-(\d\d)[ T](\d\d):(\d\d)(?::(\d\d))?/.exec(String(s)); return m ? Date.UTC(+m[1], m[2] - 1, +m[3], +m[4], +m[5], +(m[6] || 0)) / 1000 - o : NaN; };
+  const win = (b) => { const h = b.hdr && b.hdr.from && b.hdr.to ? b.hdr : b.lines.find(o => o.t === 'meta' && o.from && o.to); if (!h) return null;   // the raw strings as loaded, and the same in UTC
+    const w = { from: String(h.from), to: String(h.to), a: utc(h.from, off(b)), z: utc(h.to, off(b)) }; return isNaN(w.a) || isNaN(w.z) ? null : w; };
+  const n = (sd) => allBundles.filter(b => b.side === sd).length, W = new Map(allBundles.map(b => [b, win(b)])), byFile = (x, y) => x.file < y.file ? -1 : x.file > y.file ? 1 : 0;
+  let sets = [{ bundles: allBundles.slice() }], free = [];
+  if (n('primary') > 1 || n('standby') > 1) {
+    free = allBundles.filter(b => !W.get(b));   // no window at all: joins the set that is shown
+    const order = (x, y) => W.get(x.anchor).a - W.get(y.anchor).a || byFile(x.anchor, y.anchor);
+    const pri = allBundles.filter(b => b.side === 'primary' && W.get(b)).map(b => ({ anchor: b, bundles: [b] })).sort(order), own = [];
+    allBundles.filter(b => b.side !== 'primary' && W.get(b)).forEach(f => {
+      const w = W.get(f), same = pri.filter(s => W.get(s.anchor).from === w.from && W.get(s.anchor).to === w.to);
+      const ov = (s) => Math.max(0, Math.min(W.get(s.anchor).z, w.z) - Math.max(W.get(s.anchor).a, w.a));
+      let hit = same[0] || null; if (!hit) pri.forEach(s => { if (ov(s) > 0 && (!hit || ov(s) > ov(hit))) hit = s; });
+      if (hit) hit.bundles.push(f); else own.push({ anchor: f, bundles: [f] });
+    });
+    if (pri.length + own.length) sets = pri.concat(own).sort(order);
+    else free = [];
+  }
+  sets.forEach(s => { s.win = s.anchor ? W.get(s.anchor) : null; });
+  let ep = 1; try { const q = new URLSearchParams(location.search).get('ep'); if (/^[1-9]\d*$/.test(q || '') && +q <= sets.length) ep = +q; } catch (e) { /* no query: the oldest */ }
+  const sel = sets[ep - 1]; sel.bundles = sel.bundles.concat(free);
+  sets.forEach(s => { s.bundles.sort((x, y) => allBundles.indexOf(x) - allBundles.indexOf(y)); });   // the order the files were given in
+  if (sets.length > 1) drawSets(sets, ep, off, utc);
+  return { sets, ep };
+})();
+const bundles = SETS[EP - 1].bundles;
+
+/* ---- clocks: each host logs in its own local time; every standby time is converted to the primary's local time here, so every merged view agrees ---- */
 const CLK = {}; bundles.forEach(b => b.lines.forEach(o => { if (o.t === 'clock') CLK[o.side || b.side] = o; }));
 // format v1 has no clock record: the offset at collection time (meta.tz) stands in for it, and is labelled so
 bundles.forEach(b => { const m = b.lines.find(o => o.t === 'meta'); if (!CLK[b.side] && m && m.tz) CLK[b.side] = { t: 'clock', side: b.side, utc_off: m.tz, src: 'systimestamp at collection time (format v1)' }; });
@@ -3000,7 +3069,7 @@ $('#themeBtn').innerHTML = I('moon');
 $('#themeBtn').addEventListener('click', () => { const c = document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
   document.documentElement.dataset.theme = c === 'dark' ? 'light' : 'dark'; });
 const dbName = (MP && MP.uniq) || (MS && MS.uniq) || 'Data Guard';
-document.title = `${dbName} · DG SYNC report · ${W0.slice(0, 16)}`;
+document.title = `${dbName} · DG SYNC report · ${W0.slice(0, 16)}${SETS.length > 1 ? ` · episode ${EP} of ${SETS.length}` : ''}`;
 $('#crumbs').innerHTML = `<span>Reports</span><span class="sep">/</span><span>${esc(dbName)}</span><span class="sep">/</span><span class="cur">${esc(W0.slice(0, 16))} – ${esc(MULTI ? W1.slice(0, 16) : W1.slice(11, 16))}</span>`;
 const who = (m, side) => m ? `${m.uniq} on ${String(m.host || '').split('.')[0]}` : (HDR.find(h => h.side === side) || {}).host || `no ${side} bundle`;
 const zone = SHIFT ? ` (primary ${tzLabel(CLK.primary.utc_off)}, standby ${tzLabel(CLK.standby.utc_off)}; standby times converted to primary time)` : (CLK.primary && CLK.primary.utc_off ? ' (' + tzLabel(CLK.primary.utc_off) + ')' : MP && MP.tz ? ' (' + tzLabel(MP.tz) + ')' : '');

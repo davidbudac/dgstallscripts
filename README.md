@@ -44,6 +44,15 @@ and can be attached to a ticket.
   files it took (or says that there are none). Name the files to choose.
 - One bundle is enough for a report. The sections that need the other side say what is missing.
 
+To collect every incident of a past period (a whole month, say), let `list` print all the commands, then paste each block on the host it names
+([Finding the window](#finding-the-window); N incidents mean N full collections on each host):
+
+```sh
+# on the primary (on a standby add -a <text alert log>)
+sh/collect.sh list -s "2026-11-01" "2026-11-30" > cmds.sh
+# cmds.sh holds the standby commands, then the primary commands, then the report commands
+```
+
 ## What the report shows
 
 The page has two panes, chosen with the **Report** and **Hand-over** tabs at the top, the sidebar or the address (`#handover` opens the hand-over pane; a link to something in the other pane switches pane first). The Report pane is the default and lists the charts first (the timeline, the sequence, the waits, the baseline, the day-and-hour view, the listener, standby receive and sampler charts), then the findings (Signals, Explanations, Before the next occurrence, Coverage, Episodes side by side), the logs and the configuration and hosts. The hand-over texts are in their own pane, last in the table. Captions and notes are kept to the source, the unit and the counts of the data: explanations of method are in this README, not on the page. Printing prints the pane that is shown; the Reading disclosures open for the printout.
@@ -101,6 +110,12 @@ With more than one incident in the window there is one block per incident (a sel
 
 Both state observations only. Everything that comes from a log is in quotation marks; a test fails the build when either text contains interpretation (`points to`, `likely`, `cause`, `because`, `consistent with`, `may`, `should` ...), advice or a question outside quoted log text (`tests/wording.py`). Current-state values say "as collected" with their time, sampled durations are bounds exactly as the report states them, and a source that did not cover the incident is listed with the reason from its `cov` record. Copy uses the clipboard (a selection fallback where it is missing); Download .txt writes the block through a Blob, no network.
 
+### Several episodes in one report
+
+Bundles of several collection windows can go into one `make_report.sh` call (or one directory of `dgr_*.jsonl` files): each window is an episode. When a side has more than one bundle, the page forms one set per primary bundle, in the order of the window start (1 is the oldest). A standby bundle joins the primary bundle whose header has the same `from` and `to`, otherwise the primary bundle whose window overlaps its own most (compared in UTC, with each bundle's own UTC offset; a tie goes to the earlier set); a standby bundle that overlaps no primary bundle is a set of its own. Two primary bundles are never pooled, even when their windows overlap. One primary and one standby bundle are one set whatever their windows (a pair collected by hand may differ by a minute).
+
+The page analyses one set at a time, exactly as a report built from that pair alone would: every section, claim and hand-over text is that pair's. The address chooses the set: `report.html?ep=2` shows the second, `report.html?ep=2#handover` its hand-over pane; a missing or invalid number shows the first. A card "Episode k of N in this report" at the top of both panes lists the sets (window, bundles with side, host and file name, and what their alert lines hold: the time of the first line with a Data Guard error code and the codes found) with a link to each, Previous and Next; with more than eight sets the table is in a disclosure under that heading. The page title and a printout say which episode is shown. `sh/collect.sh list -s` prints the commands that collect the bundles of every episode of a period and the `make_report.sh` call that holds them all, and `make_report.sh` says on stderr when its bundles hold more than one window.
+
 ## Requirements and safety
 
 - Oracle 19c (tested on 19.27). The primary must be open; the standby can be mounted.
@@ -124,7 +139,7 @@ Both state observations only. Everything that comes from a log is in quotation m
 
 ```
 sh/collect.sh [options] primary|standby "YYYY-MM-DD HH:MI" "YYYY-MM-DD HH:MI"
-sh/collect.sh list [-d days] [-a alert log] [-u conn]
+sh/collect.sh list [-s] [-d days] [-a alert log] [-u conn] [from [to]]
 ```
 
 | Option | Default | Meaning |
@@ -139,8 +154,10 @@ sh/collect.sh list [-d days] [-a alert log] [-u conn]
 | `-P port` | derived, else 1521 | Peer listener port (primary: from the destination descriptor; standby: its own listener port from `lsnrctl status`) |
 | `-n file` | none | Log of `sh/net_sampler.sh`: add the samples inside the window (the rotated `<file>.1` is read too) |
 | `-N` | off | Passive collection: skip the live network check (no `ping`, no `netstat` towards the peer). Logs, sysstat files and the database are still read |
-| `-d days` | 30 | How far back "earlier occurrences" (SQL and text alert log alike) and `list` look |
+| `-d days` | 30 | How far back "earlier occurrences" (SQL and text alert log alike) and `list` look (`list` with a `from` does not use it) |
 | `-b days` | 7 | Baseline: the same clock interval on each of the previous days, primary only, from AWR (0 = none, at most 31) |
+| `-s` | off | `list` only: print nothing but the commands (all for the standby host, then all for the primary host, then the reports) |
+| `from [to]` | none | `list` only: a period instead of "`-d` days back from now": `YYYY-MM-DD`, `YYYY-MM-DD HH:MI` or `YYYY-MM-DD HH:MI:SS` each; a date alone is the start of that day for `from` and the end of that day for `to`; no `to` = now |
 
 Environment: `SQLPLUS` (the sqlplus binary), `SA_DIR` (the sysstat directory; default `/var/log/sa`, then `/var/log/sysstat`), `TNS_ADMIN` / `ORACLE_HOME` (where `tnsnames.ora` and `sqlnet.ora` are read),
 `DGR_NOW` (`YYYY-MM-DDTHH:MI:SS`, replaces the clock: for tests).
@@ -188,7 +205,7 @@ The sysstat interval (usually 10 minutes) is wider than a stall: each row is an 
 
 ### Finding the window
 
-`sh/collect.sh list [-d days] [-a alert log] [-u conn]` prints past incidents found in the alert log, grouped into episodes, each with a suggested window, which sources on this host still hold it, and the exact commands for both hosts:
+`sh/collect.sh list [-s] [-d days] [-a alert log] [-u conn] [from [to]]` prints past incidents found in the alert log, grouped into episodes, each with a suggested window, which sources on this host still hold it, and the exact commands for both hosts:
 
 ```
 Episode 1: 2026-11-06 20:38:07 to 2026-11-06 20:53:27, 3 lines: ORA-16198; LAD:2 UNSYNCHRONIZED (no connection)
@@ -205,6 +222,43 @@ the window starts 5 minutes before the first line and ends 5 minutes after the r
 When that end would be more than 60 minutes after the first line (the destination stayed unsynchronized for days) the window ends 30 minutes after the first line instead; the real return time is printed on its own line with a note, and you can widen the end by hand.
 A late return does not pull later lines into the episode. Routine lines (`RT_PMODE` for PRIMARY and PHYSICAL,
 `reason ASYNC configuration`) are not listed. The same pattern list ([`sh/dglib.sh`](sh/dglib.sh), mirrored in the SQL) drives the "earlier occurrences" history.
+
+**A period.** Without `from`, `list` looks back `-d` days (30) from now. Give it `from`, and optionally `to`, to list any stretch, a whole month for example:
+`sh/collect.sh list "2026-11-01" "2026-11-30"`. Each is `YYYY-MM-DD`, `YYYY-MM-DD HH:MI` or `YYYY-MM-DD HH:MI:SS`; a date alone is `00:00:00` of that day for `from` and `23:59:59` of that day for `to`, and without `to` the period ends now.
+`-d` is not used when `from` is given (`from` is the cutoff). An episode is listed when its first line is inside the period; lines after `to` still extend or close (return to `SYNCHRONIZED`) an episode that is already open, but no episode starts after `to`, and lines before `from` are not read.
+The first line of the output then names the period, `Incidents in the <source>, <from> to <to> (times are ...)`. Anything that is not a date and time, or a `to` before `from`, is refused with a message and exit status 1.
+Without `-a`, `sql/list_alerts.sql` is asked for the whole days from `from` to now, rounded up, plus 1, and the rows before `from` are dropped.
+
+**Only the commands.** With `-s` the output is the commands and nothing else: no episode text and no "still held" line (`sql/list_sources.sql` is not run), only shell commands, `#` comment lines and empty lines. Three blocks: every command for the standby host, then every command for the primary host, then the report commands.
+Paste each block on the host it names (running the whole file on one host would collect the standby bundles there too). Notes are on their own `#` lines, never after a command. This is the output for the episodes of 6 to 14 November, with the clock at 2026-11-20 12:00:
+
+```
+# dgstallscripts: commands for the 2 episodes found in the text alert log alert.log, 2026-11-06 00:00:00 to 2026-11-14 23:59:59.
+# Times are the clock time of the host that wrote that log. Routine lines are left out.
+# Episode 1: 2026-11-06 20:38:07 to 2026-11-06 20:53:27, 3 lines: ORA-16198; LAD:2 UNSYNCHRONIZED (no connection); window 2026-11-06 20:33 to 2026-11-06 20:59
+# Episode 2: 2026-11-13 23:58:19 to 2026-11-14 00:09:59, 2 lines: ORA-16198; LAD:2 UNSYNCHRONIZED; window 2026-11-13 23:53 to 2026-11-14 00:15
+#
+# 1. On the STANDBY host, in the directory that will hold the bundles:
+sh sh/collect.sh -o dgr_standby_20261106_2033.jsonl standby "2026-11-06 20:33" "2026-11-06 20:59"
+sh sh/collect.sh -o dgr_standby_20261113_2353.jsonl standby "2026-11-13 23:53" "2026-11-14 00:15"
+
+# 2. Copy the dgr_standby_*.jsonl files to the PRIMARY host, into the directory you run this in. Then on the PRIMARY host:
+sh sh/collect.sh -c dgr_standby_20261106_2033.jsonl -o dgr_primary_20261106_2033.jsonl primary "2026-11-06 20:33" "2026-11-06 20:59"
+sh sh/collect.sh -c dgr_standby_20261113_2353.jsonl -o dgr_primary_20261113_2353.jsonl primary "2026-11-13 23:53" "2026-11-14 00:15"
+
+# 3. With all bundles in one directory (a database host or your laptop): one report per episode
+sh sh/make_report.sh -o dgr_report_20261106_2033.html dgr_primary_20261106_2033.jsonl dgr_standby_20261106_2033.jsonl
+sh sh/make_report.sh -o dgr_report_20261113_2353.html dgr_primary_20261113_2353.jsonl dgr_standby_20261113_2353.jsonl
+
+# ... or one report that holds every episode (a selector at the top switches between them):
+sh sh/make_report.sh -o dgr_report_all.html dgr_primary_20261106_2033.jsonl dgr_standby_20261106_2033.jsonl dgr_primary_20261113_2353.jsonl dgr_standby_20261113_2353.jsonl
+```
+
+The steps: (1) run the standby block on the standby host; (2) copy the `dgr_standby_*.jsonl` files to the primary host and run the primary block there; (3) bring all bundles into one directory (a database host or your laptop) and run the report block, one report per episode, or the last line for one report that holds every episode (printed when there are two or more).
+Every collect command carries `-d <days>` when its history must reach further back than the default 30 days, so that each bundle's history reaches as far back as the list did. Without a period that is an explicit `-d N` that is not 30, passed on as it is. With a period it is the whole days from `from` to now, rounded up, plus 1, and only when that is more than 30: a period that started 45.5 days ago gets `-d 47`, while a period that started less than 30 days ago (as above) gets no `-d`, because the default 30 days already reach its start and a smaller `-d` would only shorten the history. With no incident the output is one line, `# No incidents found in the <source>, <range>.`, and the exit status is 0; a failed read (unreadable `-a` file, `v$diag_alert_ext` error, neither sqlplus nor `-a`) still prints its message on stderr, nothing on stdout, and exits 1.
+`-s` is for `list` only; with `primary` or `standby` it prints `-s only applies to list` and exits 1.
+
+N episodes mean N full collections on each host (about half a minute each); `list` itself collects nothing. Discovery reads the alert log of the host it runs on: run it on the primary, or on a standby with `-a <text alert log>` (a mounted standby cannot read `v$diag_alert_ext`).
 
 ### Network evidence and clock state
 
@@ -313,7 +367,7 @@ sh/make_report.sh        build the HTML report from bundles (default: ./dgr_*.js
 sh/net_sampler.sh        optional: one line per interval of ping, TCP retransmits and Send-Q, for the next occurrence
 sh/dglib.sh              awk fragments shared by collect.sh and alert_log_scan.sh: the history pattern list, date arithmetic
 docs/bundle-format.md    the bundle format (record types, times, commit-wait and sampler-gap records, coverage records, phase-3 records, who-waited / workload-history / activity records, v1 vs v2)
-tests/                   test harness and fixture generator: sh tests/run.sh (see Tests below); tests/wording.py checks the hand-over texts
+tests/                   test harness and fixture generator: sh tests/run.sh (see Tests below); tests/wording.py checks the hand-over texts; tests/sets.sh checks reports of several episodes
 report/template.html     the report page (make_report.sh inserts the data)
 sql/json_primary.sql     report data, primary (called by collect.sh)
 sql/json_standby.sql     report data, standby (called by collect.sh)
@@ -363,6 +417,7 @@ midnight, a failing sqlplus (a stub) and each cap; the stub's `full` mode prints
 and with `DGR_NOW` fixing the clock. They cover Linux and AIX hosts, a bare host without any of those tools, the server-to-server listener lines, endpoint resolution, sqlnet.ora, sar parsing across two days (a missing report,
 a file of another month, a restart line), clock-tool fallbacks, the derived peer, `collect.sh list` (with the line about the sources that still hold each episode: without sqlplus, with sqlplus also under `-a`, with a statement that fails, with a reused sysstat file), the next-command hints, `make_report.sh` without arguments, `net_sampler.sh` (format, rotation, read back by `collect.sh -n`) and that the
 SQL files and `sh/dglib.sh` carry the same history pattern list.
-`tests/gate.sh <out prefix> <primary bundle> <standby bundle>` renders one report in headless Chrome (`GATE_HASH=#handover` opens it on that address) and writes the DOM and the derived claims; `tests/extract.py <dom> [--net | --ticket | --parts | --cards | --facts | --ui | --captions | --order | --readings | --delivered copy|dl net|ticket]` prints the two hand-over texts, the newer sections, the cards, the facts list, the log of the button, tab and link clicks, the card captions with their length, the sections in document order, the Reading disclosures, or what Copy and Download .txt delivered.
+`sh tests/sets.sh` (`tests/run.sh` runs it too) checks reports that hold several collection windows: a report of three pairs with different windows, given in a mixed order, shows for each `?ep=n` exactly the claims and hand-over texts of that pair alone (the golden files above), no query or an invalid one shows episode 1, `?ep=2#handover` opens the hand-over pane of episode 2, the selector lists the windows in order with the shown row marked and the others linked, a pair whose windows differ by a minute is one set without a selector, overlapping windows are two sets, a standby bundle joins the primary bundle of its window (the same header window first, then the most overlap in UTC, also for hosts with different UTC offsets), no JavaScript error, and `make_report.sh` says on stderr that it holds several windows and builds the same page under `sh` and `dash`.
+`tests/gate.sh <out prefix> <primary bundle> <standby bundle>` renders one report in headless Chrome (`GATE_HASH=#handover` opens it on that address) and writes the DOM and the derived claims; `tests/extract.py <dom> [--net | --ticket | --parts | --cards | --facts | --ui | --captions | --order | --readings | --sets | --delivered copy|dl net|ticket]` prints the two hand-over texts, the newer sections, the cards, the facts list, the log of the button, tab and link clicks, the card captions with their length, the sections in document order, the Reading disclosures, the episode selector, or what Copy and Download .txt delivered.
 `SQLPLUS=/path/to/sqlplus` makes `collect.sh` use another sqlplus binary. `UPDATE=1 sh tests/run.sh` rewrites the
 expected collector output and claim files (`tests/expected/`) after an intended change: look at the diff before keeping it.

@@ -1197,6 +1197,157 @@ collect_tests() {   # SHELL LABEL
   nof list9.out 'sh sh/collect' "collect.sh list ($L): the added line does not look like a command line"
   grep -E '^Episode|suggested|standby host|primary host' list9.out > list9.eps
   nof list9.eps 'still held' "collect.sh list ($L): the added line cannot be taken for one of the existing line kinds"
+
+  # ---- collect.sh list [from [to]]: a period instead of "-d days back from now" (the clock is 2026-11-20 12:00:00)
+  hasl() { if grep -qxF -- "$2" "$1"; then pass "$3"; else fail "$3" "no line is: $2"; fi; }   # file, whole line, name
+  $CB "$SH" "$R/sh/collect.sh" list -a alert_list.log "2026-11-13 20:00" "2026-11-14 01:00" > lp1.out 2> lp1.err; echo $? > lp1.rc
+  if [ "$(cat lp1.rc)" = 0 ]; then pass "collect.sh list period ($L): exit 0"; else fail "collect.sh list period ($L): exit $(cat lp1.rc)" "$(cat lp1.err)"; fi
+  cnt lp1.out '^Episode' 1 "collect.sh list period ($L): a period that holds only the 13 November episode lists exactly that one"
+  hasf lp1.out 'Episode 1: 2026-11-13 23:58:19 to 2026-11-14 00:09:59, 2 lines: ORA-16198; LAD:2 UNSYNCHRONIZED' "collect.sh list period ($L): ... the same episode text as without a period"
+  hasl lp1.out 'Incidents in the text alert log alert_list.log, 2026-11-13 20:00:00 to 2026-11-14 01:00:00 (times are the clock time of the host that wrote that log).' "collect.sh list period ($L): the first line names the period, both ends to the second, not a number of days"
+  nof lp1.out 'last 30 days' "collect.sh list period ($L): ... and no lookback in days"
+  hasf lp1.out "  standby host: sh $R/sh/collect.sh -o dgr_standby_20261113_2353.jsonl standby \"2026-11-13 23:53\" \"2026-11-14 00:15\"" "collect.sh list period ($L): the commands are the ones of the list without a period (no -d without -s)"
+  nof lp1.out ' -d ' "collect.sh list period ($L): ... and carry no -d"
+  $CB "$SH" "$R/sh/collect.sh" list -a alert_list.log 2026-11-18 2026-11-18 > lp2.out 2> /dev/null
+  cnt lp2.out '^Episode' 1 "collect.sh list period ($L): one date twice is that whole day"
+  hasf lp2.out 'Episode 1: 2026-11-18 14:00:00 to 2026-11-18 14:02:10, 2 lines' "collect.sh list period ($L): ... the episode of that day"
+  hasl lp2.out 'Incidents in the text alert log alert_list.log, 2026-11-18 00:00:00 to 2026-11-18 23:59:59 (times are the clock time of the host that wrote that log).' "collect.sh list period ($L): a date alone is 00:00:00 for from and 23:59:59 for to"
+  $CB "$SH" "$R/sh/collect.sh" list -a alert_list.log 2026-11-06 2026-11-13 > lp2b.out 2> /dev/null
+  cnt lp2b.out '^Episode' 2 "collect.sh list period ($L): a date-only to includes its whole day (the episode of 13 November starts at 23:58)"
+  hasf lp2b.out 'Episode 2: 2026-11-13 23:58:19 to 2026-11-14 00:09:59' "collect.sh list period ($L): ... as the second episode"
+  $CB "$SH" "$R/sh/collect.sh" list -a alert_list.log 2026-11-07 2026-11-12 > lp2c.out 2> /dev/null
+  hasf lp2c.out 'No incidents found.' "collect.sh list period ($L): a period with no episode says so"
+  $CB "$SH" "$R/sh/collect.sh" list -a alert_list.log 2026-10-01 2026-10-31 > lp3.out 2> /dev/null
+  cnt lp3.out '^Episode' 1 "collect.sh list period ($L): a period reaching back to October lists the 5 October episode without -d"
+  hasf lp3.out 'Episode 1: 2026-10-05 22:11:05 to 2026-10-05 22:15:40, 2 lines' "collect.sh list period ($L): ... and only it (the routine lines of 21 October are no incident)"
+  $CB "$SH" "$R/sh/collect.sh" list -a alert_list.log -d 3 2026-10-01 > lp3b.out 2> /dev/null
+  cnt lp3b.out '^Episode' 4 "collect.sh list period ($L): a from time alone runs to now, and -d is not used for the cutoff"
+  hasl lp3b.out 'Incidents in the text alert log alert_list.log, 2026-10-01 00:00:00 to 2026-11-20 12:00:00 (times are the clock time of the host that wrote that log).' "collect.sh list period ($L): ... the end is the clock (DGR_NOW)"
+  $CB "$SH" "$R/sh/collect.sh" list -a alert_list.log "2026-11-13 23:00" "2026-11-13 23:59" > lp4.out 2> /dev/null
+  cnt lp4.out '^Episode' 1 "collect.sh list period ($L): an episode that starts inside the period..."
+  hasf lp4.out 'Episode 1: 2026-11-13 23:58:19 to 2026-11-14 00:09:59, 2 lines' "collect.sh list period ($L): ... still ends at its return line, which is after the end of the period"
+  hasf lp4.out '  back to SYNCHRONIZED at 2026-11-14 00:09:59' "collect.sh list period ($L): ... and says when the destination came back"
+  $CB "$SH" "$R/sh/collect.sh" list -a alert_list.log "2026-11-06 20:00" "2026-11-06 20:40" > lp4b.out 2> /dev/null
+  cnt lp4b.out '^Episode' 1 "collect.sh list period ($L): no episode starts after the end of the period"
+  hasf lp4b.out 'Episode 1: 2026-11-06 20:38:07 to 2026-11-06 20:53:27, 3 lines' "collect.sh list period ($L): a line after the end of the period still belongs to the open episode"
+  $CB "$SH" "$R/sh/collect.sh" list -a alert_list.log "2026-11-06 20:40" 2026-11-07 > lp5.out 2> /dev/null
+  hasf lp5.out 'Episode 1: 2026-11-06 20:43:12 to 2026-11-06 20:53:27, 1 line: ORA-16198' "collect.sh list period ($L): lines before from are not read: the episode starts at the first line after it"
+  for bad in "2026-13-45" "2026-11-13 25:00" "next week" "2026-02-31" "2026-11-13 20:00:61" "2026-11-13T20:00"; do
+    $CB "$SH" "$R/sh/collect.sh" list -a alert_list.log "$bad" > lpb.out 2> lpb.err; echo $? > lpb.rc
+    if [ "$(cat lpb.rc)" = 1 ] && [ ! -s lpb.out ] && grep -qF "list: \"$bad\" is not a time: use YYYY-MM-DD, \"YYYY-MM-DD HH:MI\" or \"YYYY-MM-DD HH:MI:SS\"" lpb.err; then pass "collect.sh list period ($L): \"$bad\" is refused with a message and exit 1"; else fail "collect.sh list period ($L): \"$bad\": exit $(cat lpb.rc)" "$(cat lpb.out lpb.err | head -3)"; fi
+  done
+  $CB "$SH" "$R/sh/collect.sh" list -a alert_list.log 2026-11-06 "later" > lpb.out 2> lpb.err; echo $? > lpb.rc
+  if [ "$(cat lpb.rc)" = 1 ] && grep -qF 'list: "later" is not a time' lpb.err; then pass "collect.sh list period ($L): a bad to is refused as well"; else fail "collect.sh list period ($L): bad to: exit $(cat lpb.rc)" "$(cat lpb.err)"; fi
+  $CB "$SH" "$R/sh/collect.sh" list -a alert_list.log 2026-11-14 2026-11-13 > lpb.out 2> lpb.err; echo $? > lpb.rc
+  if [ "$(cat lpb.rc)" = 1 ] && [ ! -s lpb.out ]; then pass "collect.sh list period ($L): to before from: exit 1, nothing on stdout"; else fail "collect.sh list period ($L): to before from: exit $(cat lpb.rc)" "$(cat lpb.out lpb.err | head -3)"; fi
+  hasl lpb.err 'list: the end of the period (2026-11-13 23:59:59) is before its start (2026-11-14 00:00:00)' "collect.sh list period ($L): ... with a message that names both ends"
+  $CB "$SH" "$R/sh/collect.sh" list -a alert_list.log 2026-11-25 > lpb.out 2> lpb.err; echo $? > lpb.rc
+  if [ "$(cat lpb.rc)" = 1 ] && [ ! -s lpb.out ]; then pass "collect.sh list period ($L): a from after now (to left out) is a to before from"; else fail "collect.sh list period ($L): from in the future: exit $(cat lpb.rc)" "$(cat lpb.out lpb.err | head -3)"; fi
+  # the SQL path: list_alerts.sql gets the whole days from from to now, rounded up, plus 1; the rows before from are dropped here
+  rm -f lq1.calls lq1b.calls lq1c.calls
+  STUB_ARGS_ALL=$D/lq1.calls STUB_LIST=$D/list_sql.txt STUB_MODE=list SQLPLUS=$W/sqlplus $CB "$SH" "$R/sh/collect.sh" list 2026-11-10 > lq1.out 2> lq1.err; echo $? > lq1.rc
+  hasl lq1.out 'Incidents in the v$diag_alert_ext, 2026-11-10 00:00:00 to 2026-11-20 12:00:00 (times are the clock time of the host that wrote that log).' "collect.sh list period ($L): without -a the period reads v\$diag_alert_ext"
+  hasf lq1.calls 'sql/list_alerts.sql 12' "collect.sh list period ($L): ... asking for 12 days (10.5 days from 2026-11-10 to now, rounded up, plus 1)"
+  cnt lq1.out '^Episode' 2 "collect.sh list period ($L): ... and the rows of 6 November, which the SQL reaches, are dropped"
+  hasf lq1.out 'Episode 1: 2026-11-13 23:58:19 to 2026-11-14 00:09:59, 2 lines' "collect.sh list period ($L): ... the first episode is the one of 13 November"
+  STUB_ARGS_ALL=$D/lq1b.calls STUB_LIST=$D/list_sql.txt STUB_MODE=list SQLPLUS=$W/sqlplus $CB "$SH" "$R/sh/collect.sh" list > /dev/null 2> /dev/null
+  STUB_ARGS_ALL=$D/lq1c.calls STUB_LIST=$D/list_sql.txt STUB_MODE=list SQLPLUS=$W/sqlplus $CB "$SH" "$R/sh/collect.sh" list -d 7 > /dev/null 2> /dev/null
+  hasf lq1b.calls 'sql/list_alerts.sql 30' "collect.sh list ($L): without a period list_alerts.sql gets -d (30)"
+  hasf lq1c.calls 'sql/list_alerts.sql 7' "collect.sh list ($L): ... and -d 7 gives 7"
+  STUB_LIST=$D/list_sql.txt STUB_MODE=list SQLPLUS=$W/sqlplus $CB "$SH" "$R/sh/collect.sh" list 2026-11-19 > lq2.out 2> lq2.err; echo $? > lq2.rc
+  if [ "$(cat lq2.rc)" = 0 ] && [ ! -s lq2.err ] && grep -qxF 'No incidents found.' lq2.out; then pass "collect.sh list period ($L): rows that all lie before from are no failed read of v\$diag_alert_ext (they hold ORA- text)"; else fail "collect.sh list period ($L): all rows before from: exit $(cat lq2.rc)" "$(cat lq2.err lq2.out | head -3)"; fi
+
+  # ---- collect.sh list -s: only the commands, as a script
+  $CB "$SH" "$R/sh/collect.sh" list -s -a alert_list.log > ls1.out 2> ls1.err; echo $? > ls1.rc
+  if [ "$(cat ls1.rc)" = 0 ] && [ ! -s ls1.err ]; then pass "collect.sh list -s ($L): exit 0, nothing on stderr"; else fail "collect.sh list -s ($L): exit $(cat ls1.rc)" "$(cat ls1.err)"; fi
+  n=$(grep -v -e '^$' -e '^#' -e '^sh ' ls1.out | wc -l | tr -d ' ')
+  if [ "$n" = 0 ]; then pass "collect.sh list -s ($L): every line of the output is empty, a # line or a command (sh ...)"; else fail "collect.sh list -s ($L): $n lines are none of these" "$(grep -v -e '^$' -e '^#' -e '^sh ' ls1.out | head -3)"; fi
+  grep '^sh ' ls1.out > ls1.cmd
+  nof ls1.cmd '#' "collect.sh list -s ($L): no command line carries a # comment (an interactive zsh would pass it as arguments)"
+  if "$SH" -n ls1.out 2> /dev/null; then pass "collect.sh list -s ($L): the output parses as a shell script (save it and run it with sh)"; else fail "collect.sh list -s ($L): the output does not parse as a shell script" "$("$SH" -n ls1.out 2>&1 | head -3)"; fi
+  cnt ls1.out '^sh ' 10 "collect.sh list -s ($L): three episodes: 3 standby, 3 primary, 3 report commands and the combined one"
+  nof ls1.out 'still held' "collect.sh list -s ($L): no \"still held\" line"
+  cnt ls1.out '^Episode' 0 "collect.sh list -s ($L): none of the normal output (no Episode line, no header)"
+  cnt ls1.out '^  ' 0 "collect.sh list -s ($L): no indented line of the normal output"
+  hasl ls1.out '# dgstallscripts: commands for the 3 episodes found in the text alert log alert_list.log, last 30 days (since 2026-10-21 12:00:00).' "collect.sh list -s ($L): the first line says what was found and where"
+  hasl ls1.out '# Times are the clock time of the host that wrote that log. Routine lines are left out.' "collect.sh list -s ($L): ... and whose clock the times are"
+  hasl ls1.out '# Episode 1: 2026-11-06 20:38:07 to 2026-11-06 20:53:27, 3 lines: ORA-16198; LAD:2 UNSYNCHRONIZED (no connection); window 2026-11-06 20:33 to 2026-11-06 20:59' "collect.sh list -s ($L): one comment line per episode with its lines and window"
+  hasl ls1.out '# Episode 3: 2026-11-18 14:00:00 to 2026-11-18 14:02:10, 2 lines: ORA-03135; possible network disconnect (standby); window 2026-11-18 13:55 to 2026-11-18 14:18; no return to SYNCHRONIZED found in the log' "collect.sh list -s ($L): ... an episode without a return says so"
+  hasl ls1.out "sh $R/sh/collect.sh -o dgr_standby_20261106_2033.jsonl standby \"2026-11-06 20:33\" \"2026-11-06 20:59\"" "collect.sh list -s ($L): the standby command of episode 1"
+  hasl ls1.out "sh $R/sh/collect.sh -c dgr_standby_20261106_2033.jsonl -o dgr_primary_20261106_2033.jsonl primary \"2026-11-06 20:33\" \"2026-11-06 20:59\"" "collect.sh list -s ($L): the primary command of episode 1 names its standby bundle"
+  hasl ls1.out "sh $R/sh/make_report.sh -o dgr_report_20261106_2033.html dgr_primary_20261106_2033.jsonl dgr_standby_20261106_2033.jsonl" "collect.sh list -s ($L): the report command of episode 1"
+  hasl ls1.out "sh $R/sh/collect.sh -o dgr_standby_20261113_2353.jsonl standby \"2026-11-13 23:53\" \"2026-11-14 00:15\"" "collect.sh list -s ($L): the standby command of the episode across midnight"
+  hasl ls1.out "sh $R/sh/make_report.sh -o dgr_report_all.html dgr_primary_20261106_2033.jsonl dgr_standby_20261106_2033.jsonl dgr_primary_20261113_2353.jsonl dgr_standby_20261113_2353.jsonl dgr_primary_20261118_1355.jsonl dgr_standby_20261118_1355.jsonl" "collect.sh list -s ($L): the combined report names every bundle, in the order of the episodes"
+  cnt ls1.out '^# \.\.\. or one report that holds every episode' 1 "collect.sh list -s ($L): ... after a line that says what it is"
+  if awk '/^# 1\. On the STANDBY host/ { a = NR } /^# 2\. / { b = NR } /^# 3\. / { c = NR }
+          /^sh .* standby "/ { if (!s1) s1 = NR; s2 = NR } /^sh .* primary "/ { if (!p1) p1 = NR; p2 = NR }
+          /^sh .*make_report.sh -o dgr_report_2/ { if (!r1) r1 = NR; r2 = NR } /^sh .*dgr_report_all/ { ra = NR }
+          END { exit !(a && a < s1 && s2 < b && b < p1 && p2 < c && c < r1 && r2 < ra) }' ls1.out; then pass "collect.sh list -s ($L): the standby commands, then the primary commands, then the reports, then the combined report"; else fail "collect.sh list -s ($L): the blocks are not in that order" "$(grep -n -e '^# [123]\.' -e '^sh ' ls1.out | cut -c1-60)"; fi
+  # a single episode: no combined report
+  $CB "$SH" "$R/sh/collect.sh" list -s -a alert_list.log 2026-11-13 2026-11-13 > ls2.out 2> /dev/null
+  cnt ls2.out '^sh ' 3 "collect.sh list -s ($L): one episode: its standby, primary and report command"
+  nof ls2.out 'dgr_report_all' "collect.sh list -s ($L): ... and no combined report"
+  nof ls2.out 'one report that holds every episode' "collect.sh list -s ($L): ... and no line about one"
+  hasl ls2.out '# dgstallscripts: commands for the 1 episode found in the text alert log alert_list.log, 2026-11-13 00:00:00 to 2026-11-13 23:59:59.' "collect.sh list -s ($L): with a period the first line names it (and says 1 episode)"
+  # -d: carried to every collect command when it is not the default
+  nof ls1.out ' -d ' "collect.sh list -s ($L): the default lookback (30 days) adds no -d"
+  $CB "$SH" "$R/sh/collect.sh" list -s -a alert_list.log -d 60 > ls3.out 2> /dev/null
+  cnt ls3.out '^sh .*collect.sh -d 60 ' 8 "collect.sh list -s ($L): -d 60 -s adds -d 60 to the 4 standby and the 4 primary commands (it reaches the October episode)"
+  hasl ls3.out "sh $R/sh/collect.sh -d 60 -o dgr_standby_20261005_2206.jsonl standby \"2026-10-05 22:06\" \"2026-10-05 22:21\"" "collect.sh list -s ($L): ... in front of -o"
+  hasl ls3.out "sh $R/sh/collect.sh -d 60 -c dgr_standby_20261005_2206.jsonl -o dgr_primary_20261005_2206.jsonl primary \"2026-10-05 22:06\" \"2026-10-05 22:21\"" "collect.sh list -s ($L): ... and in front of -c"
+  cnt ls3.out '^sh .*make_report.sh.* -d ' 0 "collect.sh list -s ($L): the report commands carry no -d"
+  hasl ls3.out '# dgstallscripts: commands for the 4 episodes found in the text alert log alert_list.log, last 60 days (since 2026-09-21 12:00:00).' "collect.sh list -s ($L): the first line names the lookback"
+  $CB "$SH" "$R/sh/collect.sh" list -s -a alert_list.log -d 30 > ls3b.out 2> /dev/null
+  nof ls3b.out ' -d ' "collect.sh list -s ($L): -d 30 is the default: no -d"
+  $CB "$SH" "$R/sh/collect.sh" list -s -a alert_list.log 2026-11-06 2026-11-07 > ls4.out 2> /dev/null
+  hasl ls4.out "sh $R/sh/collect.sh -o dgr_standby_20261106_2033.jsonl standby \"2026-11-06 20:33\" \"2026-11-06 20:59\"" "collect.sh list -s ($L): a recent period (14.5 days back: 16 derived days) carries no -d: the default 30 already reaches its start"
+  nof ls4.out ' -d ' "collect.sh list -s ($L): ... on none of the commands"
+  $CB "$SH" "$R/sh/collect.sh" list -s -a alert_list.log -d 60 "2026-10-22 12:00" 2026-11-14 > ls4c.out 2> /dev/null
+  cnt ls4c.out '^sh ' 7 "collect.sh list -s ($L): a period from 29 days ago lists 2 episodes"
+  nof ls4c.out ' -d ' "collect.sh list -s ($L): ... 29 + 1 = 30 derived days: no -d, and -d 60 is not used"
+  $CB "$SH" "$R/sh/collect.sh" list -s -a alert_list.log "2026-10-21 12:00" 2026-11-07 > ls4b.out 2> /dev/null
+  hasl ls4b.out "sh $R/sh/collect.sh -d 31 -o dgr_standby_20261106_2033.jsonl standby \"2026-11-06 20:33\" \"2026-11-06 20:59\"" "collect.sh list -s ($L): exactly 30 days from from to now: 30 + 1 = 31 derived days, more than 30, so -d 31"
+  $CB "$SH" "$R/sh/collect.sh" list -s -a alert_list.log 2026-10-01 2026-10-31 > ls4d.out 2> /dev/null
+  hasl ls4d.out "sh $R/sh/collect.sh -d 52 -o dgr_standby_20261005_2206.jsonl standby \"2026-10-05 22:06\" \"2026-10-05 22:21\"" "collect.sh list -s ($L): a period reaching back to 1 October (50.5 days: 52 derived days) adds -d 52 to the standby command"
+  hasl ls4d.out "sh $R/sh/collect.sh -d 52 -c dgr_standby_20261005_2206.jsonl -o dgr_primary_20261005_2206.jsonl primary \"2026-10-05 22:06\" \"2026-10-05 22:21\"" "collect.sh list -s ($L): ... and to the primary command"
+  cnt ls4d.out '^sh .*make_report.sh.* -d ' 0 "collect.sh list -s ($L): ... and none to the report command"
+  $CB "$SH" "$R/sh/collect.sh" list -s -a alert_list.log -d 7 > ls4e.out 2> /dev/null
+  cnt ls4e.out '^sh .*collect.sh -d 7 ' 4 "collect.sh list -s ($L): without a period an explicit -d 7 (less than 30) is passed on as it is: -d 7 on the 2 standby and the 2 primary commands"
+  # nothing found: one # line, exit 0
+  $CB "$SH" "$R/sh/collect.sh" list -s -a routine.log > ls5.out 2> /dev/null; echo $? > ls5.rc
+  if [ "$(cat ls5.rc)" = 0 ] && [ "$(cat ls5.out)" = '# No incidents found in the text alert log routine.log, last 30 days (since 2026-10-21 12:00:00).' ]; then pass "collect.sh list -s ($L): no incident: the one # line and exit 0"; else fail "collect.sh list -s ($L): no incident: exit $(cat ls5.rc)" "$(cat ls5.out)"; fi
+  $CB "$SH" "$R/sh/collect.sh" list -s -a alert_list.log 2026-11-01 2026-11-02 > ls5b.out 2> /dev/null; echo $? > ls5b.rc
+  if [ "$(cat ls5b.rc)" = 0 ] && [ "$(cat ls5b.out)" = '# No incidents found in the text alert log alert_list.log, 2026-11-01 00:00:00 to 2026-11-02 23:59:59.' ]; then pass "collect.sh list -s ($L): ... with a period the line names it"; else fail "collect.sh list -s ($L): no incident in a period: exit $(cat ls5b.rc)" "$(cat ls5b.out)"; fi
+  # the notes of the shortened windows stay on the comment line of the episode
+  $CB "$SH" "$R/sh/collect.sh" list -s -a alert_late.log > ls6.out 2> /dev/null
+  hasl ls6.out '# Episode 1: 2026-11-12 10:11:21 to 2026-11-18 22:53:00, 3 lines: ORA-16198; LAD:2 UNSYNCHRONIZED (no connection); window 2026-11-12 10:06 to 2026-11-12 10:42; window shortened to end 30 minutes after the first line (6 d 12 h after it the destination returned)' "collect.sh list -s ($L): a late return: the comment line says the window was shortened and how late the destination returned"
+  printf '2026-11-18T10:00:00.000000+01:00\nORA-03135: connection lost contact\n2026-11-18T10:10:00.000000+01:00\nORA-03135: connection lost contact\n2026-11-18T10:20:00.000000+01:00\nORA-03135: connection lost contact\n2026-11-18T10:30:00.000000+01:00\nORA-03135: connection lost contact\n2026-11-18T10:40:00.000000+01:00\nORA-03135: connection lost contact\n2026-11-18T10:50:00.000000+01:00\nORA-03135: connection lost contact\n' > chain.log
+  $CB "$SH" "$R/sh/collect.sh" list -s -a chain.log > ls7.out 2> /dev/null
+  hasl ls7.out '# Episode 1: 2026-11-18 10:00:00 to 2026-11-18 10:50:00, 6 lines: ORA-03135; window 2026-11-18 09:55 to 2026-11-18 10:30; no return to SYNCHRONIZED found in the log; window shortened to end 30 minutes after the first line (50 min after it the last line was logged)' "collect.sh list -s ($L): lines chained for 50 minutes without a return: both notes on the comment line"
+  # the SQL path asks list_alerts.sql only, with the days of the period; list_sources.sql is not run (with -a sqlplus is not called at all)
+  rm -f lq3.calls lq4.calls
+  STUB_ARGS_ALL=$D/lq3.calls STUB_LIST=$D/list_sql.txt STUB_MODE=list SQLPLUS=$W/sqlplus $CB "$SH" "$R/sh/collect.sh" list -s 2026-11-06 2026-11-13 > lq3.out 2> /dev/null
+  cnt lq3.calls '.' 1 "collect.sh list -s ($L): the SQL path calls sqlplus once"
+  hasf lq3.calls 'sql/list_alerts.sql 16' "collect.sh list -s ($L): ... for list_alerts.sql with the days of the period"
+  nof lq3.calls 'list_sources' "collect.sh list -s ($L): ... and never for sql/list_sources.sql"
+  hasl lq3.out '# dgstallscripts: commands for the 2 episodes found in the v$diag_alert_ext, 2026-11-06 00:00:00 to 2026-11-13 23:59:59.' "collect.sh list -s ($L): the source is v\$diag_alert_ext"
+  nof lq3.out 'still held' "collect.sh list -s ($L): ... and no \"still held\" line"
+  STUB_ARGS_ALL=$D/lq4.calls STUB_MODE=list SQLPLUS=$W/sqlplus $CB "$SH" "$R/sh/collect.sh" list -s -a alert_list.log > /dev/null 2> /dev/null
+  if [ ! -s lq4.calls ]; then pass "collect.sh list -s -a ($L): sqlplus is not called at all"; else fail "collect.sh list -s -a ($L): sqlplus was called" "$(cat lq4.calls)"; fi
+  # failures stay failures: nothing on stdout
+  $CB "$SH" "$R/sh/collect.sh" list -s -a nosuch.log > ls8.out 2> ls8.err; echo $? > ls8.rc
+  if [ "$(cat ls8.rc)" = 1 ] && [ ! -s ls8.out ]; then pass "collect.sh list -s ($L): an alert log that cannot be read: exit 1, nothing on stdout"; else fail "collect.sh list -s ($L): unreadable alert log: exit $(cat ls8.rc)" "$(cat ls8.out ls8.err | head -3)"; fi
+  has ls8.err '^list: cannot read nosuch.log' "collect.sh list -s ($L): ... with the message on stderr"
+  STUB_MODE=list1219 SQLPLUS=$W/sqlplus $CB "$SH" "$R/sh/collect.sh" list -s > ls9.out 2> ls9.err; echo $? > ls9.rc
+  if [ "$(cat ls9.rc)" = 1 ] && [ ! -s ls9.out ]; then pass "collect.sh list -s ($L): a mounted standby (ORA-01219): exit 1, nothing on stdout"; else fail "collect.sh list -s ($L): ORA-01219: exit $(cat ls9.rc)" "$(cat ls9.out ls9.err | head -3)"; fi
+  has ls9.err '^list: could not read v.diag_alert_ext: ORA-01219' "collect.sh list -s ($L): ... with the message on stderr"
+  SQLPLUS=$NOSQL $CB "$SH" "$R/sh/collect.sh" list -s > ls10.out 2> ls10.err; echo $? > ls10.rc
+  if [ "$(cat ls10.rc)" = 1 ] && [ ! -s ls10.out ]; then pass "collect.sh list -s ($L): neither sqlplus nor -a: exit 1, nothing on stdout"; else fail "collect.sh list -s ($L): no sqlplus: exit $(cat ls10.rc)" "$(cat ls10.out ls10.err | head -3)"; fi
+  # -s belongs to list
+  for side in standby primary; do
+    $CB "$SH" "$R/sh/collect.sh" -s $side "$WIN1" "$WIN2" -t nodir -a alert_cdb1.log -l nosuch.log -o sopt.jsonl > sopt.out 2> sopt.err; echo $? > sopt.rc
+    if [ "$(cat sopt.rc)" = 1 ] && [ ! -e sopt.jsonl ] && grep -qxF -- '-s only applies to list' sopt.err; then pass "collect.sh list -s ($L): with $side it is refused with \"-s only applies to list\", exit 1, no bundle written"; else fail "collect.sh list -s ($L): with $side: exit $(cat sopt.rc)" "$(cat sopt.err | head -3)"; fi
+  done
   cd "$R" || return
 }
 collect_tests "$SHBIN" sh
@@ -1448,6 +1599,12 @@ if [ -z "$hits" ]; then pass "lint: sh/*.sh use no gawk or bash extensions"; els
 # an awk regex literal that starts with = (/=/, /=.*/) lexes as the /= operator on AIX awk: write [=] instead
 hits=$(grep -nE '(^|[(,~!&|[:space:]])/=' "$R"/sh/*.sh | grep -vE '^[^:]+:[0-9]+:[[:space:]]*#')
 if [ -z "$hits" ]; then pass "lint: no awk regex starts with = (AIX awk reads /= as an operator)"; else fail "lint: awk regex starting with = in sh/*.sh (use [=])" "$hits"; fi
+
+# ---------------------------------------------------------------- episodes: several collection windows in one report (tests/sets.sh; its ok / FAIL / skip lines are counted here)
+sh "$T/sets.sh" > "$W/sets.out" 2>&1; src=$?
+sed '/^$/d; /^[0-9]* passed, /d' "$W/sets.out"
+sf=$(grep -c '^FAIL  ' "$W/sets.out"); PASS=$((PASS + $(grep -c '^ok  ' "$W/sets.out"))); NFAIL=$((NFAIL + sf)); NSKIP=$((NSKIP + $(grep -c '^skip  ' "$W/sets.out")))
+[ "$src" -eq 0 ] || [ "$sf" -gt 0 ] || fail "episodes: tests/sets.sh exited with status $src and no FAIL line"
 
 echo
 echo "$PASS passed, $NFAIL failed, $NSKIP skipped"

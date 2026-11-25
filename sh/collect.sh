@@ -4,7 +4,7 @@
 # sysstat files, and display commands (ping, netstat, sysctl, sar, chronyc ...). Nothing is installed, configured or left running.
 #
 # Usage: sh/collect.sh [options] primary|standby "YYYY-MM-DD HH:MI" "YYYY-MM-DD HH:MI"
-#        sh/collect.sh list [-d days] [-a alert log] [-u conn]        past incidents, which sources on this host still hold them, and the commands to collect them
+#        sh/collect.sh list [-s] [-d days] [-a alert log] [-u conn] [from [to]]     past incidents, which sources on this host still hold them, and the commands to collect them
 #
 #   -o file    bundle to write            (default ./dgr_<side>_<host>_<now>.jsonl)
 #   -u conn    sqlplus connect string     (default "/ as sysdba")
@@ -15,8 +15,11 @@
 #   -p ip      peer redo IP for the 10 s network check (default: derived, see README); -P port (default: derived, else 1521)
 #   -n file    log of sh/net_sampler.sh: add its samples inside the window
 #   -N         passive: no live network check (no ping, no netstat sampling): only logs, files and the database are read
-#   -d days    how far back "earlier occurrences" and `list` look (default 30)
+#   -d days    how far back "earlier occurrences" and `list` look (default 30; `list` with a from time does not use it)
 #   -b days    baseline: the same clock interval on each of the previous days, primary (default 7, 0 = none, at most 31)
+#   -s         list only: print nothing but the commands (every standby command, then every primary command, then the reports), to save as a script
+#   from, to   list only: the period to look at, each "YYYY-MM-DD", "YYYY-MM-DD HH:MI" or "YYYY-MM-DD HH:MI:SS"; a date alone is the start of that day for from
+#              and the end of that day for to; to left out = now. An episode is listed when its first line is inside the period.
 #
 # Run it on the standby first, then on the primary with -c <standby bundle>.
 # Then: sh/make_report.sh   (on any machine, in the directory that holds the bundles)
@@ -30,15 +33,15 @@ DIR=$(cd "$(dirname "$0")/.." && pwd)
 [ -r "$DIR/sh/dglib.sh" ] || { echo "collect.sh: $DIR/sh/dglib.sh is missing: copy the whole directory to the host" >&2; exit 1; }
 . "$DIR/sh/dglib.sh"
 SQLPLUS=${SQLPLUS:-sqlplus}
-OUT= CONN="/ as sysdba" TRACE= ALERT= LSNR= CIDS= PEER= PORT= PORTSET=0 DAYS=30 BASE=7 SAMPLES= NONET=0
+OUT= CONN="/ as sysdba" TRACE= ALERT= LSNR= CIDS= PEER= PORT= PORTSET=0 DAYS=30 BASE=7 SAMPLES= NONET=0 ONLYCMD=0
 # options may come before, between or after the positional arguments
 N=0 A1= A2= A3=
 while [ $# -gt 0 ]; do
   OPTIND=1
-  while getopts o:u:t:a:l:c:p:P:n:Nd:b:h opt; do
+  while getopts o:u:t:a:l:c:p:P:n:Nd:b:sh opt; do
     case $opt in
       o) OUT=$OPTARG ;; u) CONN=$OPTARG ;; t) TRACE=$OPTARG ;; a) ALERT=$OPTARG ;; l) LSNR=$OPTARG ;;
-      c) CIDS=$OPTARG ;; p) PEER=$OPTARG ;; P) PORT=$OPTARG PORTSET=1 ;; n) SAMPLES=$OPTARG ;; N) NONET=1 ;; d) DAYS=$OPTARG ;; b) BASE=$OPTARG ;; *) usage ;;
+      c) CIDS=$OPTARG ;; p) PEER=$OPTARG ;; P) PORT=$OPTARG PORTSET=1 ;; n) SAMPLES=$OPTARG ;; N) NONET=1 ;; d) DAYS=$OPTARG ;; b) BASE=$OPTARG ;; s) ONLYCMD=1 ;; *) usage ;;
     esac
   done
   shift $((OPTIND - 1))
@@ -52,8 +55,9 @@ case $BASE in ''|*[!0-9]*) echo "-b needs a number of days (0 = no baseline)" >&
 [ "$BASE" -le 31 ] || { echo "-b: at most 31 days" >&2; exit 1; }
 case $PORT in *[!0-9]*) echo "-P needs a port number" >&2; exit 1 ;; esac
 MODE=collect
-if [ $N -eq 1 ] && [ "$A1" = list ]; then MODE=list
+if [ "$A1" = list ] && [ $N -le 3 ]; then MODE=list   # list [from [to]]
 elif [ $N -ne 3 ]; then usage; fi
+[ $MODE = list ] || [ $ONLYCMD -eq 0 ] || { echo "-s only applies to list" >&2; exit 1; }
 
 TMP=${TMPDIR:-/tmp}/dgr.$$
 trap 'rm -f "$TMP".*' 0 1 2 15
@@ -67,7 +71,31 @@ errlines() { awk -v n="$1" '/ORA-|SP2-|TNS-/ { if (a < n) p[++a] = $0; next } /E
 
 # ================================================================ list: past incidents and the commands to collect them
 if [ $MODE = list ]; then
-  CUT=$(cutoff)
+  # An optional period, list [from [to]]: "YYYY-MM-DD" (the start of that day for from, the end of it for to), "YYYY-MM-DD HH:MI" or "YYYY-MM-DD HH:MI:SS"; to left out = now.
+  # With a period -d is not used for the cutoff (from is); sql/list_alerts.sql takes days, so it gets the whole days from from to now, rounded up, plus 1 (LDAYS).
+  PFROM= PTO= LDAYS=$DAYS
+  ptime() {   # TEXT TIME-OF-DAY-OF-A-DATE: sets PT to the time as YYYY-MM-DD HH:MI:SS; says so and exits when TEXT is no time (2026-02-31 and 24:00 are none)
+    case $1 in
+      [12][0-9][0-9][0-9]-[01][0-9]-[0-3][0-9]) PT="$1 $2" ;;
+      [12][0-9][0-9][0-9]-[01][0-9]-[0-3][0-9]\ [0-2][0-9]:[0-5][0-9]) PT="$1:00" ;;
+      [12][0-9][0-9][0-9]-[01][0-9]-[0-3][0-9]\ [0-2][0-9]:[0-5][0-9]:[0-5][0-9]) PT=$1 ;;
+      *) PT= ;; esac
+    if [ -n "$PT" ] && awk -v t="$PT" "$DATEAWK"'BEGIN { exit !(fmt(ep(t)) == t) }'; then return 0; fi
+    echo "list: \"$1\" is not a time: use YYYY-MM-DD, \"YYYY-MM-DD HH:MI\" or \"YYYY-MM-DD HH:MI:SS\"" >&2; exit 1; }
+  if [ $N -ge 2 ]; then
+    ptime "$A2" 00:00:00; PFROM=$PT
+    if [ $N -ge 3 ]; then ptime "$A3" 23:59:59; PTO=$PT; else PTO=$(now); fi
+    awk -v a="$PFROM" -v b="$PTO" 'BEGIN { exit !(b < a) }' && { echo "list: the end of the period ($PTO) is before its start ($PFROM)" >&2; exit 1; }
+    LDAYS=$(awk -v f="$PFROM" -v n="$(now)" "$DATEAWK"'BEGIN { x = ep(n) - ep(f); if (x < 0) x = 0; print int((x + 86399) / 86400) + 1 }')
+    CUT=$PFROM
+  else CUT=$(cutoff); fi
+  # -s: every collect command carries -d so each bundle's history reaches as far back as the list did. An explicit -d N is passed on as it is (N not 30);
+  # with a period only when the derived days are more than 30: the default 30 already reaches its start, and a smaller -d would shorten the history of the bundle
+  CDAYS=
+  if [ $ONLYCMD -eq 1 ]; then
+    if [ -n "$PFROM" ]; then [ "$LDAYS" -gt 30 ] && CDAYS=$LDAYS
+    elif [ "$LDAYS" -ne 30 ]; then CDAYS=$LDAYS; fi
+  fi
   : > "$TMP.lst"
   if [ -n "$ALERT" ]; then
     [ -r "$ALERT" ] || { echo "list: cannot read $ALERT" >&2; exit 1; }
@@ -78,7 +106,7 @@ if [ $MODE = list ]; then
       k >= cut { if (dghist($0)) print k "\tI\t" substr($0, 1, 200); else if (dgsync($0)) print k "\tS\t" substr($0, 1, 200) }' > "$TMP.lst"
   elif command -v "$SQLPLUS" >/dev/null 2>&1; then
     SRC="v\$diag_alert_ext"
-    "$SQLPLUS" -S -L "$CONN" @"$DIR/sql/list_alerts.sql" "$DAYS" </dev/null > "$TMP.lsq" 2>&1
+    "$SQLPLUS" -S -L "$CONN" @"$DIR/sql/list_alerts.sql" "$LDAYS" </dev/null > "$TMP.lsq" 2>&1
     awk -F'\t' 'NF >= 3 && $1 ~ /^[12][0-9][0-9][0-9]-[01][0-9]-[0-3][0-9] [0-2][0-9]:[0-5][0-9]:[0-5][0-9]$/' "$TMP.lsq" > "$TMP.lst"
     if [ ! -s "$TMP.lst" ] && grep -qE 'ORA-|SP2-|ERROR' "$TMP.lsq"; then
       echo "list: could not read v\$diag_alert_ext: $(errline < "$TMP.lsq")" >&2
@@ -93,7 +121,8 @@ if [ $MODE = list ]; then
   # The ASH and AWR query runs with -a as well as without it (it needs sqlplus, not v$diag_alert_ext: on a mounted standby ASH answers and AWR gives ORA-01219);
   # two small SELECTs of their own, a failed one is "not checked" with its first ORA- or SP2- line.
   LSASH= LSAWR=
-  if ! command -v "$SQLPLUS" >/dev/null 2>&1; then LSASH="!sqlplus not found"; LSAWR=$LSASH
+  if [ $ONLYCMD -eq 1 ]; then :   # -s prints no "still held" lines: nothing to read
+  elif ! command -v "$SQLPLUS" >/dev/null 2>&1; then LSASH="!sqlplus not found"; LSAWR=$LSASH
   else
     "$SQLPLUS" -S -L "$CONN" @"$DIR/sql/list_sources.sql" </dev/null > "$TMP.lss" 2>&1
     for K in ASH AWR; do
@@ -128,7 +157,8 @@ if [ $MODE = list ]; then
       out="$out${out:+, }$DAY ${got:-${why:-no file in ${SA_DIR:-/var/log/sa /var/log/sysstat}}}"
     done
     echo "sysstat: $out"; }
-  awk -v src="$SRC" -v cut="$CUT" -v now="$(now)" -v days="$DAYS" -v me="$0" "$DATEAWK"'
+  # from/to are set with a period only: an episode starts at a first line inside it (lines after to still extend or close an episode that is open); onlycmd = -s
+  awk -v src="$SRC" -v cut="$CUT" -v now="$(now)" -v days="$DAYS" -v me="$0" -v dir="$(dirname "$0")" -v from="$PFROM" -v to="$PTO" -v onlycmd="$ONLYCMD" -v dopt="$CDAYS" "$DATEAWK"'
     function label(m,   l, r) {
       if (match(m, /ORA-[0-9]+/)) return substr(m, RSTART, RLENGTH)
       if (match(m, /TNS-[0-9]+/)) return substr(m, RSTART, RLENGTH)
@@ -141,7 +171,7 @@ if [ $MODE = list ]; then
       if (d > 0) return d " d " h " h"; if (x >= 3600) return h " h " m " min"; return int(x / 60) " min" }
     # window: 5 minutes before the first line to 5 minutes after the return; 15 minutes after the last line when there is no return. When that end is more than
     # 60 minutes after the first line (a return days later, or lines chained for hours) the window ends 30 minutes after the first line instead, and the note says so.
-    function closeep(   a, b, e, wa, wb, tag, shown, p, i, ls, short) {
+    function closeep(   a, b, e, wa, wb, tag, shown, p, i, ls, short, c) {
       ne++; short = 0
       a = int((firstt - 300) / 60) * 60
       e = (ret != "" ? rett + 300 : lastt + 900)
@@ -151,26 +181,58 @@ if [ $MODE = list ]; then
       tag = substr(wa, 1, 4) substr(wa, 6, 2) substr(wa, 9, 2) "_" substr(wa, 12, 2) substr(wa, 15, 2)
       ls = substr(labs, 2); shown = ""; for (i = 1; i <= 4; i++) { p = index(ls, "|"); if (p == 0) break; shown = shown (shown == "" ? "" : "; ") substr(ls, 1, p - 1); ls = substr(ls, p + 1) }
       if (nl > 4) shown = shown "; ..."
-      printf "Episode %d: %s to %s, %d line%s: %s\n", ne, first, (ret != "" ? ret : last), n, (n == 1 ? "" : "s"), shown
-      if (ret != "") printf "  back to SYNCHRONIZED at %s\n", ret
-      else if (short) printf "  no return to SYNCHRONIZED found in the log\n"
-      else printf "  no return to SYNCHRONIZED found in the log: the suggested window ends 15 minutes after the last line\n"
-      if (short) printf "  note: %s after the first line; the suggested window was shortened to end 30 minutes after it. Widen its end by hand to cover the whole period.\n", dur((ret != "" ? rett : lastt) - firstt)
-      printf "  suggested window: %s to %s\n", wa, wb
-      printf "  @SOURCES\t%s\t%s\n", wa, wb
-      printf "  standby host: sh %s -o dgr_standby_%s.jsonl standby \"%s\" \"%s\"\n", me, tag, wa, wb
-      printf "  primary host: sh %s -c dgr_standby_%s.jsonl -o dgr_primary_%s.jsonl primary \"%s\" \"%s\"\n\n", me, tag, tag, wa, wb
+      if (onlycmd) {   # -s: keep what the command blocks of END need; the notes go on one comment line
+        c = sprintf("# Episode %d: %s to %s, %d line%s: %s; window %s to %s", ne, first, (ret != "" ? ret : last), n, (n == 1 ? "" : "s"), shown, wa, wb)
+        if (ret == "") c = c "; no return to SYNCHRONIZED found in the log"
+        if (short) c = c "; window shortened to end 30 minutes after the first line (" dur((ret != "" ? rett : lastt) - firstt) " after it " (ret != "" ? "the destination returned" : "the last line was logged") ")"
+        cm[ne] = c; cwa[ne] = wa; cwb[ne] = wb; ctag[ne] = tag
+      } else {
+        printf "Episode %d: %s to %s, %d line%s: %s\n", ne, first, (ret != "" ? ret : last), n, (n == 1 ? "" : "s"), shown
+        if (ret != "") printf "  back to SYNCHRONIZED at %s\n", ret
+        else if (short) printf "  no return to SYNCHRONIZED found in the log\n"
+        else printf "  no return to SYNCHRONIZED found in the log: the suggested window ends 15 minutes after the last line\n"
+        if (short) printf "  note: %s after the first line; the suggested window was shortened to end 30 minutes after it. Widen its end by hand to cover the whole period.\n", dur((ret != "" ? rett : lastt) - firstt)
+        printf "  suggested window: %s to %s\n", wa, wb
+        printf "  @SOURCES\t%s\t%s\n", wa, wb
+        printf "  standby host: sh %s -o dgr_standby_%s.jsonl standby \"%s\" \"%s\"\n", me, tag, wa, wb
+        printf "  primary host: sh %s -c dgr_standby_%s.jsonl -o dgr_primary_%s.jsonl primary \"%s\" \"%s\"\n\n", me, tag, tag, wa, wb
+      }
       open = 0 }
-    BEGIN { FS = "\t"; printf "Incidents in the %s, last %s days (since %s; times are the clock time of the host that wrote that log).\n", src, days, cut
-            printf "Routine lines are left out (RT_PMODE for PRIMARY and PHYSICAL, \"reason ASYNC configuration\").\n\n" }
+    BEGIN { FS = "\t"
+            range = (from != "" ? from " to " to : "last " days " days (since " cut ")")
+            if (!onlycmd) {
+              if (from != "") printf "Incidents in the %s, %s (times are the clock time of the host that wrote that log).\n", src, range
+              else printf "Incidents in the %s, last %s days (since %s; times are the clock time of the host that wrote that log).\n", src, days, cut
+              printf "Routine lines are left out (RT_PMODE for PRIMARY and PHYSICAL, \"reason ASYNC configuration\").\n\n" } }
+    from != "" && $1 < from { next }   # the rows of v$diag_alert_ext reach a little before the period
     { t = ep($1)
       if ($2 == "I") {
         if (open && t - lastt > 900) closeep()
-        if (!open) { open = 1; first = $1; firstt = t; n = 0; ret = ""; labs = "|"; nl = 0 }
+        if (!open) { if (to != "" && $1 > to) next; open = 1; first = $1; firstt = t; n = 0; ret = ""; labs = "|"; nl = 0 }   # no episode starts after the period
         n++; last = $1; lastt = t; ret = ""; addlab(label($3))
       } else if ($2 == "S" && open && ret == "") { ret = $1; rett = t; if (t - lastt <= 900) lastt = t } }   # a late return does not stretch the episode: the next lines start a new one
     END { if (open) closeep()
-          if (ne == 0) print "No incidents found."
+          if (onlycmd) {   # three blocks to paste on the hosts they name, or to save and run: only commands, # lines and empty lines
+            if (ne == 0) { printf "# No incidents found in the %s, %s.\n", src, range; exit }
+            printf "# dgstallscripts: commands for the %d episode%s found in the %s, %s.\n", ne, (ne == 1 ? "" : "s"), src, range
+            print "# Times are the clock time of the host that wrote that log. Routine lines are left out."
+            for (i = 1; i <= ne; i++) print cm[i]
+            print "#"
+            print "# 1. On the STANDBY host, in the directory that will hold the bundles:"
+            for (i = 1; i <= ne; i++) printf "sh %s%s -o dgr_standby_%s.jsonl standby \"%s\" \"%s\"\n", me, (dopt == "" ? "" : " -d " dopt), ctag[i], cwa[i], cwb[i]
+            print ""
+            print "# 2. Copy the dgr_standby_*.jsonl files to the PRIMARY host, into the directory you run this in. Then on the PRIMARY host:"
+            for (i = 1; i <= ne; i++) printf "sh %s%s -c dgr_standby_%s.jsonl -o dgr_primary_%s.jsonl primary \"%s\" \"%s\"\n", me, (dopt == "" ? "" : " -d " dopt), ctag[i], ctag[i], cwa[i], cwb[i]
+            print ""
+            print "# 3. With all bundles in one directory (a database host or your laptop): one report per episode"
+            for (i = 1; i <= ne; i++) printf "sh %s/make_report.sh -o dgr_report_%s.html dgr_primary_%s.jsonl dgr_standby_%s.jsonl\n", dir, ctag[i], ctag[i], ctag[i]
+            if (ne >= 2) {
+              print ""
+              print "# ... or one report that holds every episode (a selector at the top switches between them):"
+              all = ""; for (i = 1; i <= ne; i++) all = all " dgr_primary_" ctag[i] ".jsonl dgr_standby_" ctag[i] ".jsonl"
+              printf "sh %s/make_report.sh -o dgr_report_all.html%s\n", dir, all }
+          }
+          else if (ne == 0) print "No incidents found."
           else print "Run the standby command on the standby host first, copy its bundle to the primary host, then run the primary command there.\nTimes in the commands are as logged by that host; add -a <alert log>, -t, -l or -u when the defaults do not fit." }' "$TMP.lst" |
   while IFS= read -r LINE; do
     case $LINE in

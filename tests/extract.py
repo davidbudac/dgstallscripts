@@ -14,6 +14,8 @@
 #   extract.py DOM --captions | --order | --readings   the card captions with their length, the sections in document order, the Reading disclosures and whether each is closed
 #   extract.py DOM --ui     the log of the button, tab and link clicks of hover.html;  --delivered copy|dl net|ticket  the texts Copy / Download .txt delivered, per incident
 #   extract.py DOM --cards  the cards of the lookback and impact records: EP* (episodes side by side), WHO* (who waited), RECURBAR* (the activity bars of the day-and-hour grid)
+#   extract.py DOM --sets   the episode selector of a report whose bundles hold several collection windows: SETS (its heading), SETNAV (Previous, Next), SET n | window | bundles | alert lines | shown or link ?ep=n per row;
+#                           nothing when the report has no selector
 import json, re, sys, html
 d = open(sys.argv[1], encoding='utf-8').read()
 mode = sys.argv[2] if len(sys.argv) > 2 else ''
@@ -152,6 +154,18 @@ if mode == '--captions':   # every card heading with the paragraph beside it: "l
 if mode == '--order':   # the sections of the page in document order, with the ids of the two panes: report, ..., paneHandover, handover
     ids = 'report summary timeline sequence commits who lgwr baseline recur listener rfsCard nsCard signals explain next coverage episodes history alerts traces shipping cidCard config rfsEvCard standby network paneHandover handover'.split()
     print(' '.join(m.group(1) for m in re.finditer(r'<(?:section|div)[^>]*\bid="(%s)"' % '|'.join(ids), re.sub(r'<script.*?</script>', '', d, flags=re.S))))
+    sys.exit(0)
+if mode == '--sets':   # the page's own source (the selector's template strings) is left out: only a rendered selector counts
+    d = re.sub(r'<script.*?</script>', '', d, flags=re.S)
+    sec = block('epsel')
+    if sec:
+        emit('SETS: ' + txt(re.search(r'<h2[^>]*>(.*?)</h2>', sec, flags=re.S).group(1)))
+        emit('SETNAV: ' + ' | '.join('%s %s' % (txt(l), h) for h, l in re.findall(r'<a class="btn" href="([^"]*)"[^>]*>(.*?)</a>', sec, flags=re.S)) + ''.join(' | %s none' % txt(l) for l in re.findall(r'<span class="btn" aria-disabled="true">(.*?)</span>', sec, flags=re.S)))
+        for tag, row in re.findall(r'<tr (data-set="\d+"[^>]*)>(.*?)</tr>', sec, flags=re.S):
+            c = re.findall(r'<td[^>]*>(.*?)</td>', row, flags=re.S)
+            lk = re.search(r'<a href="([^"]*)"', c[4])
+            state = 'shown' if 'aria-current="true"' in tag and 'shown' in txt(c[4]) else 'link ' + lk.group(1) if lk and 'aria-current' not in tag else 'MARK?'
+            emit('SET %s | %s | %s | %s | %s' % (re.search(r'data-set="(\d+)"', tag).group(1), txt(c[1]), ' ; '.join(txt(x) for x in re.findall(r'<div[^>]*>(.*?)</div>', c[2], flags=re.S)), txt(c[3]), state))
     sys.exit(0)
 if mode == '--readings':   # the Reading disclosures: "closed | Reading (n)"; DIVRD counts a Reading block that is not a disclosure
     page = re.sub(r'<script.*?</script>', '', d, flags=re.S)
