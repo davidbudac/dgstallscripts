@@ -1,0 +1,52 @@
+#### incident 1
+Oracle Data Guard redo transport (TCP) from primary prim-host.example (address not collected) to standby
+stby-host.example (address not collected), port not collected.
+Incident 1 of 1: 2026-11-20 10:15:01Z to 10:17:00Z (primary local 10:15:01 to 10:17:00 +00:00).
+Collected: primary 2026-11-20 14:30:00Z, standby 2026-11-20 14:30:00Z. Columns: UTC (Z), then host local time
+(primary +00:00, standby +00:00). Tags: [ms] [1 s] resolution of the logged time, [ASH] [sampler] sampled,
+[avg] average over the interval ending at that time.
+ENDPOINTS (as collected, not the state at the incident)
+endpoint aliases (ep): not collected (primary and standby: "no destination or fal_server alias known").
+TCP connections between the hosts (conn): not collected (primary and standby: "no peer address: -p not given
+and none could be derived").
+TIMELINE
+10:15:01.780Z 10:15:01.780 primary ORA-03135 (3 lines until 10:15:01.810): "LGWR (PID:2201): Attempting LAD:2
+                                   network reconnect (3135)" [ms]
+10:15:01.830Z 10:15:01.830 primary LAD:2 UNSYNCHRONIZED, reason as logged "no connection" [ms]
+10:16:28.900Z 10:16:28.900 primary Fatal NI connect error 12170: "TNS-12535: TNS:operation timed out"; ns main
+                                   12535, ns secondary 12560, nt main 505, nt secondary 0, nt OS 0; connecting
+                                   to (HOST=198.51.100.12)(PORT=1521) [ms]
+10:16:32.000Z 10:16:32.000 primary Fatal NI connect error 12543: "TNS-12543: TNS:destination host
+                                   unreachable"; ns main 12543, ns secondary 12560, nt main 513, nt secondary
+                                   113, nt OS 0; connecting to (HOST=198.51.100.12)(PORT=1521) [ms]
+primary and standby listeners: no PROGRAM=oracle connection from the other host during 2026-11-20 10:13:31Z to
+10:18:00Z (the listener log covers it)
+HOST-SIDE OBSERVATIONS
+10:15:00.400Z 10:15:00.400 primary 1 shutdown or process-termination line, first "Shutdown is initiated by
+                                   sqlplus@prim-host.example (TNS V1-V3)." [ms]
+10:15:01.600Z 10:15:01.600 standby 3 shutdown or process-termination lines, first "Process termination
+                                   requested for pid 2100 [source = unknown], [ ..." [ms]
+10:15:02.100Z 10:15:02.100 primary 2 shutdown or process-termination lines, first "Shutting down instance:
+                                   further logons disabled" [ms]
+VKTM time-drift lines: none in the primary and standby alert logs from 2026-11-20 10:13:31Z to 10:18:00Z
+ASH sampler gaps over 2 s, primary: none from 2026-11-20 10:13:31Z to 10:18:00Z (the incident interval)
+ASH sampler gaps over 2 s, standby: not checked from 2026-11-20 10:13:31Z to 10:18:00Z: gap check inconclusive
+NETWORK MEASUREMENTS DURING THE WINDOW (the length of a sar interval is not in the bundle)
+no sar row overlapping the incident interval and no sampler line in it
+not available, primary and standby: sar ETCP, TCP, DEV, EDEV: not read: "no sysstat network history read"
+not available, primary and standby: sampler log: no sampler log was given to collect.sh (-n)
+NETWORK MEASUREMENTS AT COLLECTION TIME (not during the window; times UTC; retransmits are host-wide)
+network check (ping, retransmit counter, Send-Q): not run (primary and standby: "option -p not given").
+TIMEOUTS AND SETTINGS (as collected, not the state at the incident)
+NET_TIMEOUT 30 s, REOPEN 300 s, MAX_FAILURE 0 (v$archive_dest LAD:2, PARALLELSYNC AFFIRM=YES)
+sqlnet.ora: not collected (primary and standby: "neither TNS_ADMIN nor ORACLE_HOME is set: sqlnet.ora not
+located")
+OS TCP: not collected (primary and standby: "no TCP tunables read for this OS")
+CLOCKS (NTP state as collected, times UTC; offset = system clock minus source)
+UTC offset in the window: primary +00:00 (alert log), standby +00:00 (alert log)
+NTP state: not collected (primary and standby: "no clock synchronisation state could be read").
+OTHER EPISODES IN THE ALERT-LOG HISTORY (UTC, window offset)
+before the window: none found; after it: none found.
+History read: primary and standby alert logs 2026-10-21 to 2026-11-20, newest 300 lines kept, capped: no.
+NOT AVAILABLE FOR THE INCIDENT INTERVAL 2026-11-20 10:13:31Z to 10:18:00Z
+standby ASH: holds nothing before 2026-11-20 13:30:00Z; the interval starts 2026-11-20 10:13:31Z

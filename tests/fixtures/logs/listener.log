@@ -1,0 +1,26 @@
+2026-08-09T20:31:24.100000+00:00
+09-AUG-2026 20:31:24 * (CONNECT_DATA=(SERVER=DEDICATED)(SID=cdb1)(CID=(PROGRAM=oracle)(HOST=fakehost1.example.localdomain)(USER=oracle))) * (ADDRESS=(PROTOCOL=tcp)(HOST=192.0.2.31)(PORT=28492)) * establish * cdb1 * 12518
+2026-11-13T23:49:50.100000+00:00
+13-NOV-2026 23:49:50 * (CONNECT_DATA=(SERVICE_NAME=APP_RW)(CID=(PROGRAM=app)(HOST=appsrv1.example.localdomain)(USER=app))) * (ADDRESS=(PROTOCOL=tcp)(HOST=192.0.2.21)(PORT=40001)) * establish * APP_RW * 0
+2026-11-13T23:50:00.500000+00:00
+13-NOV-2026 23:50:00 * (CONNECT_DATA=(SERVICE_NAME=APP_RW)(CID=(PROGRAM=app)(HOST=appsrv1.example.localdomain)(USER=app))) * (ADDRESS=(PROTOCOL=tcp)(HOST=192.0.2.21)(PORT=40002)) * establish * APP_RW * 0
+2026-11-13T23:58:01.500000+00:00
+13-NOV-2026 23:58:01 * service_update * cdb1 * 0
+13-NOV-2026 23:58:19 * (CONNECT_DATA=(SERVICE_NAME=APP_RW)(CID=(PROGRAM=app)(HOST=appsrv1.example.localdomain)(USER=app))(CONNECTION_ID=Q1w2E3r4T5y6U7i8O9p0Aa==)) * (ADDRESS=(PROTOCOL=tcp)(HOST=192.0.2.23)(PORT=40112)) * establish * APP_RW * 12514
+13-NOV-2026 23:58:44 * (CONNECT_DATA=(SERVICE_NAME=APP_RW)(CID=(PROGRAM=app)(HOST=appsrv2.example.localdomain)(USER=app))(CONNECTION_ID=Zx9c8V7b6N5m4L3k2J1h0Gg==)) * (ADDRESS=(PROTOCOL=tcp)(HOST=192.0.2.22)(PORT=40113)) * establish * APP_RW * 12514
+WARNING: Subscription for node down event still pending
+2026-11-13T23:58:12.000000+00:00
+13-NOV-2026 23:58:12 * (CONNECT_DATA=(SERVER=DEDICATED)(SID=cdb1)(CID=(PROGRAM=oracle)(HOST=prim-host.example)(USER=oracle))) * (ADDRESS=(PROTOCOL=tcp)(HOST=198.51.100.11)(PORT=33001)) * establish * cdb1 * 0
+13-NOV-2026 23:58:40 * (CONNECT_DATA=(SERVER=DEDICATED)(SID=cdb1)(CID=(PROGRAM=oracle)(HOST=prim-host.example)(USER=oracle))) * (ADDRESS=(PROTOCOL=tcp)(HOST=198.51.100.11)(PORT=33002)) * establish * cdb1 * 12518
+13-NOV-2026 23:59:01 * (CONNECT_DATA=(SERVICE_NAME=proddb_s_dgmgrl)(CID=(PROGRAM=oracle)(HOST=other-host.example)(USER=oracle))) * (ADDRESS=(PROTOCOL=tcp)(HOST=198.51.100.13)(PORT=33010)) * establish * proddb_s_dgmgrl * 0
+14-NOV-2026 00:01:30 * (CONNECT_DATA=(SERVER=DEDICATED)(SID=cdb1)(CID=(PROGRAM=oracle)(HOST=prim-host.example)(USER=oracle))) * (ADDRESS=(PROTOCOL=tcp)(HOST=198.51.100.11)(PORT=33007)) * establish * cdb1 * 0
+2026-11-14T00:02:44.000100+00:00
+14-NOV-2026 00:02:44 * (CONNECT_DATA=(SID=cdb1)(CID=(PROGRAM=perl)(HOST=fakehost1.example.localdomain)(USER=oracle))) * (ADDRESS=(PROTOCOL=tcp)(HOST=192.0.2.21)(PORT=62200)) * establish * cdb1 * 0
+14-NOV-2026 00:03:10 * (CONNECT_DATA=(SERVICE_NAME=APP_RW)(CID=(PROGRAM=app)(HOST=appsrv3.example.localdomain)(USER=app))(CONNECTION_ID=Mn8b7V6c5X4z3L2k1J0hGg==)) * (ADDRESS=(PROTOCOL=tcp)(HOST=192.0.2.24)(PORT=40114)) * establish * APP_RW * 12514
+
+2026-11-14T00:10:00.000000+00:00
+14-NOV-2026 00:10:00 * service_update * cdb1 * 0
+14-NOV-2026 00:10:01 * service_update * cdb1 * 0
+2026-11-21T09:01:46.464031+00:00
+21-NOV-2026 09:01:46 * service_update * cdb1 * 0
+21-NOV-2026 08:50:44 * (CONNECT_DATA=(SID=cdb1)(CID=(PROGRAM=perl)(HOST=fakehost1.example.localdomain)(USER=oracle))) * (ADDRESS=(PROTOCOL=tcp)(HOST=192.0.2.21)(PORT=62200)) * establish * cdb1 * 0

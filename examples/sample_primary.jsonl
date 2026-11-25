@@ -1,121 +1,192 @@
-{"t":"bundle","side":"primary","host":"prim-host","from":"2026-11-13 20:35:00","to":"2026-11-13 20:58:00","collected":"2026-11-14 09:12:40","cidcheck":"yes","v":1}
-{"t":"meta","side":"primary","db":"PRODDB","uniq":"proddb","role":"PRIMARY","open":"READ WRITE","pmode":"MAXIMUM AVAILABILITY","plevel":"MAXIMUM AVAILABILITY","inst":"proddb1","host":"prim-host.example","ver":"19.30.0.0.0","plat":"AIX-Based Systems (64-bit)","from":"2026-11-13 20:35:00","to":"2026-11-13 20:58:00","gen":"2026-11-14 09:12:41","tz":"+01:00","ash":"H"}
+{"t":"bundle","side":"primary","host":"prim-host","from":"2026-11-13 20:35:00","to":"2026-11-13 20:58:00","collected":"2026-11-14 09:12:40","cidcheck":"yes","v":2}
+{"t":"meta","side":"primary","db":"PRODDB","uniq":"proddb","role":"PRIMARY","open":"READ WRITE","pmode":"MAXIMUM AVAILABILITY","plevel":"MAXIMUM AVAILABILITY","inst":"proddb1","host":"prim-host.example","ver":"19.30.0.0.0","plat":"AIX-Based Systems (64-bit)","from":"2026-11-13 20:35:00","to":"2026-11-13 20:58:00","gen":"2026-11-14 09:12:41","tz":"+01:00","ash":"H","startup":"2026-10-04 02:15:33","cluster_database":"FALSE","inst_count":1}
 {"t":"dest","id":2,"dest":"proddb_s_dgmgrl","uniq":"proddb_s","status":"VALID","mode":"PARALLELSYNC","affirm":"NO","net_timeout":30,"reopen":300,"max_failure":0,"failures":1,"error":null,"sync":"OK","synced":"YES","gap":"NO GAP"}
 {"t":"param","name":"data_guard_sync_latency","value":"0"}
 {"t":"param","name":"log_archive_config","value":"dg_config=(proddb,proddb_s)"}
-{"t":"fg","m":"20:35","lgwr":0,"other":12,"cpu":30}
-{"t":"fg","m":"20:36","lgwr":0,"other":18,"cpu":36}
-{"t":"fg","m":"20:37","lgwr":16,"other":12,"cpu":30}
-{"t":"fg","m":"20:38","lgwr":87,"other":6,"cpu":12}
-{"t":"fg","m":"20:44","lgwr":0,"other":6,"cpu":6}
-{"t":"fg","m":"20:45","lgwr":0,"other":6,"cpu":12}
-{"t":"fg","m":"20:46","lgwr":0,"other":0,"cpu":6}
-{"t":"fg","m":"20:47","lgwr":0,"other":6,"cpu":6}
-{"t":"fg","m":"20:48","lgwr":0,"other":0,"cpu":12}
-{"t":"fg","m":"20:49","lgwr":0,"other":6,"cpu":6}
-{"t":"fg","m":"20:50","lgwr":0,"other":6,"cpu":12}
-{"t":"fg","m":"20:51","lgwr":0,"other":0,"cpu":6}
-{"t":"fg","m":"20:52","lgwr":0,"other":6,"cpu":6}
-{"t":"fg","m":"20:53","lgwr":0,"other":12,"cpu":24}
-{"t":"fg","m":"20:54","lgwr":0,"other":18,"cpu":36}
-{"t":"fg","m":"20:55","lgwr":0,"other":12,"cpu":30}
-{"t":"fg","m":"20:56","lgwr":0,"other":18,"cpu":36}
-{"t":"fg","m":"20:57","lgwr":0,"other":12,"cpu":30}
-{"t":"fg10","b":"20:37:40","n":4}
-{"t":"fg10","b":"20:37:50","n":12}
-{"t":"fg10","b":"20:38:00","n":9}
-{"t":"fg10","b":"20:38:10","n":13}
-{"t":"fg10","b":"20:38:20","n":14}
-{"t":"fg10","b":"20:38:30","n":16}
-{"t":"fg10","b":"20:38:40","n":17}
-{"t":"fg10","b":"20:38:50","n":18}
-{"t":"tx","ts":"20:35:02.118","p":"LGWR","ev":"SYNC Remote Write","seq":63881,"tw":2400}
-{"t":"tx","ts":"20:35:22.118","p":"LGWR","ev":"log file parallel write","seq":63883,"tw":800}
-{"t":"tx","ts":"20:35:32.118","p":"LGWR","ev":"SYNC Remote Write","seq":63884,"tw":1200}
-{"t":"tx","ts":"20:35:42.118","p":"LGWR","ev":"SYNC Remote Write","seq":63885,"tw":2400}
-{"t":"tx","ts":"20:35:52.118","p":"LGWR","ev":"SYNC Remote Write","seq":63886,"tw":2400}
-{"t":"tx","ts":"20:36:02.118","p":"LGWR","ev":"log file parallel write","seq":63887,"tw":800}
-{"t":"tx","ts":"20:36:42.118","p":"LGWR","ev":"log file parallel write","seq":63891,"tw":2400}
-{"t":"tx","ts":"20:36:52.118","p":"LGWR","ev":"SYNC Remote Write","seq":63892,"tw":800}
-{"t":"tx","ts":"20:37:12.118","p":"LGWR","ev":"SYNC Remote Write","seq":63894,"tw":1200}
-{"t":"tx","ts":"20:37:22.118","p":"LGWR","ev":"log file parallel write","seq":63895,"tw":1900}
-{"t":"tx","ts":"20:37:42.118","p":"LGWR","ev":"SYNC Remote Write","seq":63896,"tw":420000}
-{"t":"tx","ts":"20:37:52.118","p":"LGWR","ev":"SYNC Remote Write","seq":63897,"tw":890000}
-{"t":"tx","ts":"20:38:02.118","p":"LGWR","ev":"SYNC Remote Write","seq":63898,"tw":1210000}
-{"t":"tx","ts":"20:38:12.118","p":"LGWR","ev":"SYNC Remote Write","seq":63899,"tw":1780000}
-{"t":"tx","ts":"20:38:12.118","p":"NSS2","ev":"Redo Transport MISC","seq":8801,"tw":1778000}
-{"t":"tx","ts":"20:38:22.118","p":"LGWR","ev":"SYNC Remote Write","seq":63900,"tw":640000}
-{"t":"tx","ts":"20:38:32.118","p":"LGWR","ev":"SYNC Remote Write","seq":63907,"tw":0}
-{"t":"tx","ts":"20:38:32.118","p":"NSS2","ev":"Redo Transport MISC","seq":8802,"tw":0}
-{"t":"tx","ts":"20:38:42.118","p":"LGWR","ev":"SYNC Remote Write","seq":63907,"tw":0}
-{"t":"tx","ts":"20:38:42.118","p":"NSS2","ev":"Redo Transport MISC","seq":8802,"tw":0}
-{"t":"tx","ts":"20:38:52.118","p":"LGWR","ev":"SYNC Remote Write","seq":63907,"tw":26434000}
-{"t":"tx","ts":"20:38:52.118","p":"NSS2","ev":"Redo Transport MISC","seq":8802,"tw":0}
-{"t":"tx","ts":"20:39:02.118","p":"NSS2","ev":"Redo Transport MISC","seq":8802,"tw":0}
-{"t":"tx","ts":"20:39:12.118","p":"NSS2","ev":"Redo Transport MISC","seq":8802,"tw":0}
-{"t":"tx","ts":"20:39:22.118","p":"NSS2","ev":"Redo Transport MISC","seq":8802,"tw":0}
-{"t":"tx","ts":"20:39:32.118","p":"NSS2","ev":"Redo Transport MISC","seq":8802,"tw":0}
-{"t":"tx","ts":"20:39:42.118","p":"NSS2","ev":"Redo Transport Detach","seq":8803,"tw":16000}
-{"t":"tx","ts":"20:43:59.118","p":"LGWR","ev":"Redo Transport Open","seq":64001,"tw":120000}
-{"t":"tx","ts":"20:44:02.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
-{"t":"tx","ts":"20:44:02.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
-{"t":"tx","ts":"20:44:12.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
-{"t":"tx","ts":"20:44:12.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
-{"t":"tx","ts":"20:44:22.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
-{"t":"tx","ts":"20:44:22.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
-{"t":"tx","ts":"20:44:32.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
-{"t":"tx","ts":"20:44:32.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
-{"t":"tx","ts":"20:44:42.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
-{"t":"tx","ts":"20:44:42.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
-{"t":"tx","ts":"20:44:52.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
-{"t":"tx","ts":"20:44:52.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
-{"t":"tx","ts":"20:44:53.118","p":"LGWR","ev":"SYNC Remote Write","seq":64128,"tw":3000}
-{"t":"tx","ts":"20:45:02.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
-{"t":"tx","ts":"20:45:02.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
-{"t":"tx","ts":"20:45:12.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
-{"t":"tx","ts":"20:45:12.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
-{"t":"tx","ts":"20:45:22.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
-{"t":"tx","ts":"20:45:22.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
-{"t":"tx","ts":"20:45:32.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
-{"t":"tx","ts":"20:45:32.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
-{"t":"tx","ts":"20:45:42.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
-{"t":"tx","ts":"20:45:42.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
-{"t":"tx","ts":"20:45:43.118","p":"LGWR","ev":"SYNC Remote Write","seq":64129,"tw":2100}
-{"t":"tx","ts":"20:45:52.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
-{"t":"tx","ts":"20:45:52.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
-{"t":"tx","ts":"20:46:02.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
-{"t":"tx","ts":"20:46:02.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
-{"t":"tx","ts":"20:46:12.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
-{"t":"tx","ts":"20:46:12.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
-{"t":"tx","ts":"20:46:22.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
-{"t":"tx","ts":"20:46:22.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
-{"t":"tx","ts":"20:46:32.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
-{"t":"tx","ts":"20:46:32.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
-{"t":"tx","ts":"20:46:42.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
-{"t":"tx","ts":"20:46:42.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
-{"t":"tx","ts":"20:46:43.118","p":"LGWR","ev":"SYNC Remote Write","seq":64130,"tw":1300}
-{"t":"tx","ts":"20:46:52.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
-{"t":"tx","ts":"20:46:52.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
-{"t":"tx","ts":"20:47:02.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
-{"t":"tx","ts":"20:47:02.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
-{"t":"tx","ts":"20:47:12.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
-{"t":"tx","ts":"20:47:12.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
-{"t":"tx","ts":"20:47:22.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
-{"t":"tx","ts":"20:47:22.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
-{"t":"tx","ts":"20:47:32.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
-{"t":"tx","ts":"20:47:32.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
-{"t":"tx","ts":"20:47:42.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
-{"t":"tx","ts":"20:47:42.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
-{"t":"tx","ts":"20:47:52.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
-{"t":"tx","ts":"20:47:52.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
-{"t":"tx","ts":"20:48:02.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
-{"t":"tx","ts":"20:48:02.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
-{"t":"tx","ts":"20:48:12.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":260000000}
-{"t":"tx","ts":"20:48:12.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":261000000}
-{"t":"tx","ts":"20:54:23.118","p":"LGWR","ev":"SYNC Remote Write","seq":64131,"tw":1800}
-{"t":"tx","ts":"20:55:33.118","p":"LGWR","ev":"SYNC Remote Write","seq":64132,"tw":1100}
-{"t":"tx","ts":"20:56:43.118","p":"LGWR","ev":"SYNC Remote Write","seq":64133,"tw":900}
-{"t":"tx","ts":"20:57:23.118","p":"LGWR","ev":"SYNC Remote Write","seq":64134,"tw":1500}
+{"t":"fg","m":"2026-11-13 20:35","lgwr":0,"other":12,"cpu":30}
+{"t":"fg","m":"2026-11-13 20:36","lgwr":0,"other":18,"cpu":36}
+{"t":"fg","m":"2026-11-13 20:37","lgwr":16,"other":12,"cpu":30}
+{"t":"fg","m":"2026-11-13 20:38","lgwr":87,"other":6,"cpu":12}
+{"t":"fg","m":"2026-11-13 20:44","lgwr":0,"other":6,"cpu":6}
+{"t":"fg","m":"2026-11-13 20:45","lgwr":0,"other":6,"cpu":12}
+{"t":"fg","m":"2026-11-13 20:46","lgwr":0,"other":0,"cpu":6}
+{"t":"fg","m":"2026-11-13 20:47","lgwr":0,"other":6,"cpu":6}
+{"t":"fg","m":"2026-11-13 20:48","lgwr":0,"other":0,"cpu":12}
+{"t":"fg","m":"2026-11-13 20:49","lgwr":0,"other":6,"cpu":6}
+{"t":"fg","m":"2026-11-13 20:50","lgwr":0,"other":6,"cpu":12}
+{"t":"fg","m":"2026-11-13 20:51","lgwr":0,"other":0,"cpu":6}
+{"t":"fg","m":"2026-11-13 20:52","lgwr":0,"other":6,"cpu":6}
+{"t":"fg","m":"2026-11-13 20:53","lgwr":0,"other":12,"cpu":24}
+{"t":"fg","m":"2026-11-13 20:54","lgwr":0,"other":18,"cpu":36}
+{"t":"fg","m":"2026-11-13 20:55","lgwr":0,"other":12,"cpu":30}
+{"t":"fg","m":"2026-11-13 20:56","lgwr":0,"other":18,"cpu":36}
+{"t":"fg","m":"2026-11-13 20:57","lgwr":0,"other":12,"cpu":30}
+{"t":"fg10","b":"2026-11-13 20:37:40","n":4}
+{"t":"fg10","b":"2026-11-13 20:37:50","n":12}
+{"t":"fg10","b":"2026-11-13 20:38:00","n":9}
+{"t":"fg10","b":"2026-11-13 20:38:10","n":13}
+{"t":"fg10","b":"2026-11-13 20:38:20","n":14}
+{"t":"fg10","b":"2026-11-13 20:38:30","n":16}
+{"t":"fg10","b":"2026-11-13 20:38:40","n":17}
+{"t":"fg10","b":"2026-11-13 20:38:50","n":18}
+{"t":"lfs","side":"primary","sid":101,"ser":304,"seq":8101,"a":"2026-11-13 20:37:40.118","z":"2026-11-13 20:37:40.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":102,"ser":307,"seq":8102,"a":"2026-11-13 20:37:40.118","z":"2026-11-13 20:37:40.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":103,"ser":310,"seq":8103,"a":"2026-11-13 20:37:40.118","z":"2026-11-13 20:37:40.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":104,"ser":313,"seq":8104,"a":"2026-11-13 20:37:40.118","z":"2026-11-13 20:37:40.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":105,"ser":316,"seq":8105,"a":"2026-11-13 20:37:50.118","z":"2026-11-13 20:37:50.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":106,"ser":319,"seq":8106,"a":"2026-11-13 20:37:50.118","z":"2026-11-13 20:37:50.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":107,"ser":322,"seq":8107,"a":"2026-11-13 20:37:50.118","z":"2026-11-13 20:37:50.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":108,"ser":325,"seq":8108,"a":"2026-11-13 20:37:50.118","z":"2026-11-13 20:37:50.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":109,"ser":328,"seq":8109,"a":"2026-11-13 20:37:50.118","z":"2026-11-13 20:37:50.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":110,"ser":331,"seq":8110,"a":"2026-11-13 20:37:50.118","z":"2026-11-13 20:37:50.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":111,"ser":334,"seq":8111,"a":"2026-11-13 20:37:50.118","z":"2026-11-13 20:37:50.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":112,"ser":337,"seq":8112,"a":"2026-11-13 20:37:50.118","z":"2026-11-13 20:37:50.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":113,"ser":340,"seq":8113,"a":"2026-11-13 20:37:50.118","z":"2026-11-13 20:37:50.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":114,"ser":343,"seq":8114,"a":"2026-11-13 20:37:50.118","z":"2026-11-13 20:37:50.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":115,"ser":346,"seq":8115,"a":"2026-11-13 20:37:50.118","z":"2026-11-13 20:37:50.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":116,"ser":349,"seq":8116,"a":"2026-11-13 20:37:50.118","z":"2026-11-13 20:37:50.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":117,"ser":352,"seq":8117,"a":"2026-11-13 20:38:00.118","z":"2026-11-13 20:38:00.118","n":1,"tw":1000000,"lg":1}
+{"t":"lfs","side":"primary","sid":118,"ser":355,"seq":8118,"a":"2026-11-13 20:38:00.118","z":"2026-11-13 20:38:00.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":119,"ser":358,"seq":8119,"a":"2026-11-13 20:38:00.118","z":"2026-11-13 20:38:00.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":120,"ser":361,"seq":8120,"a":"2026-11-13 20:38:00.118","z":"2026-11-13 20:38:00.118","n":1,"tw":1270000,"lg":1}
+{"t":"lfs","side":"primary","sid":121,"ser":364,"seq":8121,"a":"2026-11-13 20:38:00.118","z":"2026-11-13 20:38:00.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":122,"ser":367,"seq":8122,"a":"2026-11-13 20:38:00.118","z":"2026-11-13 20:38:00.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":123,"ser":370,"seq":8123,"a":"2026-11-13 20:38:00.118","z":"2026-11-13 20:38:00.118","n":1,"tw":1540000,"lg":1}
+{"t":"lfs","side":"primary","sid":124,"ser":373,"seq":8124,"a":"2026-11-13 20:38:00.118","z":"2026-11-13 20:38:00.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":125,"ser":376,"seq":8125,"a":"2026-11-13 20:38:00.118","z":"2026-11-13 20:38:00.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":126,"ser":379,"seq":8126,"a":"2026-11-13 20:38:10.118","z":"2026-11-13 20:38:10.118","n":1,"tw":1000000,"lg":1}
+{"t":"lfs","side":"primary","sid":127,"ser":382,"seq":8127,"a":"2026-11-13 20:38:10.118","z":"2026-11-13 20:38:10.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":128,"ser":385,"seq":8128,"a":"2026-11-13 20:38:10.118","z":"2026-11-13 20:38:10.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":129,"ser":388,"seq":8129,"a":"2026-11-13 20:38:10.118","z":"2026-11-13 20:38:10.118","n":1,"tw":1270000,"lg":1}
+{"t":"lfs","side":"primary","sid":130,"ser":391,"seq":8130,"a":"2026-11-13 20:38:10.118","z":"2026-11-13 20:38:10.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":131,"ser":394,"seq":8131,"a":"2026-11-13 20:38:10.118","z":"2026-11-13 20:38:10.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":132,"ser":397,"seq":8132,"a":"2026-11-13 20:38:10.118","z":"2026-11-13 20:38:10.118","n":1,"tw":1540000,"lg":1}
+{"t":"lfs","side":"primary","sid":133,"ser":400,"seq":8133,"a":"2026-11-13 20:38:10.118","z":"2026-11-13 20:38:10.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":134,"ser":403,"seq":8134,"a":"2026-11-13 20:38:10.118","z":"2026-11-13 20:38:10.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":135,"ser":406,"seq":8135,"a":"2026-11-13 20:38:10.118","z":"2026-11-13 20:38:10.118","n":1,"tw":1090000,"lg":1}
+{"t":"lfs","side":"primary","sid":136,"ser":409,"seq":8136,"a":"2026-11-13 20:38:10.118","z":"2026-11-13 20:38:10.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":137,"ser":412,"seq":8137,"a":"2026-11-13 20:38:10.118","z":"2026-11-13 20:38:10.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":138,"ser":415,"seq":8138,"a":"2026-11-13 20:38:10.118","z":"2026-11-13 20:38:10.118","n":1,"tw":1360000,"lg":1}
+{"t":"lfs","side":"primary","sid":139,"ser":418,"seq":8139,"a":"2026-11-13 20:38:20.118","z":"2026-11-13 20:38:20.118","n":1,"tw":1000000,"lg":1}
+{"t":"lfs","side":"primary","sid":140,"ser":421,"seq":8140,"a":"2026-11-13 20:38:20.118","z":"2026-11-13 20:38:20.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":141,"ser":424,"seq":8141,"a":"2026-11-13 20:38:20.118","z":"2026-11-13 20:38:20.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":142,"ser":427,"seq":8142,"a":"2026-11-13 20:38:20.118","z":"2026-11-13 20:38:20.118","n":1,"tw":1270000,"lg":1}
+{"t":"lfs","side":"primary","sid":143,"ser":430,"seq":8143,"a":"2026-11-13 20:38:20.118","z":"2026-11-13 20:38:20.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":144,"ser":433,"seq":8144,"a":"2026-11-13 20:38:20.118","z":"2026-11-13 20:38:20.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":145,"ser":436,"seq":8145,"a":"2026-11-13 20:38:20.118","z":"2026-11-13 20:38:20.118","n":1,"tw":1540000,"lg":1}
+{"t":"lfs","side":"primary","sid":146,"ser":439,"seq":8146,"a":"2026-11-13 20:38:20.118","z":"2026-11-13 20:38:20.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":147,"ser":442,"seq":8147,"a":"2026-11-13 20:38:20.118","z":"2026-11-13 20:38:20.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":148,"ser":445,"seq":8148,"a":"2026-11-13 20:38:20.118","z":"2026-11-13 20:38:20.118","n":1,"tw":1090000,"lg":1}
+{"t":"lfs","side":"primary","sid":149,"ser":448,"seq":8149,"a":"2026-11-13 20:38:20.118","z":"2026-11-13 20:38:20.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":150,"ser":451,"seq":8150,"a":"2026-11-13 20:38:20.118","z":"2026-11-13 20:38:20.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":151,"ser":454,"seq":8151,"a":"2026-11-13 20:38:20.118","z":"2026-11-13 20:38:20.118","n":1,"tw":1360000,"lg":1}
+{"t":"lfs","side":"primary","sid":152,"ser":457,"seq":8152,"a":"2026-11-13 20:38:20.118","z":"2026-11-13 20:38:20.118","n":1,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":153,"ser":460,"seq":8153,"a":"2026-11-13 20:38:30.118","z":"2026-11-13 20:38:50.118","n":3,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":154,"ser":463,"seq":8154,"a":"2026-11-13 20:38:30.118","z":"2026-11-13 20:38:50.118","n":3,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":155,"ser":466,"seq":8155,"a":"2026-11-13 20:38:30.118","z":"2026-11-13 20:38:50.118","n":3,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":156,"ser":469,"seq":8156,"a":"2026-11-13 20:38:30.118","z":"2026-11-13 20:38:50.118","n":3,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":157,"ser":472,"seq":8157,"a":"2026-11-13 20:38:30.118","z":"2026-11-13 20:38:50.118","n":3,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":158,"ser":475,"seq":8158,"a":"2026-11-13 20:38:30.118","z":"2026-11-13 20:38:50.118","n":3,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":159,"ser":478,"seq":8159,"a":"2026-11-13 20:38:30.118","z":"2026-11-13 20:38:50.118","n":3,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":160,"ser":481,"seq":8160,"a":"2026-11-13 20:38:30.118","z":"2026-11-13 20:38:50.118","n":3,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":161,"ser":484,"seq":8161,"a":"2026-11-13 20:38:30.118","z":"2026-11-13 20:38:50.118","n":3,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":162,"ser":487,"seq":8162,"a":"2026-11-13 20:38:30.118","z":"2026-11-13 20:38:50.118","n":3,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":163,"ser":490,"seq":8163,"a":"2026-11-13 20:38:30.118","z":"2026-11-13 20:38:50.118","n":3,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":164,"ser":493,"seq":8164,"a":"2026-11-13 20:38:30.118","z":"2026-11-13 20:38:50.118","n":3,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":165,"ser":496,"seq":8165,"a":"2026-11-13 20:38:30.118","z":"2026-11-13 20:38:50.118","n":3,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":166,"ser":499,"seq":8166,"a":"2026-11-13 20:38:30.118","z":"2026-11-13 20:38:50.118","n":3,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":167,"ser":502,"seq":8167,"a":"2026-11-13 20:38:30.118","z":"2026-11-13 20:38:50.118","n":3,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":168,"ser":505,"seq":8168,"a":"2026-11-13 20:38:30.118","z":"2026-11-13 20:38:50.118","n":3,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":169,"ser":508,"seq":8169,"a":"2026-11-13 20:38:40.118","z":"2026-11-13 20:38:50.118","n":2,"tw":0,"lg":1}
+{"t":"lfs","side":"primary","sid":170,"ser":511,"seq":8170,"a":"2026-11-13 20:38:50.118","z":"2026-11-13 20:38:50.118","n":1,"tw":0,"lg":1}
+{"t":"lfs_sum","side":"primary","waits":70,"lgwr_waits":70,"pk_n":18,"pk_at":"2026-11-13 20:38:50.118","pk_lg":18,"pk_lg_at":"2026-11-13 20:38:50.118"}
+{"t":"tx","ts":"2026-11-13 20:35:02.118","p":"LGWR","ev":"SYNC Remote Write","seq":63881,"tw":2400}
+{"t":"tx","ts":"2026-11-13 20:35:22.118","p":"LGWR","ev":"log file parallel write","seq":63883,"tw":800}
+{"t":"tx","ts":"2026-11-13 20:35:32.118","p":"LGWR","ev":"SYNC Remote Write","seq":63884,"tw":1200}
+{"t":"tx","ts":"2026-11-13 20:35:42.118","p":"LGWR","ev":"SYNC Remote Write","seq":63885,"tw":2400}
+{"t":"tx","ts":"2026-11-13 20:35:52.118","p":"LGWR","ev":"SYNC Remote Write","seq":63886,"tw":2400}
+{"t":"tx","ts":"2026-11-13 20:36:02.118","p":"LGWR","ev":"log file parallel write","seq":63887,"tw":800}
+{"t":"tx","ts":"2026-11-13 20:36:42.118","p":"LGWR","ev":"log file parallel write","seq":63891,"tw":2400}
+{"t":"tx","ts":"2026-11-13 20:36:52.118","p":"LGWR","ev":"SYNC Remote Write","seq":63892,"tw":800}
+{"t":"tx","ts":"2026-11-13 20:37:12.118","p":"LGWR","ev":"SYNC Remote Write","seq":63894,"tw":1200}
+{"t":"tx","ts":"2026-11-13 20:37:22.118","p":"LGWR","ev":"log file parallel write","seq":63895,"tw":1900}
+{"t":"tx","ts":"2026-11-13 20:37:42.118","p":"LGWR","ev":"SYNC Remote Write","seq":63896,"tw":420000}
+{"t":"tx","ts":"2026-11-13 20:37:52.118","p":"LGWR","ev":"SYNC Remote Write","seq":63897,"tw":890000}
+{"t":"tx","ts":"2026-11-13 20:38:02.118","p":"LGWR","ev":"SYNC Remote Write","seq":63898,"tw":1210000}
+{"t":"tx","ts":"2026-11-13 20:38:12.118","p":"LGWR","ev":"SYNC Remote Write","seq":63899,"tw":1780000}
+{"t":"tx","ts":"2026-11-13 20:38:12.118","p":"NSS2","ev":"Redo Transport MISC","seq":8801,"tw":1778000}
+{"t":"tx","ts":"2026-11-13 20:38:22.118","p":"LGWR","ev":"SYNC Remote Write","seq":63900,"tw":640000}
+{"t":"tx","ts":"2026-11-13 20:38:32.118","p":"LGWR","ev":"SYNC Remote Write","seq":63907,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:38:32.118","p":"NSS2","ev":"Redo Transport MISC","seq":8802,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:38:42.118","p":"LGWR","ev":"SYNC Remote Write","seq":63907,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:38:42.118","p":"NSS2","ev":"Redo Transport MISC","seq":8802,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:38:52.118","p":"LGWR","ev":"SYNC Remote Write","seq":63907,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:38:52.118","p":"NSS2","ev":"Redo Transport MISC","seq":8802,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:39:02.118","p":"NSS2","ev":"Redo Transport MISC","seq":8802,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:39:12.118","p":"NSS2","ev":"Redo Transport MISC","seq":8802,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:39:22.118","p":"NSS2","ev":"Redo Transport MISC","seq":8802,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:39:32.118","p":"NSS2","ev":"Redo Transport MISC","seq":8802,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:39:42.118","p":"NSS2","ev":"Redo Transport Detach","seq":8803,"tw":16000}
+{"t":"tx","ts":"2026-11-13 20:43:59.118","p":"LGWR","ev":"Redo Transport Open","seq":64001,"tw":120000}
+{"t":"tx","ts":"2026-11-13 20:44:02.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:44:02.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:44:12.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:44:12.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:44:22.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:44:22.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:44:32.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:44:32.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:44:42.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:44:42.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:44:52.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:44:52.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:44:53.118","p":"LGWR","ev":"SYNC Remote Write","seq":64128,"tw":3000}
+{"t":"tx","ts":"2026-11-13 20:45:02.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:45:02.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:45:12.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:45:12.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:45:22.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:45:22.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:45:32.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:45:32.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:45:42.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:45:42.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:45:43.118","p":"LGWR","ev":"SYNC Remote Write","seq":64129,"tw":2100}
+{"t":"tx","ts":"2026-11-13 20:45:52.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:45:52.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:46:02.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:46:02.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:46:12.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:46:12.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:46:22.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:46:22.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:46:32.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:46:32.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:46:42.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:46:42.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:46:43.118","p":"LGWR","ev":"SYNC Remote Write","seq":64130,"tw":1300}
+{"t":"tx","ts":"2026-11-13 20:46:52.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:46:52.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:47:02.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:47:02.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:47:12.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:47:12.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:47:22.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:47:22.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:47:32.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:47:32.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:47:42.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:47:42.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:47:52.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:47:52.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:48:02.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:48:02.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":0}
+{"t":"tx","ts":"2026-11-13 20:48:12.118","p":"ARC1","ev":"Redo Transport MISC","seq":501,"tw":260000000}
+{"t":"tx","ts":"2026-11-13 20:48:12.118","p":"ARC2","ev":"Redo Transport MISC","seq":611,"tw":261000000}
+{"t":"tx","ts":"2026-11-13 20:54:23.118","p":"LGWR","ev":"SYNC Remote Write","seq":64131,"tw":1800}
+{"t":"tx","ts":"2026-11-13 20:55:33.118","p":"LGWR","ev":"SYNC Remote Write","seq":64132,"tw":1100}
+{"t":"tx","ts":"2026-11-13 20:56:43.118","p":"LGWR","ev":"SYNC Remote Write","seq":64133,"tw":900}
+{"t":"tx","ts":"2026-11-13 20:57:23.118","p":"LGWR","ev":"SYNC Remote Write","seq":64134,"tw":1500}
 {"t":"hist_su","ev":"SYNC Remote Write","b":"8 microseconds","us":8,"n":3}
 {"t":"hist_su","ev":"SYNC Remote Write","b":"16 microseconds","us":16,"n":210}
 {"t":"hist_su","ev":"SYNC Remote Write","b":"32 microseconds","us":32,"n":940}
@@ -139,59 +210,59 @@
 {"t":"hist_su","ev":"SYNC Remote Write","b":"8 seconds","us":8000000,"n":2}
 {"t":"hist_su","ev":"SYNC Remote Write","b":"16 seconds","us":16000000,"n":1}
 {"t":"hist_su","ev":"SYNC Remote Write","b":"33 seconds","us":33000000,"n":4}
-{"t":"hist_awr","ev":"SYNC Remote Write","ms":0.125,"n":140,"b":"20:30","e":"21:00"}
-{"t":"hist_awr","ev":"SYNC Remote Write","ms":0.25,"n":920,"b":"20:30","e":"21:00"}
-{"t":"hist_awr","ev":"SYNC Remote Write","ms":0.5,"n":3400,"b":"20:30","e":"21:00"}
-{"t":"hist_awr","ev":"SYNC Remote Write","ms":1,"n":6100,"b":"20:30","e":"21:00"}
-{"t":"hist_awr","ev":"SYNC Remote Write","ms":2,"n":2400,"b":"20:30","e":"21:00"}
-{"t":"hist_awr","ev":"SYNC Remote Write","ms":4,"n":410,"b":"20:30","e":"21:00"}
-{"t":"hist_awr","ev":"SYNC Remote Write","ms":8,"n":120,"b":"20:30","e":"21:00"}
-{"t":"hist_awr","ev":"SYNC Remote Write","ms":16,"n":41,"b":"20:30","e":"21:00"}
-{"t":"hist_awr","ev":"SYNC Remote Write","ms":32,"n":14,"b":"20:30","e":"21:00"}
-{"t":"hist_awr","ev":"SYNC Remote Write","ms":64,"n":6,"b":"20:30","e":"21:00"}
-{"t":"hist_awr","ev":"SYNC Remote Write","ms":128,"n":3,"b":"20:30","e":"21:00"}
-{"t":"hist_awr","ev":"SYNC Remote Write","ms":256,"n":2,"b":"20:30","e":"21:00"}
-{"t":"hist_awr","ev":"SYNC Remote Write","ms":512,"n":1,"b":"20:30","e":"21:00"}
-{"t":"hist_awr","ev":"SYNC Remote Write","ms":1024,"n":1,"b":"20:30","e":"21:00"}
-{"t":"hist_awr","ev":"SYNC Remote Write","ms":2048,"n":1,"b":"20:30","e":"21:00"}
-{"t":"hist_awr","ev":"SYNC Remote Write","ms":32768,"n":1,"b":"20:30","e":"21:00"}
-{"t":"wl","m":"20:35","redo":2.1,"txn":44.1,"logons":0.9,"aas":5.0}
-{"t":"wl","m":"20:36","redo":2.3,"txn":48.3,"logons":0.9,"aas":5.5}
-{"t":"wl","m":"20:37","redo":1.9,"txn":39.9,"logons":0.9,"aas":4.6}
-{"t":"wl","m":"20:38","redo":0.6,"txn":12.6,"logons":0.2,"aas":1.4}
-{"t":"wl","m":"20:39","redo":0.02,"txn":0.4,"logons":0.2,"aas":0.0}
-{"t":"wl","m":"20:40","redo":0.01,"txn":0.2,"logons":0.2,"aas":0.0}
-{"t":"wl","m":"20:41","redo":0.02,"txn":0.4,"logons":0.2,"aas":0.0}
-{"t":"wl","m":"20:42","redo":0.01,"txn":0.2,"logons":0.2,"aas":0.0}
-{"t":"wl","m":"20:43","redo":0.03,"txn":0.6,"logons":0.2,"aas":0.1}
-{"t":"wl","m":"20:44","redo":0.12,"txn":2.5,"logons":0.2,"aas":0.3}
-{"t":"wl","m":"20:45","redo":0.18,"txn":3.8,"logons":0.2,"aas":0.4}
-{"t":"wl","m":"20:46","redo":0.09,"txn":1.9,"logons":0.2,"aas":0.2}
-{"t":"wl","m":"20:47","redo":0.11,"txn":2.3,"logons":0.2,"aas":0.3}
-{"t":"wl","m":"20:48","redo":0.07,"txn":1.5,"logons":0.2,"aas":0.2}
-{"t":"wl","m":"20:49","redo":0.1,"txn":2.1,"logons":0.2,"aas":0.2}
-{"t":"wl","m":"20:50","redo":0.14,"txn":2.9,"logons":0.2,"aas":0.3}
-{"t":"wl","m":"20:51","redo":0.08,"txn":1.7,"logons":0.2,"aas":0.2}
-{"t":"wl","m":"20:52","redo":0.12,"txn":2.5,"logons":0.2,"aas":0.3}
-{"t":"wl","m":"20:53","redo":1.6,"txn":33.6,"logons":0.9,"aas":3.8}
-{"t":"wl","m":"20:54","redo":2.4,"txn":50.4,"logons":0.9,"aas":5.8}
-{"t":"wl","m":"20:55","redo":2.2,"txn":46.2,"logons":0.9,"aas":5.3}
-{"t":"wl","m":"20:56","redo":2.0,"txn":42.0,"logons":0.9,"aas":4.8}
-{"t":"wl","m":"20:57","redo":2.1,"txn":44.1,"logons":0.9,"aas":5.0}
-{"t":"alert","side":"primary","ts":"20:36:41.208","msg":"Thread 1 advanced to log sequence 114493 (LGWR switch), current SCN: 0x00000a1b2c3d4e5f\n  Current log# 2 seq# 114493 mem# 0: +REDO/PRODDB/ONLINELOG/group_2.262.1130000001"}
-{"t":"alert","side":"primary","ts":"20:38:58.734","msg":"LGWR (PID:10224042): ORA-16198: Received timed out error from KSR"}
-{"t":"alert","side":"primary","ts":"20:38:58.734","msg":"LGWR (PID:10224042): Attempting LAD:2 network reconnect (16198)"}
-{"t":"alert","side":"primary","ts":"20:38:58.735","msg":"LGWR (PID:10224042): LAD:2 network reconnect abandoned"}
-{"t":"alert","side":"primary","ts":"20:38:58.736","msg":"Errors in file /u01/app/oracle/diag/rdbms/proddb/proddb1/trace/proddb1_lgwr_10224042.trc:\nORA-16198: Timeout incurred on internal channel during remote archival"}
-{"t":"alert","side":"primary","ts":"20:38:58.740","msg":"LGWR (PID:10224042): LAD:2 is UNSYNCHRONIZED"}
-{"t":"alert","side":"primary","ts":"20:43:58.020","msg":"ARC1 (PID:16974138): LAD:2 network reconnect"}
-{"t":"alert","side":"primary","ts":"20:43:59.310","msg":"LGWR (PID:10224042): LAD:2 new SYNC connection established"}
-{"t":"alert","side":"primary","ts":"20:48:20.402","msg":"TMON (PID:7340090): ARC1 (PID:16974138) hung for 260 s, killed"}
-{"t":"alert","side":"primary","ts":"20:48:21.118","msg":"TMON (PID:7340090): ARC2 (PID:16908582) hung for 261 s, killed"}
-{"t":"alert","side":"primary","ts":"20:48:23.540","msg":"FAL archive of T-1.S-114495 to LAD:2 failed, error 16198"}
-{"t":"alert","side":"primary","ts":"20:49:06.811","msg":"FAL archive of T-1.S-114495 to LAD:2 failed, error 16198"}
-{"t":"alert","side":"primary","ts":"20:52:10.004","msg":"Thread 1 advanced to log sequence 114495 (LGWR switch)"}
-{"t":"alert","side":"primary","ts":"20:53:27.905","msg":"LGWR (PID:10224042): LAD:2 is SYNCHRONIZED"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":0.125,"n":140,"b":"2026-11-13 20:30","e":"2026-11-13 21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":0.25,"n":920,"b":"2026-11-13 20:30","e":"2026-11-13 21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":0.5,"n":3400,"b":"2026-11-13 20:30","e":"2026-11-13 21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":1,"n":6100,"b":"2026-11-13 20:30","e":"2026-11-13 21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":2,"n":2400,"b":"2026-11-13 20:30","e":"2026-11-13 21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":4,"n":410,"b":"2026-11-13 20:30","e":"2026-11-13 21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":8,"n":120,"b":"2026-11-13 20:30","e":"2026-11-13 21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":16,"n":41,"b":"2026-11-13 20:30","e":"2026-11-13 21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":32,"n":14,"b":"2026-11-13 20:30","e":"2026-11-13 21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":64,"n":6,"b":"2026-11-13 20:30","e":"2026-11-13 21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":128,"n":3,"b":"2026-11-13 20:30","e":"2026-11-13 21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":256,"n":2,"b":"2026-11-13 20:30","e":"2026-11-13 21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":512,"n":1,"b":"2026-11-13 20:30","e":"2026-11-13 21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":1024,"n":1,"b":"2026-11-13 20:30","e":"2026-11-13 21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":2048,"n":1,"b":"2026-11-13 20:30","e":"2026-11-13 21:00"}
+{"t":"hist_awr","ev":"SYNC Remote Write","ms":32768,"n":1,"b":"2026-11-13 20:30","e":"2026-11-13 21:00"}
+{"t":"wl","m":"2026-11-13 20:35","redo":2.1,"txn":44.1,"logons":0.9,"aas":5.0}
+{"t":"wl","m":"2026-11-13 20:36","redo":2.3,"txn":48.3,"logons":0.9,"aas":5.5}
+{"t":"wl","m":"2026-11-13 20:37","redo":1.9,"txn":39.9,"logons":0.9,"aas":4.6}
+{"t":"wl","m":"2026-11-13 20:38","redo":0.6,"txn":12.6,"logons":0.2,"aas":1.4}
+{"t":"wl","m":"2026-11-13 20:39","redo":0.02,"txn":0.4,"logons":0.2,"aas":0.0}
+{"t":"wl","m":"2026-11-13 20:40","redo":0.01,"txn":0.2,"logons":0.2,"aas":0.0}
+{"t":"wl","m":"2026-11-13 20:41","redo":0.02,"txn":0.4,"logons":0.2,"aas":0.0}
+{"t":"wl","m":"2026-11-13 20:42","redo":0.01,"txn":0.2,"logons":0.2,"aas":0.0}
+{"t":"wl","m":"2026-11-13 20:43","redo":0.03,"txn":0.6,"logons":0.2,"aas":0.1}
+{"t":"wl","m":"2026-11-13 20:44","redo":0.12,"txn":2.5,"logons":0.2,"aas":0.3}
+{"t":"wl","m":"2026-11-13 20:45","redo":0.18,"txn":3.8,"logons":0.2,"aas":0.4}
+{"t":"wl","m":"2026-11-13 20:46","redo":0.09,"txn":1.9,"logons":0.2,"aas":0.2}
+{"t":"wl","m":"2026-11-13 20:47","redo":0.11,"txn":2.3,"logons":0.2,"aas":0.3}
+{"t":"wl","m":"2026-11-13 20:48","redo":0.07,"txn":1.5,"logons":0.2,"aas":0.2}
+{"t":"wl","m":"2026-11-13 20:49","redo":0.1,"txn":2.1,"logons":0.2,"aas":0.2}
+{"t":"wl","m":"2026-11-13 20:50","redo":0.14,"txn":2.9,"logons":0.2,"aas":0.3}
+{"t":"wl","m":"2026-11-13 20:51","redo":0.08,"txn":1.7,"logons":0.2,"aas":0.2}
+{"t":"wl","m":"2026-11-13 20:52","redo":0.12,"txn":2.5,"logons":0.2,"aas":0.3}
+{"t":"wl","m":"2026-11-13 20:53","redo":1.6,"txn":33.6,"logons":0.9,"aas":3.8}
+{"t":"wl","m":"2026-11-13 20:54","redo":2.4,"txn":50.4,"logons":0.9,"aas":5.8}
+{"t":"wl","m":"2026-11-13 20:55","redo":2.2,"txn":46.2,"logons":0.9,"aas":5.3}
+{"t":"wl","m":"2026-11-13 20:56","redo":2.0,"txn":42.0,"logons":0.9,"aas":4.8}
+{"t":"wl","m":"2026-11-13 20:57","redo":2.1,"txn":44.1,"logons":0.9,"aas":5.0}
+{"t":"alert","side":"primary","ts":"2026-11-13 20:36:41.208","msg":"Thread 1 advanced to log sequence 114493 (LGWR switch), current SCN: 0x00000a1b2c3d4e5f\n  Current log# 2 seq# 114493 mem# 0: +REDO/PRODDB/ONLINELOG/group_2.262.1130000001"}
+{"t":"alert","side":"primary","ts":"2026-11-13 20:38:58.734","msg":"LGWR (PID:10224042): ORA-16198: Received timed out error from KSR"}
+{"t":"alert","side":"primary","ts":"2026-11-13 20:38:58.734","msg":"LGWR (PID:10224042): Attempting LAD:2 network reconnect (16198)"}
+{"t":"alert","side":"primary","ts":"2026-11-13 20:38:58.735","msg":"LGWR (PID:10224042): LAD:2 network reconnect abandoned"}
+{"t":"alert","side":"primary","ts":"2026-11-13 20:38:58.736","msg":"Errors in file /u01/app/oracle/diag/rdbms/proddb/proddb1/trace/proddb1_lgwr_10224042.trc:\nORA-16198: Timeout incurred on internal channel during remote archival"}
+{"t":"alert","side":"primary","ts":"2026-11-13 20:38:58.740","msg":"LGWR (PID:10224042): LAD:2 is UNSYNCHRONIZED"}
+{"t":"alert","side":"primary","ts":"2026-11-13 20:43:58.020","msg":"ARC1 (PID:16974138): LAD:2 network reconnect"}
+{"t":"alert","side":"primary","ts":"2026-11-13 20:43:59.310","msg":"LGWR (PID:10224042): LAD:2 new SYNC connection established"}
+{"t":"alert","side":"primary","ts":"2026-11-13 20:48:20.402","msg":"TMON (PID:7340090): ARC1 (PID:16974138) hung for 260 s, killed"}
+{"t":"alert","side":"primary","ts":"2026-11-13 20:48:21.118","msg":"TMON (PID:7340090): ARC2 (PID:16908582) hung for 261 s, killed"}
+{"t":"alert","side":"primary","ts":"2026-11-13 20:48:23.540","msg":"FAL archive of T-1.S-114495 to LAD:2 failed, error 16198"}
+{"t":"alert","side":"primary","ts":"2026-11-13 20:49:06.811","msg":"FAL archive of T-1.S-114495 to LAD:2 failed, error 16198"}
+{"t":"alert","side":"primary","ts":"2026-11-13 20:52:10.004","msg":"Thread 1 advanced to log sequence 114495 (LGWR switch)"}
+{"t":"alert","side":"primary","ts":"2026-11-13 20:53:27.905","msg":"LGWR (PID:10224042): LAD:2 is SYNCHRONIZED"}
 {"t":"alhist","side":"primary","ts":"2026-10-16 20:41:12","msg":"LGWR (PID:10224042): ORA-16198: Received timed out error from KSR"}
 {"t":"alhist","side":"primary","ts":"2026-10-16 20:41:12","msg":"LGWR (PID:10224042): LAD:2 is UNSYNCHRONIZED"}
 {"t":"alhist","side":"primary","ts":"2026-10-23 20:39:55","msg":"LGWR (PID:10224042): ORA-16198: Received timed out error from KSR"}
@@ -200,39 +271,1264 @@
 {"t":"alhist","side":"primary","ts":"2026-10-30 20:44:31","msg":"LGWR (PID:10224042): LAD:2 is UNSYNCHRONIZED"}
 {"t":"alhist","side":"primary","ts":"2026-11-06 20:38:07","msg":"LGWR (PID:10224042): ORA-16198: Received timed out error from KSR"}
 {"t":"alhist","side":"primary","ts":"2026-11-06 20:38:07","msg":"LGWR (PID:10224042): LAD:2 is UNSYNCHRONIZED"}
-{"t":"arch","side":"primary","dest":2,"thr":1,"seq":114493,"first":"20:31:02","next":"20:36:41","done":"20:36:41","creator":"LGWR","reg":"LGWR","fal":"NO","mb":454.0}
-{"t":"arch","side":"primary","dest":2,"thr":1,"seq":114494,"first":"20:36:41","next":"20:52:10","done":"20:52:10","creator":"LGWR","reg":"LGWR","fal":"NO","mb":470.0}
-{"t":"arch","side":"primary","dest":2,"thr":1,"seq":114495,"first":"20:52:10","next":"20:53:24","done":"20:53:25","creator":"ARCH","reg":"ARCH","fal":"YES","mb":393.6}
-{"t":"lsnr","side":"primary","m":"20:35","code":"0","n":44}
-{"t":"lsnr","side":"primary","m":"20:36","code":"0","n":49}
-{"t":"lsnr","side":"primary","m":"20:37","code":"0","n":41}
-{"t":"lsnr","side":"primary","m":"20:38","code":"0","n":29}
-{"t":"lsnr","side":"primary","m":"20:39","code":"0","n":14}
-{"t":"lsnr","side":"primary","m":"20:40","code":"0","n":30}
-{"t":"lsnr","side":"primary","m":"20:41","code":"0","n":13}
-{"t":"lsnr","side":"primary","m":"20:42","code":"0","n":18}
-{"t":"lsnr","side":"primary","m":"20:43","code":"0","n":27}
-{"t":"lsnr","side":"primary","m":"20:44","code":"0","n":29}
-{"t":"lsnr","side":"primary","m":"20:45","code":"0","n":25}
-{"t":"lsnr","side":"primary","m":"20:46","code":"0","n":22}
-{"t":"lsnr","side":"primary","m":"20:47","code":"0","n":26}
-{"t":"lsnr","side":"primary","m":"20:48","code":"0","n":30}
-{"t":"lsnr","side":"primary","m":"20:49","code":"0","n":26}
-{"t":"lsnr","side":"primary","m":"20:50","code":"0","n":23}
-{"t":"lsnr","side":"primary","m":"20:51","code":"0","n":47}
-{"t":"lsnr","side":"primary","m":"20:52","code":"0","n":45}
-{"t":"lsnr","side":"primary","m":"20:53","code":"0","n":43}
-{"t":"lsnr","side":"primary","m":"20:54","code":"0","n":45}
-{"t":"lsnr","side":"primary","m":"20:55","code":"0","n":40}
-{"t":"lsnr","side":"primary","m":"20:56","code":"0","n":47}
-{"t":"lsnr","side":"primary","m":"20:57","code":"0","n":54}
+{"t":"arch","side":"primary","dest":2,"thr":1,"seq":114493,"first":"2026-11-13 20:31:02","next":"2026-11-13 20:36:41","done":"2026-11-13 20:36:41","creator":"LGWR","reg":"LGWR","fal":"NO","mb":454.0}
+{"t":"arch","side":"primary","dest":2,"thr":1,"seq":114494,"first":"2026-11-13 20:36:41","next":"2026-11-13 20:52:10","done":"2026-11-13 20:52:10","creator":"LGWR","reg":"LGWR","fal":"NO","mb":470.0}
+{"t":"arch","side":"primary","dest":2,"thr":1,"seq":114495,"first":"2026-11-13 20:52:10","next":"2026-11-13 20:53:24","done":"2026-11-13 20:53:25","creator":"ARCH","reg":"ARCH","fal":"YES","mb":393.6}
+{"t":"lsnr","side":"primary","m":"2026-11-13 20:35","code":"0","n":44}
+{"t":"lsnr","side":"primary","m":"2026-11-13 20:36","code":"0","n":49}
+{"t":"lsnr","side":"primary","m":"2026-11-13 20:37","code":"0","n":41}
+{"t":"lsnr","side":"primary","m":"2026-11-13 20:38","code":"0","n":29}
+{"t":"lsnr","side":"primary","m":"2026-11-13 20:39","code":"0","n":14}
+{"t":"lsnr","side":"primary","m":"2026-11-13 20:40","code":"0","n":30}
+{"t":"lsnr","side":"primary","m":"2026-11-13 20:41","code":"0","n":13}
+{"t":"lsnr","side":"primary","m":"2026-11-13 20:42","code":"0","n":18}
+{"t":"lsnr","side":"primary","m":"2026-11-13 20:43","code":"0","n":27}
+{"t":"lsnr","side":"primary","m":"2026-11-13 20:44","code":"0","n":29}
+{"t":"lsnr","side":"primary","m":"2026-11-13 20:45","code":"0","n":25}
+{"t":"lsnr","side":"primary","m":"2026-11-13 20:46","code":"0","n":22}
+{"t":"lsnr","side":"primary","m":"2026-11-13 20:47","code":"0","n":26}
+{"t":"lsnr","side":"primary","m":"2026-11-13 20:48","code":"0","n":30}
+{"t":"lsnr","side":"primary","m":"2026-11-13 20:49","code":"0","n":26}
+{"t":"lsnr","side":"primary","m":"2026-11-13 20:50","code":"0","n":23}
+{"t":"lsnr","side":"primary","m":"2026-11-13 20:51","code":"0","n":47}
+{"t":"lsnr","side":"primary","m":"2026-11-13 20:52","code":"0","n":45}
+{"t":"lsnr","side":"primary","m":"2026-11-13 20:53","code":"0","n":43}
+{"t":"lsnr","side":"primary","m":"2026-11-13 20:54","code":"0","n":45}
+{"t":"lsnr","side":"primary","m":"2026-11-13 20:55","code":"0","n":40}
+{"t":"lsnr","side":"primary","m":"2026-11-13 20:56","code":"0","n":47}
+{"t":"lsnr","side":"primary","m":"2026-11-13 20:57","code":"0","n":54}
 {"t":"lsnr_ip","side":"primary","ip":"192.0.2.21","code":"0","n":412}
 {"t":"lsnr_ip","side":"primary","ip":"192.0.2.22","code":"0","n":377}
-{"t":"trace","side":"primary","ts":"20:38:58.734","file":"proddb1_lgwr_10224042.trc","msg":"Error 16198 for LNO:2 to 'proddb_s_dgmgrl'"}
-{"t":"trace","side":"primary","ts":"20:38:58.734","file":"proddb1_lgwr_10224042.trc","msg":"krsw_ksr_receive: Current time <11/13/2026 20:38:58> exceeds begin time <11/13/2026 20:38:28> by  <30> seconds, return timed out error"}
-{"t":"trace","side":"primary","ts":"20:38:58.734","file":"proddb1_lgwr_10224042.trc","msg":"krsw_ksr_status: Received error 16198 on receiving channel messages"}
-{"t":"trace","side":"primary","ts":"20:38:58.734","file":"proddb1_lgwr_10224042.trc","msg":"ORA-16198: Received timed out error from KSR"}
-{"t":"trace","side":"primary","ts":"20:39:42.061","file":"proddb1_lgwr_10224042.trc","msg":"krsu_upi_status: Error 16198 detaching RFS from standby instance at host 'proddb_s_dgmgrl'"}
-{"t":"trace","side":"primary","ts":"20:48:20.401","file":"proddb1_arc1_16974138.trc","msg":"krsi_verify_network: Error 3113 verifying archive destination LAD:2"}
-{"t":"net","side":"primary","peer":"198.51.100.12","port":"1526","os":"AIX","rtt":"0.41","loss":"0%","retr":3,"secs":10,"sendq":0,"at":"09:12:58"}
-{"t":"cid_hit","side":"primary","ts":"13-NOV-2026 20:40:07","ip":"192.0.2.21","code":"0","cid":"1VrT+1FJors/6ILi8IHn5k=="}
+{"t":"trace","side":"primary","ts":"2026-11-13 20:38:58.734","file":"proddb1_lgwr_10224042.trc","msg":"Error 16198 for LNO:2 to 'proddb_s_dgmgrl'"}
+{"t":"trace","side":"primary","ts":"2026-11-13 20:38:58.734","file":"proddb1_lgwr_10224042.trc","msg":"krsw_ksr_receive: Current time <11/13/2026 20:38:58> exceeds begin time <11/13/2026 20:38:28> by  <30> seconds, return timed out error"}
+{"t":"trace","side":"primary","ts":"2026-11-13 20:38:58.734","file":"proddb1_lgwr_10224042.trc","msg":"krsw_ksr_status: Received error 16198 on receiving channel messages"}
+{"t":"trace","side":"primary","ts":"2026-11-13 20:38:58.734","file":"proddb1_lgwr_10224042.trc","msg":"ORA-16198: Received timed out error from KSR"}
+{"t":"trace","side":"primary","ts":"2026-11-13 20:39:42.061","file":"proddb1_lgwr_10224042.trc","msg":"krsu_upi_status: Error 16198 detaching RFS from standby instance at host 'proddb_s_dgmgrl'"}
+{"t":"trace","side":"primary","ts":"2026-11-13 20:48:20.401","file":"proddb1_arc1_16974138.trc","msg":"krsi_verify_network: Error 3113 verifying archive destination LAD:2"}
+{"t":"net","side":"primary","peer":"198.51.100.12","port":"1526","os":"AIX","rtt":"0.41","loss":"0%","retr":3,"secs":10,"sendq":0,"at":"2026-11-14 09:12:58","via":"option -p"}
+{"t":"cid_hit","side":"primary","ts":"2026-11-13 20:40:07","ip":"192.0.2.21","code":"0","cid":"1VrT+1FJors/6ILi8IHn5k=="}
+{"t":"clock","side":"primary","utc_off":"+01:00","src":"alert log"}
+{"t":"cov","side":"primary","src":"database","st":"ok","first":null,"last":null,"n":1,"cap":null,"capped":false,"note":"sqlplus connected, meta written"}
+{"t":"cov","side":"primary","src":"ash","kind":"H","st":"ok","first":"2026-11-06 09:00:03","last":"2026-11-14 08:59:53","n":2284,"cap":null,"capped":false,"note":"dba_hist_active_sess_history"}
+{"t":"cov","side":"primary","src":"awr_snap","st":"ok","first":"2026-11-06 09:00:03","last":"2026-11-14 09:00:04","n":1,"cap":null,"capped":false,"note":"dba_hist_snapshot: first/last = oldest begin and newest end held; n = snapshots overlapping the window"}
+{"t":"cov","side":"primary","src":"sysmetric","st":"ok","first":"2026-11-06 09:00:00","last":"2026-11-14 08:59:00","n":23,"cap":null,"capped":false,"note":"dba_hist_sysmetric_history, 1 min values; n = minutes in the window"}
+{"t":"cov","side":"primary","src":"lfs","st":"ok","first":"2026-11-06 09:00:03","last":"2026-11-14 08:59:53","n":70,"cap":200,"capped":false,"note":"log file sync waits in ASH (H), longest 200 kept; first/last = what ASH holds"}
+{"t":"cov","side":"primary","src":"ashgap","st":"empty","first":"2026-11-13 20:34:03","last":"2026-11-13 20:59:03","n":0,"cap":50,"capped":false,"note":"gaps over 2 s between consecutive ASH samples (H), 1 s per sample_id; first/last = samples read, one minute around the window","samples":150}
+{"t":"cov","side":"primary","src":"alert_sql","st":"ok","first":"2026-10-15 09:12:41","last":"2026-11-14 09:12:39","n":14,"cap":null,"capped":false,"note":"v$diag_alert_ext, lookback 30 days"}
+{"t":"cov","side":"primary","src":"alert_text","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not requested; pass -a to read the text alert log"}
+{"t":"cov","side":"primary","src":"alhist","kind":"sql","st":"ok","first":"2026-10-15 09:12:41","last":"2026-11-14 09:12:39","n":8,"cap":300,"capped":false,"note":"v$diag_alert_ext, lookback 30 days, newest 300 kept; routine RT_PMODE lines (PRIMARY, PHYSICAL, reason ASYNC configuration) excluded"}
+{"t":"cov","side":"primary","src":"trace","files":9,"st":"ok","first":"2026-10-02 00:00:41","last":"2026-11-14 08:57:12","n":6,"cap":400,"capped":false,"note":"files modified in the last 45 days"}
+{"t":"cov","side":"primary","src":"listener","st":"ok","first":"2026-09-20 00:00:01","last":"2026-11-14 09:12:36","n":793,"cap":null,"capped":false,"note":"listener.log"}
+{"t":"cov","side":"primary","src":"lsnr_ref","st":"empty","first":"2026-09-20 00:00:01","last":"2026-11-14 09:12:36","n":0,"cap":500,"capped":false,"note":"refused establish lines in the window"}
+{"t":"cov","side":"primary","src":"cid","st":"ok","first":"2026-09-20 00:00:01","last":"2026-11-14 09:12:36","n":1,"cap":2000,"capped":false,"note":"49 CONNECTION_IDs looked up"}
+{"t":"cov","side":"primary","src":"net","st":"ok","first":"2026-11-14 09:12:58","last":"2026-11-14 09:12:58","n":1,"cap":null,"capped":false,"note":"ping and netstat towards 198.51.100.12"}
+{"t":"dgstatus","side":"primary","ts":"2026-11-13 20:38:58","facility":"Log Transport Services","severity":"Error","dest":2,"err":16198,"msg":"LGWR: Error 16198 for archive log file 3 to 'proddb_s_dgmgrl'"}
+{"t":"dgstatus","side":"primary","ts":"2026-11-13 20:38:58","facility":"Log Transport Services","severity":"Warning","dest":2,"err":0,"msg":"LGWR: LAD:2 network reconnect abandoned"}
+{"t":"dgstatus","side":"primary","ts":"2026-11-13 20:47:57","facility":"Log Transport Services","severity":"Control","dest":2,"err":0,"msg":"LGWR: Attempting destination LAD:2 network reconnect"}
+{"t":"dgstatus","side":"primary","ts":"2026-11-13 20:53:23","facility":"Log Transport Services","severity":"Error","dest":2,"err":16198,"msg":"ARC1: FAL archive of T-1.S-114495 to LAD:2 failed"}
+{"t":"dgstatus","side":"primary","ts":"2026-11-13 20:53:25","facility":"Log Transport Services","severity":"Control","dest":2,"err":0,"msg":"LGWR: LAD:2 SYNC destination is SYNCHRONIZED"}
+{"t":"dest_hist","side":"primary","dest":2,"dur":1,"freq":91244017,"hit":"11/14/2026 09:12:38"}
+{"t":"dest_hist","side":"primary","dest":2,"dur":2,"freq":3120,"hit":"11/13/2026 20:53:28"}
+{"t":"dest_hist","side":"primary","dest":2,"dur":3,"freq":411,"hit":"11/13/2026 20:53:28"}
+{"t":"dest_hist","side":"primary","dest":2,"dur":4,"freq":120,"hit":"11/13/2026 20:48:21"}
+{"t":"dest_hist","side":"primary","dest":2,"dur":5,"freq":38,"hit":"11/13/2026 20:43:58"}
+{"t":"dest_hist","side":"primary","dest":2,"dur":8,"freq":14,"hit":"11/09/2026 02:14:09"}
+{"t":"dest_hist","side":"primary","dest":2,"dur":16,"freq":6,"hit":"11/06/2026 20:38:41"}
+{"t":"dest_hist","side":"primary","dest":2,"dur":30,"freq":9,"hit":"11/13/2026 20:38:58"}
+{"t":"dest_hist","side":"primary","dest":2,"dur":60,"freq":2,"hit":"10/30/2026 20:45:02"}
+{"t":"base_day","side":"primary","d":1,"from":"2026-11-12 20:35:00","to":"2026-11-12 20:58:00","snaps":1,"used":1,"b":"2026-11-12 20:30:04","e":"2026-11-12 21:00:05"}
+{"t":"base_day","side":"primary","d":2,"from":"2026-11-11 20:35:00","to":"2026-11-11 20:58:00","snaps":1,"used":1,"b":"2026-11-11 20:30:04","e":"2026-11-11 21:00:05"}
+{"t":"base_day","side":"primary","d":3,"from":"2026-11-10 20:35:00","to":"2026-11-10 20:58:00","snaps":1,"used":1,"b":"2026-11-10 20:30:04","e":"2026-11-10 21:00:05"}
+{"t":"base_day","side":"primary","d":4,"from":"2026-11-09 20:35:00","to":"2026-11-09 20:58:00","snaps":1,"used":1,"b":"2026-11-09 20:30:04","e":"2026-11-09 21:00:05"}
+{"t":"base_day","side":"primary","d":5,"from":"2026-11-08 20:35:00","to":"2026-11-08 20:58:00","snaps":1,"used":1,"b":"2026-11-08 20:30:04","e":"2026-11-08 21:00:05"}
+{"t":"base_day","side":"primary","d":6,"from":"2026-11-07 20:35:00","to":"2026-11-07 20:58:00","snaps":1,"used":1,"b":"2026-11-07 20:30:04","e":"2026-11-07 21:00:05"}
+{"t":"base_day","side":"primary","d":7,"from":"2026-11-06 20:35:00","to":"2026-11-06 20:58:00","snaps":1,"used":1,"b":"2026-11-06 20:30:04","e":"2026-11-06 21:00:05"}
+{"t":"base_hist","side":"primary","d":1,"ev":"SYNC Remote Write","ms":0.5,"n":3128}
+{"t":"base_hist","side":"primary","d":1,"ev":"SYNC Remote Write","ms":1,"n":5612}
+{"t":"base_hist","side":"primary","d":1,"ev":"SYNC Remote Write","ms":2,"n":2208}
+{"t":"base_hist","side":"primary","d":1,"ev":"SYNC Remote Write","ms":4,"n":377}
+{"t":"base_hist","side":"primary","d":1,"ev":"SYNC Remote Write","ms":8,"n":110}
+{"t":"base_hist","side":"primary","d":1,"ev":"SYNC Remote Write","ms":16,"n":37}
+{"t":"base_hist","side":"primary","d":1,"ev":"SYNC Remote Write","ms":32,"n":12}
+{"t":"base_hist","side":"primary","d":1,"ev":"SYNC Remote Write","ms":64,"n":5}
+{"t":"base_hist","side":"primary","d":1,"ev":"log file sync","ms":0.5,"n":4379}
+{"t":"base_hist","side":"primary","d":1,"ev":"log file sync","ms":1,"n":7856}
+{"t":"base_hist","side":"primary","d":1,"ev":"log file sync","ms":2,"n":3091}
+{"t":"base_hist","side":"primary","d":1,"ev":"log file sync","ms":4,"n":528}
+{"t":"base_hist","side":"primary","d":1,"ev":"log file sync","ms":8,"n":154}
+{"t":"base_hist","side":"primary","d":1,"ev":"log file sync","ms":16,"n":52}
+{"t":"base_hist","side":"primary","d":1,"ev":"log file sync","ms":32,"n":18}
+{"t":"base_hist","side":"primary","d":1,"ev":"log file sync","ms":64,"n":7}
+{"t":"base_hist","side":"primary","d":2,"ev":"SYNC Remote Write","ms":0.5,"n":3196}
+{"t":"base_hist","side":"primary","d":2,"ev":"SYNC Remote Write","ms":1,"n":5734}
+{"t":"base_hist","side":"primary","d":2,"ev":"SYNC Remote Write","ms":2,"n":2256}
+{"t":"base_hist","side":"primary","d":2,"ev":"SYNC Remote Write","ms":4,"n":385}
+{"t":"base_hist","side":"primary","d":2,"ev":"SYNC Remote Write","ms":8,"n":112}
+{"t":"base_hist","side":"primary","d":2,"ev":"SYNC Remote Write","ms":16,"n":38}
+{"t":"base_hist","side":"primary","d":2,"ev":"SYNC Remote Write","ms":32,"n":13}
+{"t":"base_hist","side":"primary","d":2,"ev":"SYNC Remote Write","ms":64,"n":5}
+{"t":"base_hist","side":"primary","d":2,"ev":"log file sync","ms":0.5,"n":4474}
+{"t":"base_hist","side":"primary","d":2,"ev":"log file sync","ms":1,"n":8027}
+{"t":"base_hist","side":"primary","d":2,"ev":"log file sync","ms":2,"n":3158}
+{"t":"base_hist","side":"primary","d":2,"ev":"log file sync","ms":4,"n":539}
+{"t":"base_hist","side":"primary","d":2,"ev":"log file sync","ms":8,"n":157}
+{"t":"base_hist","side":"primary","d":2,"ev":"log file sync","ms":16,"n":53}
+{"t":"base_hist","side":"primary","d":2,"ev":"log file sync","ms":32,"n":18}
+{"t":"base_hist","side":"primary","d":2,"ev":"log file sync","ms":64,"n":7}
+{"t":"base_hist","side":"primary","d":3,"ev":"SYNC Remote Write","ms":0.5,"n":3264}
+{"t":"base_hist","side":"primary","d":3,"ev":"SYNC Remote Write","ms":1,"n":5856}
+{"t":"base_hist","side":"primary","d":3,"ev":"SYNC Remote Write","ms":2,"n":2304}
+{"t":"base_hist","side":"primary","d":3,"ev":"SYNC Remote Write","ms":4,"n":393}
+{"t":"base_hist","side":"primary","d":3,"ev":"SYNC Remote Write","ms":8,"n":115}
+{"t":"base_hist","side":"primary","d":3,"ev":"SYNC Remote Write","ms":16,"n":39}
+{"t":"base_hist","side":"primary","d":3,"ev":"SYNC Remote Write","ms":32,"n":13}
+{"t":"base_hist","side":"primary","d":3,"ev":"SYNC Remote Write","ms":64,"n":5}
+{"t":"base_hist","side":"primary","d":3,"ev":"log file sync","ms":0.5,"n":4569}
+{"t":"base_hist","side":"primary","d":3,"ev":"log file sync","ms":1,"n":8198}
+{"t":"base_hist","side":"primary","d":3,"ev":"log file sync","ms":2,"n":3225}
+{"t":"base_hist","side":"primary","d":3,"ev":"log file sync","ms":4,"n":551}
+{"t":"base_hist","side":"primary","d":3,"ev":"log file sync","ms":8,"n":161}
+{"t":"base_hist","side":"primary","d":3,"ev":"log file sync","ms":16,"n":55}
+{"t":"base_hist","side":"primary","d":3,"ev":"log file sync","ms":32,"n":18}
+{"t":"base_hist","side":"primary","d":3,"ev":"log file sync","ms":64,"n":8}
+{"t":"base_hist","side":"primary","d":4,"ev":"SYNC Remote Write","ms":0.5,"n":3332}
+{"t":"base_hist","side":"primary","d":4,"ev":"SYNC Remote Write","ms":1,"n":5978}
+{"t":"base_hist","side":"primary","d":4,"ev":"SYNC Remote Write","ms":2,"n":2352}
+{"t":"base_hist","side":"primary","d":4,"ev":"SYNC Remote Write","ms":4,"n":401}
+{"t":"base_hist","side":"primary","d":4,"ev":"SYNC Remote Write","ms":8,"n":117}
+{"t":"base_hist","side":"primary","d":4,"ev":"SYNC Remote Write","ms":16,"n":40}
+{"t":"base_hist","side":"primary","d":4,"ev":"SYNC Remote Write","ms":32,"n":13}
+{"t":"base_hist","side":"primary","d":4,"ev":"SYNC Remote Write","ms":64,"n":5}
+{"t":"base_hist","side":"primary","d":4,"ev":"log file sync","ms":0.5,"n":4664}
+{"t":"base_hist","side":"primary","d":4,"ev":"log file sync","ms":1,"n":8369}
+{"t":"base_hist","side":"primary","d":4,"ev":"log file sync","ms":2,"n":3292}
+{"t":"base_hist","side":"primary","d":4,"ev":"log file sync","ms":4,"n":562}
+{"t":"base_hist","side":"primary","d":4,"ev":"log file sync","ms":8,"n":164}
+{"t":"base_hist","side":"primary","d":4,"ev":"log file sync","ms":16,"n":56}
+{"t":"base_hist","side":"primary","d":4,"ev":"log file sync","ms":32,"n":19}
+{"t":"base_hist","side":"primary","d":4,"ev":"log file sync","ms":64,"n":8}
+{"t":"base_hist","side":"primary","d":5,"ev":"SYNC Remote Write","ms":0.5,"n":3400}
+{"t":"base_hist","side":"primary","d":5,"ev":"SYNC Remote Write","ms":1,"n":6100}
+{"t":"base_hist","side":"primary","d":5,"ev":"SYNC Remote Write","ms":2,"n":2400}
+{"t":"base_hist","side":"primary","d":5,"ev":"SYNC Remote Write","ms":4,"n":410}
+{"t":"base_hist","side":"primary","d":5,"ev":"SYNC Remote Write","ms":8,"n":120}
+{"t":"base_hist","side":"primary","d":5,"ev":"SYNC Remote Write","ms":16,"n":41}
+{"t":"base_hist","side":"primary","d":5,"ev":"SYNC Remote Write","ms":32,"n":14}
+{"t":"base_hist","side":"primary","d":5,"ev":"SYNC Remote Write","ms":64,"n":6}
+{"t":"base_hist","side":"primary","d":5,"ev":"log file sync","ms":0.5,"n":4760}
+{"t":"base_hist","side":"primary","d":5,"ev":"log file sync","ms":1,"n":8540}
+{"t":"base_hist","side":"primary","d":5,"ev":"log file sync","ms":2,"n":3360}
+{"t":"base_hist","side":"primary","d":5,"ev":"log file sync","ms":4,"n":574}
+{"t":"base_hist","side":"primary","d":5,"ev":"log file sync","ms":8,"n":168}
+{"t":"base_hist","side":"primary","d":5,"ev":"log file sync","ms":16,"n":57}
+{"t":"base_hist","side":"primary","d":5,"ev":"log file sync","ms":32,"n":19}
+{"t":"base_hist","side":"primary","d":5,"ev":"log file sync","ms":64,"n":8}
+{"t":"base_hist","side":"primary","d":6,"ev":"SYNC Remote Write","ms":0.5,"n":3468}
+{"t":"base_hist","side":"primary","d":6,"ev":"SYNC Remote Write","ms":1,"n":6222}
+{"t":"base_hist","side":"primary","d":6,"ev":"SYNC Remote Write","ms":2,"n":2448}
+{"t":"base_hist","side":"primary","d":6,"ev":"SYNC Remote Write","ms":4,"n":418}
+{"t":"base_hist","side":"primary","d":6,"ev":"SYNC Remote Write","ms":8,"n":122}
+{"t":"base_hist","side":"primary","d":6,"ev":"SYNC Remote Write","ms":16,"n":41}
+{"t":"base_hist","side":"primary","d":6,"ev":"SYNC Remote Write","ms":32,"n":14}
+{"t":"base_hist","side":"primary","d":6,"ev":"SYNC Remote Write","ms":64,"n":6}
+{"t":"base_hist","side":"primary","d":6,"ev":"log file sync","ms":0.5,"n":4855}
+{"t":"base_hist","side":"primary","d":6,"ev":"log file sync","ms":1,"n":8710}
+{"t":"base_hist","side":"primary","d":6,"ev":"log file sync","ms":2,"n":3427}
+{"t":"base_hist","side":"primary","d":6,"ev":"log file sync","ms":4,"n":585}
+{"t":"base_hist","side":"primary","d":6,"ev":"log file sync","ms":8,"n":171}
+{"t":"base_hist","side":"primary","d":6,"ev":"log file sync","ms":16,"n":58}
+{"t":"base_hist","side":"primary","d":6,"ev":"log file sync","ms":32,"n":19}
+{"t":"base_hist","side":"primary","d":6,"ev":"log file sync","ms":64,"n":8}
+{"t":"base_hist","side":"primary","d":7,"ev":"SYNC Remote Write","ms":0.5,"n":3536}
+{"t":"base_hist","side":"primary","d":7,"ev":"SYNC Remote Write","ms":1,"n":6344}
+{"t":"base_hist","side":"primary","d":7,"ev":"SYNC Remote Write","ms":2,"n":2496}
+{"t":"base_hist","side":"primary","d":7,"ev":"SYNC Remote Write","ms":4,"n":426}
+{"t":"base_hist","side":"primary","d":7,"ev":"SYNC Remote Write","ms":8,"n":124}
+{"t":"base_hist","side":"primary","d":7,"ev":"SYNC Remote Write","ms":16,"n":42}
+{"t":"base_hist","side":"primary","d":7,"ev":"SYNC Remote Write","ms":32,"n":14}
+{"t":"base_hist","side":"primary","d":7,"ev":"SYNC Remote Write","ms":64,"n":6}
+{"t":"base_hist","side":"primary","d":7,"ev":"SYNC Remote Write","ms":32768,"n":1}
+{"t":"base_hist","side":"primary","d":7,"ev":"log file sync","ms":0.5,"n":4950}
+{"t":"base_hist","side":"primary","d":7,"ev":"log file sync","ms":1,"n":8881}
+{"t":"base_hist","side":"primary","d":7,"ev":"log file sync","ms":2,"n":3494}
+{"t":"base_hist","side":"primary","d":7,"ev":"log file sync","ms":4,"n":596}
+{"t":"base_hist","side":"primary","d":7,"ev":"log file sync","ms":8,"n":174}
+{"t":"base_hist","side":"primary","d":7,"ev":"log file sync","ms":16,"n":59}
+{"t":"base_hist","side":"primary","d":7,"ev":"log file sync","ms":32,"n":20}
+{"t":"base_hist","side":"primary","d":7,"ev":"log file sync","ms":64,"n":8}
+{"t":"lsnr_srv","side":"primary","ts":"2026-11-13 20:39:15","host":"stby-host.example","ip":"198.51.100.12","port":51234,"svc":"SID:proddb","code":"0"}
+{"t":"lsnr_srv","side":"primary","ts":"2026-11-13 20:53:20","host":"stby-host.example","ip":"198.51.100.12","port":51301,"svc":"SID:proddb","code":"0"}
+{"t":"ep","side":"primary","from":"v$archive_dest","dest":2,"alias":"proddb_s_dgmgrl","file":"/u01/app/oracle/product/19.0.0/dbhome_1/network/admin/tnsnames.ora","host":"stby-host.example","port":1526,"addrs":1,"ip":null,"ip_how":null,"note":"alias proddb_s_dgmgrl in /u01/app/oracle/product/19.0.0/dbhome_1/network/admin/tnsnames.ora; getent not found: host name not resolved"}
+{"t":"conn","side":"primary","lip":"198.51.100.11","lport":41622,"pip":"198.51.100.12","pport":1526,"state":"ESTABLISHED","sendq":0,"recvq":0}
+{"t":"conn","side":"primary","lip":"198.51.100.11","lport":41640,"pip":"198.51.100.12","pport":1526,"state":"ESTABLISHED","sendq":0,"recvq":0}
+{"t":"sqlnet","side":"primary","name":"SQLNET.EXPIRE_TIME","set":true,"value":"10","file":"/u01/app/oracle/product/19.0.0/dbhome_1/network/admin/sqlnet.ora"}
+{"t":"sqlnet","side":"primary","name":"SQLNET.OUTBOUND_CONNECT_TIMEOUT","set":false,"value":null,"file":"/u01/app/oracle/product/19.0.0/dbhome_1/network/admin/sqlnet.ora"}
+{"t":"sqlnet","side":"primary","name":"SQLNET.INBOUND_CONNECT_TIMEOUT","set":false,"value":null,"file":"/u01/app/oracle/product/19.0.0/dbhome_1/network/admin/sqlnet.ora"}
+{"t":"sqlnet","side":"primary","name":"SQLNET.RECV_TIMEOUT","set":false,"value":null,"file":"/u01/app/oracle/product/19.0.0/dbhome_1/network/admin/sqlnet.ora"}
+{"t":"sqlnet","side":"primary","name":"SQLNET.SEND_TIMEOUT","set":false,"value":null,"file":"/u01/app/oracle/product/19.0.0/dbhome_1/network/admin/sqlnet.ora"}
+{"t":"sqlnet","side":"primary","name":"TCP.CONNECT_TIMEOUT","set":false,"value":null,"file":"/u01/app/oracle/product/19.0.0/dbhome_1/network/admin/sqlnet.ora"}
+{"t":"ostcp","side":"primary","name":"rfc1323","value":"1","tool":"no -a"}
+{"t":"ostcp","side":"primary","name":"sb_max","value":"4194304","tool":"no -a"}
+{"t":"ostcp","side":"primary","name":"tcp_keepcnt","value":"8","tool":"no -a"}
+{"t":"ostcp","side":"primary","name":"tcp_keepidle","value":"14400","tool":"no -a"}
+{"t":"ostcp","side":"primary","name":"tcp_keepinit","value":"150","tool":"no -a"}
+{"t":"ostcp","side":"primary","name":"tcp_keepintvl","value":"150","tool":"no -a"}
+{"t":"ostcp","side":"primary","name":"tcp_recvspace","value":"262144","tool":"no -a"}
+{"t":"ostcp","side":"primary","name":"tcp_sendspace","value":"262144","tool":"no -a"}
+{"t":"ntp","side":"primary","tool":"ntpq -p","ref":"ntp1.example.net","stratum":2,"off":0.000412,"synced":"yes","at":"2026-11-14 09:12:40","note":"system peer = the line marked *; off = system clock minus the peer, seconds, positive = ahead (ntpq reports the opposite sign, in ms)"}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:35:00","off":"+01:00","rtt":0.4,"loss":false,"retr":18400,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:35:05","off":"+01:00","rtt":0.412,"loss":false,"retr":18403,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:35:10","off":"+01:00","rtt":0.424,"loss":false,"retr":18406,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:35:15","off":"+01:00","rtt":0.436,"loss":false,"retr":18409,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:35:20","off":"+01:00","rtt":0.448,"loss":false,"retr":18412,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:35:25","off":"+01:00","rtt":0.4,"loss":false,"retr":18415,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:35:30","off":"+01:00","rtt":0.412,"loss":false,"retr":18418,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:35:35","off":"+01:00","rtt":0.424,"loss":false,"retr":18421,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:35:40","off":"+01:00","rtt":0.436,"loss":false,"retr":18424,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:35:45","off":"+01:00","rtt":0.448,"loss":false,"retr":18427,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:35:50","off":"+01:00","rtt":0.4,"loss":false,"retr":18430,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:35:55","off":"+01:00","rtt":0.412,"loss":false,"retr":18433,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:36:00","off":"+01:00","rtt":0.424,"loss":false,"retr":18436,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:36:05","off":"+01:00","rtt":0.436,"loss":false,"retr":18439,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:36:10","off":"+01:00","rtt":0.448,"loss":false,"retr":18442,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:36:15","off":"+01:00","rtt":0.4,"loss":false,"retr":18445,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:36:20","off":"+01:00","rtt":0.412,"loss":false,"retr":18448,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:36:25","off":"+01:00","rtt":0.424,"loss":false,"retr":18451,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:36:30","off":"+01:00","rtt":0.436,"loss":false,"retr":18454,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:36:35","off":"+01:00","rtt":0.448,"loss":false,"retr":18457,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:36:40","off":"+01:00","rtt":0.4,"loss":false,"retr":18460,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:36:45","off":"+01:00","rtt":0.412,"loss":false,"retr":18463,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:36:50","off":"+01:00","rtt":0.424,"loss":false,"retr":18466,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:36:55","off":"+01:00","rtt":0.436,"loss":false,"retr":18469,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:37:00","off":"+01:00","rtt":0.448,"loss":false,"retr":18472,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:37:05","off":"+01:00","rtt":0.4,"loss":false,"retr":18475,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:37:10","off":"+01:00","rtt":0.412,"loss":false,"retr":18478,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:37:15","off":"+01:00","rtt":0.424,"loss":false,"retr":18481,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:37:20","off":"+01:00","rtt":0.436,"loss":false,"retr":18484,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:37:25","off":"+01:00","rtt":0.448,"loss":false,"retr":18487,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:37:30","off":"+01:00","rtt":0.4,"loss":false,"retr":18490,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:37:35","off":"+01:00","rtt":0.412,"loss":false,"retr":18493,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:37:40","off":"+01:00","rtt":0.424,"loss":false,"retr":18496,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:37:45","off":"+01:00","rtt":0.436,"loss":false,"retr":18499,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:37:50","off":"+01:00","rtt":0.448,"loss":false,"retr":18502,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:37:55","off":"+01:00","rtt":0.4,"loss":false,"retr":18505,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:38:00","off":"+01:00","rtt":0.412,"loss":false,"retr":18508,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:38:05","off":"+01:00","rtt":0.424,"loss":false,"retr":18511,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:38:10","off":"+01:00","rtt":0.436,"loss":false,"retr":18514,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:38:15","off":"+01:00","rtt":0.448,"loss":false,"retr":18517,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:38:20","off":"+01:00","rtt":0.4,"loss":false,"retr":18520,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:38:25","off":"+01:00","rtt":0.412,"loss":false,"retr":18523,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:38:30","off":"+01:00","rtt":0.424,"loss":false,"retr":18526,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:38:35","off":"+01:00","rtt":null,"loss":true,"retr":18529,"sendq":14480}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:38:40","off":"+01:00","rtt":null,"loss":true,"retr":18532,"sendq":14480}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:38:45","off":"+01:00","rtt":null,"loss":true,"retr":18535,"sendq":14480}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:38:50","off":"+01:00","rtt":null,"loss":true,"retr":18538,"sendq":14480}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:38:55","off":"+01:00","rtt":null,"loss":true,"retr":18541,"sendq":14480}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:39:00","off":"+01:00","rtt":0.436,"loss":false,"retr":18584,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:39:05","off":"+01:00","rtt":0.448,"loss":false,"retr":18587,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:39:10","off":"+01:00","rtt":0.4,"loss":false,"retr":18590,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:39:15","off":"+01:00","rtt":0.412,"loss":false,"retr":18593,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:39:20","off":"+01:00","rtt":0.424,"loss":false,"retr":18596,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:39:25","off":"+01:00","rtt":0.436,"loss":false,"retr":18599,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:39:30","off":"+01:00","rtt":0.448,"loss":false,"retr":18602,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:39:35","off":"+01:00","rtt":0.4,"loss":false,"retr":18605,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:39:40","off":"+01:00","rtt":0.412,"loss":false,"retr":18608,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:39:45","off":"+01:00","rtt":0.424,"loss":false,"retr":18611,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:39:50","off":"+01:00","rtt":0.436,"loss":false,"retr":18614,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:39:55","off":"+01:00","rtt":0.448,"loss":false,"retr":18617,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:40:00","off":"+01:00","rtt":0.4,"loss":false,"retr":18620,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:40:05","off":"+01:00","rtt":0.412,"loss":false,"retr":18623,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:40:10","off":"+01:00","rtt":0.424,"loss":false,"retr":18626,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:40:15","off":"+01:00","rtt":0.436,"loss":false,"retr":18629,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:40:20","off":"+01:00","rtt":0.448,"loss":false,"retr":18632,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:40:25","off":"+01:00","rtt":0.4,"loss":false,"retr":18635,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:40:30","off":"+01:00","rtt":0.412,"loss":false,"retr":18638,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:40:35","off":"+01:00","rtt":0.424,"loss":false,"retr":18641,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:40:40","off":"+01:00","rtt":0.436,"loss":false,"retr":18644,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:40:45","off":"+01:00","rtt":0.448,"loss":false,"retr":18647,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:40:50","off":"+01:00","rtt":0.4,"loss":false,"retr":18650,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:40:55","off":"+01:00","rtt":0.412,"loss":false,"retr":18653,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:41:00","off":"+01:00","rtt":0.424,"loss":false,"retr":18656,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:41:05","off":"+01:00","rtt":0.436,"loss":false,"retr":18659,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:41:10","off":"+01:00","rtt":0.448,"loss":false,"retr":18662,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:41:15","off":"+01:00","rtt":0.4,"loss":false,"retr":18665,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:41:20","off":"+01:00","rtt":0.412,"loss":false,"retr":18668,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:41:25","off":"+01:00","rtt":0.424,"loss":false,"retr":18671,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:41:30","off":"+01:00","rtt":0.436,"loss":false,"retr":18674,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:41:35","off":"+01:00","rtt":0.448,"loss":false,"retr":18677,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:41:40","off":"+01:00","rtt":0.4,"loss":false,"retr":18680,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:41:45","off":"+01:00","rtt":0.412,"loss":false,"retr":18683,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:41:50","off":"+01:00","rtt":0.424,"loss":false,"retr":18686,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:41:55","off":"+01:00","rtt":0.436,"loss":false,"retr":18689,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:42:00","off":"+01:00","rtt":0.448,"loss":false,"retr":18692,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:42:05","off":"+01:00","rtt":0.4,"loss":false,"retr":18695,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:42:10","off":"+01:00","rtt":0.412,"loss":false,"retr":18698,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:42:15","off":"+01:00","rtt":0.424,"loss":false,"retr":18701,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:42:20","off":"+01:00","rtt":0.436,"loss":false,"retr":18704,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:42:25","off":"+01:00","rtt":0.448,"loss":false,"retr":18707,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:42:30","off":"+01:00","rtt":0.4,"loss":false,"retr":18710,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:42:35","off":"+01:00","rtt":0.412,"loss":false,"retr":18713,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:42:40","off":"+01:00","rtt":0.424,"loss":false,"retr":18716,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:42:45","off":"+01:00","rtt":0.436,"loss":false,"retr":18719,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:42:50","off":"+01:00","rtt":0.448,"loss":false,"retr":18722,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:42:55","off":"+01:00","rtt":0.4,"loss":false,"retr":18725,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:43:00","off":"+01:00","rtt":0.412,"loss":false,"retr":18728,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:43:05","off":"+01:00","rtt":0.424,"loss":false,"retr":18731,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:43:10","off":"+01:00","rtt":0.436,"loss":false,"retr":18734,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:43:15","off":"+01:00","rtt":0.448,"loss":false,"retr":18737,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:43:20","off":"+01:00","rtt":0.4,"loss":false,"retr":18740,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:43:25","off":"+01:00","rtt":0.412,"loss":false,"retr":18743,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:43:30","off":"+01:00","rtt":0.424,"loss":false,"retr":18746,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:43:35","off":"+01:00","rtt":0.436,"loss":false,"retr":18749,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:43:40","off":"+01:00","rtt":0.448,"loss":false,"retr":18752,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:43:45","off":"+01:00","rtt":0.4,"loss":false,"retr":18755,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:43:50","off":"+01:00","rtt":0.412,"loss":false,"retr":18758,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:43:55","off":"+01:00","rtt":0.424,"loss":false,"retr":18761,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:44:00","off":"+01:00","rtt":0.436,"loss":false,"retr":18764,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:44:05","off":"+01:00","rtt":0.448,"loss":false,"retr":18767,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:44:10","off":"+01:00","rtt":0.4,"loss":false,"retr":18770,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:44:15","off":"+01:00","rtt":0.412,"loss":false,"retr":18773,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:44:20","off":"+01:00","rtt":0.424,"loss":false,"retr":18776,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:44:25","off":"+01:00","rtt":0.436,"loss":false,"retr":18779,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:44:30","off":"+01:00","rtt":0.448,"loss":false,"retr":18782,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:44:35","off":"+01:00","rtt":0.4,"loss":false,"retr":18785,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:44:40","off":"+01:00","rtt":0.412,"loss":false,"retr":18788,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:44:45","off":"+01:00","rtt":0.424,"loss":false,"retr":18791,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:44:50","off":"+01:00","rtt":0.436,"loss":false,"retr":18794,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:44:55","off":"+01:00","rtt":0.448,"loss":false,"retr":18797,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:45:00","off":"+01:00","rtt":0.4,"loss":false,"retr":18800,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:45:05","off":"+01:00","rtt":0.412,"loss":false,"retr":18803,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:45:10","off":"+01:00","rtt":0.424,"loss":false,"retr":18806,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:45:15","off":"+01:00","rtt":0.436,"loss":false,"retr":18809,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:45:20","off":"+01:00","rtt":0.448,"loss":false,"retr":18812,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:45:25","off":"+01:00","rtt":0.4,"loss":false,"retr":18815,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:45:30","off":"+01:00","rtt":0.412,"loss":false,"retr":18818,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:45:35","off":"+01:00","rtt":0.424,"loss":false,"retr":18821,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:45:40","off":"+01:00","rtt":0.436,"loss":false,"retr":18824,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:45:45","off":"+01:00","rtt":0.448,"loss":false,"retr":18827,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:45:50","off":"+01:00","rtt":0.4,"loss":false,"retr":18830,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:45:55","off":"+01:00","rtt":0.412,"loss":false,"retr":18833,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:46:00","off":"+01:00","rtt":0.424,"loss":false,"retr":18836,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:46:05","off":"+01:00","rtt":0.436,"loss":false,"retr":18839,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:46:10","off":"+01:00","rtt":0.448,"loss":false,"retr":18842,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:46:15","off":"+01:00","rtt":0.4,"loss":false,"retr":18845,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:46:20","off":"+01:00","rtt":0.412,"loss":false,"retr":18848,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:46:25","off":"+01:00","rtt":0.424,"loss":false,"retr":18851,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:46:30","off":"+01:00","rtt":0.436,"loss":false,"retr":18854,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:46:35","off":"+01:00","rtt":0.448,"loss":false,"retr":18857,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:46:40","off":"+01:00","rtt":0.4,"loss":false,"retr":18860,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:46:45","off":"+01:00","rtt":0.412,"loss":false,"retr":18863,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:46:50","off":"+01:00","rtt":0.424,"loss":false,"retr":18866,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:46:55","off":"+01:00","rtt":0.436,"loss":false,"retr":18869,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:47:00","off":"+01:00","rtt":0.448,"loss":false,"retr":18872,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:47:05","off":"+01:00","rtt":0.4,"loss":false,"retr":18875,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:47:10","off":"+01:00","rtt":0.412,"loss":false,"retr":18878,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:47:15","off":"+01:00","rtt":0.424,"loss":false,"retr":18881,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:47:20","off":"+01:00","rtt":0.436,"loss":false,"retr":18884,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:47:25","off":"+01:00","rtt":0.448,"loss":false,"retr":18887,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:47:30","off":"+01:00","rtt":0.4,"loss":false,"retr":18890,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:47:35","off":"+01:00","rtt":0.412,"loss":false,"retr":18893,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:47:40","off":"+01:00","rtt":0.424,"loss":false,"retr":18896,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:47:45","off":"+01:00","rtt":0.436,"loss":false,"retr":18899,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:47:50","off":"+01:00","rtt":0.448,"loss":false,"retr":18902,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:47:55","off":"+01:00","rtt":0.4,"loss":false,"retr":18905,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:48:00","off":"+01:00","rtt":0.412,"loss":false,"retr":18908,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:48:05","off":"+01:00","rtt":0.424,"loss":false,"retr":18911,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:48:10","off":"+01:00","rtt":0.436,"loss":false,"retr":18914,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:48:15","off":"+01:00","rtt":0.448,"loss":false,"retr":18917,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:48:20","off":"+01:00","rtt":0.4,"loss":false,"retr":18920,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:48:25","off":"+01:00","rtt":0.412,"loss":false,"retr":18923,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:48:30","off":"+01:00","rtt":0.424,"loss":false,"retr":18926,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:48:35","off":"+01:00","rtt":0.436,"loss":false,"retr":18929,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:48:40","off":"+01:00","rtt":0.448,"loss":false,"retr":18932,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:48:45","off":"+01:00","rtt":0.4,"loss":false,"retr":18935,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:48:50","off":"+01:00","rtt":0.412,"loss":false,"retr":18938,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:48:55","off":"+01:00","rtt":0.424,"loss":false,"retr":18941,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:49:00","off":"+01:00","rtt":0.436,"loss":false,"retr":18944,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:49:05","off":"+01:00","rtt":0.448,"loss":false,"retr":18947,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:49:10","off":"+01:00","rtt":0.4,"loss":false,"retr":18950,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:49:15","off":"+01:00","rtt":0.412,"loss":false,"retr":18953,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:49:20","off":"+01:00","rtt":0.424,"loss":false,"retr":18956,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:49:25","off":"+01:00","rtt":0.436,"loss":false,"retr":18959,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:49:30","off":"+01:00","rtt":0.448,"loss":false,"retr":18962,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:49:35","off":"+01:00","rtt":0.4,"loss":false,"retr":18965,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:49:40","off":"+01:00","rtt":0.412,"loss":false,"retr":18968,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:49:45","off":"+01:00","rtt":0.424,"loss":false,"retr":18971,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:49:50","off":"+01:00","rtt":0.436,"loss":false,"retr":18974,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:49:55","off":"+01:00","rtt":0.448,"loss":false,"retr":18977,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:50:00","off":"+01:00","rtt":0.4,"loss":false,"retr":18980,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:50:05","off":"+01:00","rtt":0.412,"loss":false,"retr":18983,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:50:10","off":"+01:00","rtt":0.424,"loss":false,"retr":18986,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:50:15","off":"+01:00","rtt":0.436,"loss":false,"retr":18989,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:50:20","off":"+01:00","rtt":0.448,"loss":false,"retr":18992,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:50:25","off":"+01:00","rtt":0.4,"loss":false,"retr":18995,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:50:30","off":"+01:00","rtt":0.412,"loss":false,"retr":18998,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:50:35","off":"+01:00","rtt":0.424,"loss":false,"retr":19001,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:50:40","off":"+01:00","rtt":0.436,"loss":false,"retr":19004,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:50:45","off":"+01:00","rtt":0.448,"loss":false,"retr":19007,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:50:50","off":"+01:00","rtt":0.4,"loss":false,"retr":19010,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:50:55","off":"+01:00","rtt":0.412,"loss":false,"retr":19013,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:51:00","off":"+01:00","rtt":0.424,"loss":false,"retr":19016,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:51:05","off":"+01:00","rtt":0.436,"loss":false,"retr":19019,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:51:10","off":"+01:00","rtt":0.448,"loss":false,"retr":19022,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:51:15","off":"+01:00","rtt":0.4,"loss":false,"retr":19025,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:51:20","off":"+01:00","rtt":0.412,"loss":false,"retr":19028,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:51:25","off":"+01:00","rtt":0.424,"loss":false,"retr":19031,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:51:30","off":"+01:00","rtt":0.436,"loss":false,"retr":19034,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:51:35","off":"+01:00","rtt":0.448,"loss":false,"retr":19037,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:51:40","off":"+01:00","rtt":0.4,"loss":false,"retr":19040,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:51:45","off":"+01:00","rtt":0.412,"loss":false,"retr":19043,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:51:50","off":"+01:00","rtt":0.424,"loss":false,"retr":19046,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:51:55","off":"+01:00","rtt":0.436,"loss":false,"retr":19049,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:52:00","off":"+01:00","rtt":0.448,"loss":false,"retr":19052,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:52:05","off":"+01:00","rtt":0.4,"loss":false,"retr":19055,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:52:10","off":"+01:00","rtt":0.412,"loss":false,"retr":19058,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:52:15","off":"+01:00","rtt":0.424,"loss":false,"retr":19061,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:52:20","off":"+01:00","rtt":0.436,"loss":false,"retr":19064,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:52:25","off":"+01:00","rtt":0.448,"loss":false,"retr":19067,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:52:30","off":"+01:00","rtt":0.4,"loss":false,"retr":19070,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:52:35","off":"+01:00","rtt":0.412,"loss":false,"retr":19073,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:52:40","off":"+01:00","rtt":0.424,"loss":false,"retr":19076,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:52:45","off":"+01:00","rtt":0.436,"loss":false,"retr":19079,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:52:50","off":"+01:00","rtt":0.448,"loss":false,"retr":19082,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:52:55","off":"+01:00","rtt":0.4,"loss":false,"retr":19085,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:53:00","off":"+01:00","rtt":0.412,"loss":false,"retr":19088,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:53:05","off":"+01:00","rtt":0.424,"loss":false,"retr":19091,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:53:10","off":"+01:00","rtt":0.436,"loss":false,"retr":19094,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:53:15","off":"+01:00","rtt":0.448,"loss":false,"retr":19097,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:53:20","off":"+01:00","rtt":0.4,"loss":false,"retr":19100,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:53:25","off":"+01:00","rtt":0.412,"loss":false,"retr":19103,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:53:30","off":"+01:00","rtt":0.424,"loss":false,"retr":19106,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:53:35","off":"+01:00","rtt":0.436,"loss":false,"retr":19109,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:53:40","off":"+01:00","rtt":0.448,"loss":false,"retr":19112,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:53:45","off":"+01:00","rtt":0.4,"loss":false,"retr":19115,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:53:50","off":"+01:00","rtt":0.412,"loss":false,"retr":19118,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:53:55","off":"+01:00","rtt":0.424,"loss":false,"retr":19121,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:54:00","off":"+01:00","rtt":0.436,"loss":false,"retr":19124,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:54:05","off":"+01:00","rtt":0.448,"loss":false,"retr":19127,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:54:10","off":"+01:00","rtt":0.4,"loss":false,"retr":19130,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:54:15","off":"+01:00","rtt":0.412,"loss":false,"retr":19133,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:54:20","off":"+01:00","rtt":0.424,"loss":false,"retr":19136,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:54:25","off":"+01:00","rtt":0.436,"loss":false,"retr":19139,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:54:30","off":"+01:00","rtt":0.448,"loss":false,"retr":19142,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:54:35","off":"+01:00","rtt":0.4,"loss":false,"retr":19145,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:54:40","off":"+01:00","rtt":0.412,"loss":false,"retr":19148,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:54:45","off":"+01:00","rtt":0.424,"loss":false,"retr":19151,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:54:50","off":"+01:00","rtt":0.436,"loss":false,"retr":19154,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:54:55","off":"+01:00","rtt":0.448,"loss":false,"retr":19157,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:55:00","off":"+01:00","rtt":0.4,"loss":false,"retr":19160,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:55:05","off":"+01:00","rtt":0.412,"loss":false,"retr":19163,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:55:10","off":"+01:00","rtt":0.424,"loss":false,"retr":19166,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:55:15","off":"+01:00","rtt":0.436,"loss":false,"retr":19169,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:55:20","off":"+01:00","rtt":0.448,"loss":false,"retr":19172,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:55:25","off":"+01:00","rtt":0.4,"loss":false,"retr":19175,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:55:30","off":"+01:00","rtt":0.412,"loss":false,"retr":19178,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:55:35","off":"+01:00","rtt":0.424,"loss":false,"retr":19181,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:55:40","off":"+01:00","rtt":0.436,"loss":false,"retr":19184,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:55:45","off":"+01:00","rtt":0.448,"loss":false,"retr":19187,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:55:50","off":"+01:00","rtt":0.4,"loss":false,"retr":19190,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:55:55","off":"+01:00","rtt":0.412,"loss":false,"retr":19193,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:56:00","off":"+01:00","rtt":0.424,"loss":false,"retr":19196,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:56:05","off":"+01:00","rtt":0.436,"loss":false,"retr":19199,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:56:10","off":"+01:00","rtt":0.448,"loss":false,"retr":19202,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:56:15","off":"+01:00","rtt":0.4,"loss":false,"retr":19205,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:56:20","off":"+01:00","rtt":0.412,"loss":false,"retr":19208,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:56:25","off":"+01:00","rtt":0.424,"loss":false,"retr":19211,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:56:30","off":"+01:00","rtt":0.436,"loss":false,"retr":19214,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:56:35","off":"+01:00","rtt":0.448,"loss":false,"retr":19217,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:56:40","off":"+01:00","rtt":0.4,"loss":false,"retr":19220,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:56:45","off":"+01:00","rtt":0.412,"loss":false,"retr":19223,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:56:50","off":"+01:00","rtt":0.424,"loss":false,"retr":19226,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:56:55","off":"+01:00","rtt":0.436,"loss":false,"retr":19229,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:57:00","off":"+01:00","rtt":0.448,"loss":false,"retr":19232,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:57:05","off":"+01:00","rtt":0.4,"loss":false,"retr":19235,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:57:10","off":"+01:00","rtt":0.412,"loss":false,"retr":19238,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:57:15","off":"+01:00","rtt":0.424,"loss":false,"retr":19241,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:57:20","off":"+01:00","rtt":0.436,"loss":false,"retr":19244,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:57:25","off":"+01:00","rtt":0.448,"loss":false,"retr":19247,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:57:30","off":"+01:00","rtt":0.4,"loss":false,"retr":19250,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:57:35","off":"+01:00","rtt":0.412,"loss":false,"retr":19253,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:57:40","off":"+01:00","rtt":0.424,"loss":false,"retr":19256,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:57:45","off":"+01:00","rtt":0.436,"loss":false,"retr":19259,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:57:50","off":"+01:00","rtt":0.448,"loss":false,"retr":19262,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:57:55","off":"+01:00","rtt":0.4,"loss":false,"retr":19265,"sendq":0}
+{"t":"netsamp","side":"primary","ts":"2026-11-13 20:58:00","off":"+01:00","rtt":0.412,"loss":false,"retr":19268,"sendq":0}
+{"t":"cov","side":"primary","src":"dgstatus","st":"ok","first":"2026-11-13 14:35:00","last":"2026-11-14 09:12:30","n":5,"cap":500,"capped":false,"note":"v$dataguard_status, in memory (lost at restart); first/last = oldest and newest row it holds, newest 500 of the window kept"}
+{"t":"cov","side":"primary","src":"dest_hist","st":"ok","first":"2026-11-14 09:12:40","last":"2026-11-14 09:12:40","n":9,"cap":null,"capped":false,"note":"as collected, counters not limited to the window; first = last = collection time"}
+{"t":"cov","side":"primary","src":"base_hist","st":"ok","first":"2026-11-05 21:35:00","last":"2026-11-14 09:00:40","n":7,"cap":null,"capped":false,"note":"previous 7 days, same clock interval; n = days with a usable histogram delta; first/last = the AWR span held; dba_hist_event_histogram deltas, intervals after an instance restart left out"}
+{"t":"cov","side":"primary","src":"rfs_ev","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the primary"}
+{"t":"cov","side":"primary","src":"rfs_hist","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the primary"}
+{"t":"cov","side":"primary","src":"dgproc","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the primary"}
+{"t":"cov","side":"primary","src":"archgap","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the primary"}
+{"t":"cov","side":"primary","src":"lsnr_srv","st":"ok","first":"2026-09-20 00:00:01","last":"2026-11-14 09:12:36","n":2,"cap":500,"capped":false,"note":"establish lines with PROGRAM=oracle (the other database host: redo transport, FAL, broker) in the window"}
+{"t":"cov","side":"primary","src":"ep","st":"ok","first":"2026-11-14 09:12:40","last":"2026-11-14 09:12:40","n":1,"cap":null,"capped":false,"note":"destination and fal_server aliases as configured, resolved through /u01/app/oracle/product/19.0.0/dbhome_1/network/admin/tnsnames.ora; as collected, first = last = collection time"}
+{"t":"cov","side":"primary","src":"conn","st":"ok","first":"2026-11-14 09:12:40","last":"2026-11-14 09:12:40","n":2,"cap":200,"capped":false,"note":"netstat -an: TCP connections between this host and 198.51.100.12 on port 1526, as collected (not during the window); first = last = collection time"}
+{"t":"cov","side":"primary","src":"sqlnet","st":"ok","first":"2026-11-14 09:12:40","last":"2026-11-14 09:12:40","n":6,"cap":null,"capped":false,"note":"/u01/app/oracle/product/19.0.0/dbhome_1/network/admin/sqlnet.ora"}
+{"t":"cov","side":"primary","src":"ostcp","st":"ok","first":"2026-11-14 09:12:40","last":"2026-11-14 09:12:40","n":8,"cap":null,"capped":false,"note":"AIX TCP tunables as collected; value null = not readable here"}
+{"t":"cov","side":"primary","src":"ntp","st":"ok","first":"2026-11-14 09:12:40","last":"2026-11-14 09:12:40","n":1,"cap":null,"capped":false,"note":"ntpq -p, as collected: the clock state now, not at the incident"}
+{"t":"cov","side":"primary","src":"sar","kind":"ETCP","st":"skipped","first":null,"last":null,"n":0,"cap":2000,"capped":false,"note":"AIX has no network history by default (sar on AIX does not keep these reports)"}
+{"t":"cov","side":"primary","src":"sar","kind":"TCP","st":"skipped","first":null,"last":null,"n":0,"cap":2000,"capped":false,"note":"AIX has no network history by default (sar on AIX does not keep these reports)"}
+{"t":"cov","side":"primary","src":"sar","kind":"DEV","st":"skipped","first":null,"last":null,"n":0,"cap":2000,"capped":false,"note":"AIX has no network history by default (sar on AIX does not keep these reports)"}
+{"t":"cov","side":"primary","src":"sar","kind":"EDEV","st":"skipped","first":null,"last":null,"n":0,"cap":2000,"capped":false,"note":"AIX has no network history by default (sar on AIX does not keep these reports)"}
+{"t":"cov","side":"primary","src":"netsamp","st":"ok","first":"2026-11-13 20:30:00","last":"2026-11-14 09:11:40","n":277,"cap":5000,"capped":false,"note":"samples of net_sampler.sh from /var/tmp/net_sampler.log (peer=198.51.100.12 port=1526 interval=5 started=2026-11-13T20:00:01+0100)"}
+{"t":"cov","side":"primary","src":"tx","st":"ok","first":"2026-11-06 09:00:03","last":"2026-11-14 08:59:53","n":87,"cap":null,"capped":false,"note":"LGWR/LGnn/NSSn/TTnn/ARCn/TMON wait samples in ASH (H); first/last = what ASH holds"}
+{"t":"lfs_by","side":"primary","dim":"service","name":"ordersvc.example","n":60,"lg":60,"sess":42,"a":"2026-11-13 20:37:40","z":"2026-11-13 20:38:50"}
+{"t":"lfs_by","side":"primary","dim":"service","name":"reportsvc.example","n":22,"lg":22,"sess":14,"a":"2026-11-13 20:37:40","z":"2026-11-13 20:38:50"}
+{"t":"lfs_by","side":"primary","dim":"service","name":"hash 3427055676","n":21,"lg":21,"sess":14,"a":"2026-11-13 20:37:40","z":"2026-11-13 20:38:50"}
+{"t":"lfs_by","side":"primary","dim":"module","name":"JDBC Thin Client","n":27,"lg":27,"sess":18,"a":"2026-11-13 20:37:40","z":"2026-11-13 20:38:50"}
+{"t":"lfs_by","side":"primary","dim":"module","name":"batch_loader","n":26,"lg":26,"sess":18,"a":"2026-11-13 20:37:40","z":"2026-11-13 20:38:50"}
+{"t":"lfs_by","side":"primary","dim":"module","name":null,"n":25,"lg":25,"sess":17,"a":"2026-11-13 20:37:40","z":"2026-11-13 20:38:50"}
+{"t":"lfs_by","side":"primary","dim":"module","name":"ordersrv","n":25,"lg":25,"sess":17,"a":"2026-11-13 20:37:40","z":"2026-11-13 20:38:50"}
+{"t":"lfs_by","side":"primary","dim":"machine","name":"app01.example","n":35,"lg":35,"sess":23,"a":"2026-11-13 20:37:40","z":"2026-11-13 20:38:50"}
+{"t":"lfs_by","side":"primary","dim":"machine","name":"app02.example","n":34,"lg":34,"sess":23,"a":"2026-11-13 20:37:40","z":"2026-11-13 20:38:50"}
+{"t":"lfs_by","side":"primary","dim":"machine","name":"batch01.example","n":34,"lg":34,"sess":24,"a":"2026-11-13 20:37:40","z":"2026-11-13 20:38:50"}
+{"t":"wl_hist","side":"primary","b":"2026-11-06 09:00","e":"2026-11-06 10:00","redo":2.3,"redo_max":4.11,"txn":49.4}
+{"t":"wl_hist","side":"primary","b":"2026-11-06 10:00","e":"2026-11-06 11:00","redo":2.0,"redo_max":3.6,"txn":43.0}
+{"t":"wl_hist","side":"primary","b":"2026-11-06 11:00","e":"2026-11-06 12:00","redo":1.7,"redo_max":3.09,"txn":36.5}
+{"t":"wl_hist","side":"primary","b":"2026-11-06 12:00","e":"2026-11-06 13:00","redo":2.15,"redo_max":3.85,"txn":46.2}
+{"t":"wl_hist","side":"primary","b":"2026-11-06 13:00","e":"2026-11-06 14:00","redo":1.85,"redo_max":3.35,"txn":39.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-06 14:00","e":"2026-11-06 15:00","redo":2.3,"redo_max":4.11,"txn":49.4}
+{"t":"wl_hist","side":"primary","b":"2026-11-06 15:00","e":"2026-11-06 16:00","redo":2.0,"redo_max":3.6,"txn":43.0}
+{"t":"wl_hist","side":"primary","b":"2026-11-06 16:00","e":"2026-11-06 17:00","redo":1.7,"redo_max":3.09,"txn":36.5}
+{"t":"wl_hist","side":"primary","b":"2026-11-06 17:00","e":"2026-11-06 18:00","redo":2.15,"redo_max":3.85,"txn":46.2}
+{"t":"wl_hist","side":"primary","b":"2026-11-06 18:00","e":"2026-11-06 19:00","redo":1.85,"redo_max":3.35,"txn":39.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-06 19:00","e":"2026-11-06 20:00","redo":2.3,"redo_max":4.11,"txn":49.4}
+{"t":"wl_hist","side":"primary","b":"2026-11-06 20:00","e":"2026-11-06 21:00","redo":1.62,"redo_max":2.7,"txn":34.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-06 21:00","e":"2026-11-06 22:00","redo":1.7,"redo_max":3.09,"txn":36.5}
+{"t":"wl_hist","side":"primary","b":"2026-11-06 22:00","e":"2026-11-06 23:00","redo":2.15,"redo_max":3.85,"txn":46.2}
+{"t":"wl_hist","side":"primary","b":"2026-11-06 23:00","e":"2026-11-07 00:00","redo":1.85,"redo_max":3.35,"txn":39.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-07 00:00","e":"2026-11-07 01:00","redo":0.5,"redo_max":1.05,"txn":10.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-07 01:00","e":"2026-11-07 02:00","redo":0.5,"redo_max":1.05,"txn":10.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-07 02:00","e":"2026-11-07 03:00","redo":0.6,"redo_max":1.22,"txn":12.9}
+{"t":"wl_hist","side":"primary","b":"2026-11-07 03:00","e":"2026-11-07 04:00","redo":0.6,"redo_max":1.22,"txn":12.9}
+{"t":"wl_hist","side":"primary","b":"2026-11-07 04:00","e":"2026-11-07 05:00","redo":0.5,"redo_max":1.05,"txn":10.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-07 05:00","e":"2026-11-07 06:00","redo":0.5,"redo_max":1.05,"txn":10.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-07 06:00","e":"2026-11-07 07:00","redo":2.0,"redo_max":3.6,"txn":43.0}
+{"t":"wl_hist","side":"primary","b":"2026-11-07 07:00","e":"2026-11-07 08:00","redo":1.7,"redo_max":3.09,"txn":36.5}
+{"t":"wl_hist","side":"primary","b":"2026-11-07 08:00","e":"2026-11-07 09:00","redo":2.15,"redo_max":3.85,"txn":46.2}
+{"t":"wl_hist","side":"primary","b":"2026-11-07 09:00","e":"2026-11-07 10:00","redo":1.85,"redo_max":3.35,"txn":39.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-07 10:00","e":"2026-11-07 11:00","redo":2.3,"redo_max":4.11,"txn":49.4}
+{"t":"wl_hist","side":"primary","b":"2026-11-07 11:00","e":"2026-11-07 12:00","redo":2.0,"redo_max":3.6,"txn":43.0}
+{"t":"wl_hist","side":"primary","b":"2026-11-07 12:00","e":"2026-11-07 13:00","redo":1.7,"redo_max":3.09,"txn":36.5}
+{"t":"wl_hist","side":"primary","b":"2026-11-07 13:00","e":"2026-11-07 14:00","redo":2.15,"redo_max":3.85,"txn":46.2}
+{"t":"wl_hist","side":"primary","b":"2026-11-07 14:00","e":"2026-11-07 15:00","redo":1.85,"redo_max":3.35,"txn":39.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-07 15:00","e":"2026-11-07 16:00","redo":2.3,"redo_max":4.11,"txn":49.4}
+{"t":"wl_hist","side":"primary","b":"2026-11-07 16:00","e":"2026-11-07 17:00","redo":2.0,"redo_max":3.6,"txn":43.0}
+{"t":"wl_hist","side":"primary","b":"2026-11-07 17:00","e":"2026-11-07 18:00","redo":1.7,"redo_max":3.09,"txn":36.5}
+{"t":"wl_hist","side":"primary","b":"2026-11-07 18:00","e":"2026-11-07 19:00","redo":2.15,"redo_max":3.85,"txn":46.2}
+{"t":"wl_hist","side":"primary","b":"2026-11-07 19:00","e":"2026-11-07 20:00","redo":1.85,"redo_max":3.35,"txn":39.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-07 20:00","e":"2026-11-07 21:00","redo":2.3,"redo_max":4.11,"txn":49.4}
+{"t":"wl_hist","side":"primary","b":"2026-11-07 21:00","e":"2026-11-07 22:00","redo":2.0,"redo_max":3.6,"txn":43.0}
+{"t":"wl_hist","side":"primary","b":"2026-11-07 22:00","e":"2026-11-07 23:00","redo":1.7,"redo_max":3.09,"txn":36.5}
+{"t":"wl_hist","side":"primary","b":"2026-11-07 23:00","e":"2026-11-08 00:00","redo":2.15,"redo_max":3.85,"txn":46.2}
+{"t":"wl_hist","side":"primary","b":"2026-11-08 00:00","e":"2026-11-08 01:00","redo":0.5,"redo_max":1.05,"txn":10.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-08 01:00","e":"2026-11-08 02:00","redo":0.5,"redo_max":1.05,"txn":10.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-08 02:00","e":"2026-11-08 03:00","redo":0.6,"redo_max":1.22,"txn":12.9}
+{"t":"wl_hist","side":"primary","b":"2026-11-08 03:00","e":"2026-11-08 04:00","redo":0.6,"redo_max":1.22,"txn":12.9}
+{"t":"wl_hist","side":"primary","b":"2026-11-08 04:00","e":"2026-11-08 05:00","redo":0.5,"redo_max":1.05,"txn":10.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-08 05:00","e":"2026-11-08 06:00","redo":0.5,"redo_max":1.05,"txn":10.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-08 06:00","e":"2026-11-08 07:00","redo":2.3,"redo_max":4.11,"txn":49.4}
+{"t":"wl_hist","side":"primary","b":"2026-11-08 07:00","e":"2026-11-08 08:00","redo":2.0,"redo_max":3.6,"txn":43.0}
+{"t":"wl_hist","side":"primary","b":"2026-11-08 08:00","e":"2026-11-08 09:00","redo":1.7,"redo_max":3.09,"txn":36.5}
+{"t":"wl_hist","side":"primary","b":"2026-11-08 09:00","e":"2026-11-08 10:00","redo":2.15,"redo_max":3.85,"txn":46.2}
+{"t":"wl_hist","side":"primary","b":"2026-11-08 10:00","e":"2026-11-08 11:00","redo":1.85,"redo_max":3.35,"txn":39.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-08 11:00","e":"2026-11-08 12:00","redo":2.3,"redo_max":4.11,"txn":49.4}
+{"t":"wl_hist","side":"primary","b":"2026-11-08 12:00","e":"2026-11-08 13:00","redo":2.0,"redo_max":3.6,"txn":43.0}
+{"t":"wl_hist","side":"primary","b":"2026-11-08 13:00","e":"2026-11-08 14:00","redo":1.7,"redo_max":3.09,"txn":36.5}
+{"t":"wl_hist","side":"primary","b":"2026-11-08 14:00","e":"2026-11-08 15:00","redo":2.15,"redo_max":3.85,"txn":46.2}
+{"t":"wl_hist","side":"primary","b":"2026-11-08 15:00","e":"2026-11-08 16:00","redo":1.85,"redo_max":3.35,"txn":39.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-08 16:00","e":"2026-11-08 17:00","redo":2.3,"redo_max":4.11,"txn":49.4}
+{"t":"wl_hist","side":"primary","b":"2026-11-08 17:00","e":"2026-11-08 18:00","redo":2.0,"redo_max":3.6,"txn":43.0}
+{"t":"wl_hist","side":"primary","b":"2026-11-08 18:00","e":"2026-11-08 19:00","redo":1.7,"redo_max":3.09,"txn":36.5}
+{"t":"wl_hist","side":"primary","b":"2026-11-08 19:00","e":"2026-11-08 20:00","redo":2.15,"redo_max":3.85,"txn":46.2}
+{"t":"wl_hist","side":"primary","b":"2026-11-08 20:00","e":"2026-11-08 21:00","redo":1.85,"redo_max":3.35,"txn":39.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-08 21:00","e":"2026-11-08 22:00","redo":2.3,"redo_max":4.11,"txn":49.4}
+{"t":"wl_hist","side":"primary","b":"2026-11-08 22:00","e":"2026-11-08 23:00","redo":2.0,"redo_max":3.6,"txn":43.0}
+{"t":"wl_hist","side":"primary","b":"2026-11-08 23:00","e":"2026-11-09 00:00","redo":1.7,"redo_max":3.09,"txn":36.5}
+{"t":"wl_hist","side":"primary","b":"2026-11-09 00:00","e":"2026-11-09 01:00","redo":0.5,"redo_max":1.05,"txn":10.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-09 01:00","e":"2026-11-09 02:00","redo":0.5,"redo_max":1.05,"txn":10.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-09 02:00","e":"2026-11-09 03:00","redo":0.6,"redo_max":1.22,"txn":12.9}
+{"t":"wl_hist","side":"primary","b":"2026-11-09 03:00","e":"2026-11-09 04:00","redo":0.6,"redo_max":1.22,"txn":12.9}
+{"t":"wl_hist","side":"primary","b":"2026-11-09 04:00","e":"2026-11-09 05:00","redo":0.5,"redo_max":1.05,"txn":10.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-09 05:00","e":"2026-11-09 06:00","redo":0.5,"redo_max":1.05,"txn":10.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-09 06:00","e":"2026-11-09 07:00","redo":1.85,"redo_max":3.35,"txn":39.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-09 07:00","e":"2026-11-09 08:00","redo":2.3,"redo_max":4.11,"txn":49.4}
+{"t":"wl_hist","side":"primary","b":"2026-11-09 08:00","e":"2026-11-09 09:00","redo":2.0,"redo_max":3.6,"txn":43.0}
+{"t":"wl_hist","side":"primary","b":"2026-11-09 09:00","e":"2026-11-09 10:00","redo":1.7,"redo_max":3.09,"txn":36.5}
+{"t":"wl_hist","side":"primary","b":"2026-11-09 10:00","e":"2026-11-09 11:00","redo":2.15,"redo_max":3.85,"txn":46.2}
+{"t":"wl_hist","side":"primary","b":"2026-11-09 11:00","e":"2026-11-09 12:00","redo":1.85,"redo_max":3.35,"txn":39.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-09 12:00","e":"2026-11-09 13:00","redo":2.3,"redo_max":4.11,"txn":49.4}
+{"t":"wl_hist","side":"primary","b":"2026-11-09 13:00","e":"2026-11-09 14:00","redo":2.0,"redo_max":3.6,"txn":43.0}
+{"t":"wl_hist","side":"primary","b":"2026-11-09 14:00","e":"2026-11-09 15:00","redo":1.7,"redo_max":3.09,"txn":36.5}
+{"t":"wl_hist","side":"primary","b":"2026-11-09 15:00","e":"2026-11-09 16:00","redo":2.15,"redo_max":3.85,"txn":46.2}
+{"t":"wl_hist","side":"primary","b":"2026-11-09 16:00","e":"2026-11-09 17:00","redo":1.85,"redo_max":3.35,"txn":39.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-09 17:00","e":"2026-11-09 18:00","redo":2.3,"redo_max":4.11,"txn":49.4}
+{"t":"wl_hist","side":"primary","b":"2026-11-09 18:00","e":"2026-11-09 19:00","redo":2.0,"redo_max":3.6,"txn":43.0}
+{"t":"wl_hist","side":"primary","b":"2026-11-09 19:00","e":"2026-11-09 20:00","redo":1.7,"redo_max":3.09,"txn":36.5}
+{"t":"wl_hist","side":"primary","b":"2026-11-09 20:00","e":"2026-11-09 21:00","redo":2.15,"redo_max":3.85,"txn":46.2}
+{"t":"wl_hist","side":"primary","b":"2026-11-09 21:00","e":"2026-11-09 22:00","redo":1.85,"redo_max":3.35,"txn":39.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-09 22:00","e":"2026-11-09 23:00","redo":2.3,"redo_max":4.11,"txn":49.4}
+{"t":"wl_hist","side":"primary","b":"2026-11-09 23:00","e":"2026-11-10 00:00","redo":2.0,"redo_max":3.6,"txn":43.0}
+{"t":"wl_hist","side":"primary","b":"2026-11-10 00:00","e":"2026-11-10 01:00","redo":0.5,"redo_max":1.05,"txn":10.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-10 01:00","e":"2026-11-10 02:00","redo":0.5,"redo_max":1.05,"txn":10.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-10 02:00","e":"2026-11-10 03:00","redo":0.6,"redo_max":1.22,"txn":12.9}
+{"t":"wl_hist","side":"primary","b":"2026-11-10 03:00","e":"2026-11-10 04:00","redo":0.6,"redo_max":1.22,"txn":12.9}
+{"t":"wl_hist","side":"primary","b":"2026-11-10 04:00","e":"2026-11-10 05:00","redo":0.5,"redo_max":1.05,"txn":10.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-10 05:00","e":"2026-11-10 06:00","redo":0.5,"redo_max":1.05,"txn":10.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-10 06:00","e":"2026-11-10 07:00","redo":2.15,"redo_max":3.85,"txn":46.2}
+{"t":"wl_hist","side":"primary","b":"2026-11-10 07:00","e":"2026-11-10 08:00","redo":1.85,"redo_max":3.35,"txn":39.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-10 08:00","e":"2026-11-10 09:00","redo":2.3,"redo_max":4.11,"txn":49.4}
+{"t":"wl_hist","side":"primary","b":"2026-11-10 09:00","e":"2026-11-10 10:00","redo":2.0,"redo_max":3.6,"txn":43.0}
+{"t":"wl_hist","side":"primary","b":"2026-11-10 10:00","e":"2026-11-10 11:00","redo":1.7,"redo_max":3.09,"txn":36.5}
+{"t":"wl_hist","side":"primary","b":"2026-11-10 11:00","e":"2026-11-10 12:00","redo":2.15,"redo_max":3.85,"txn":46.2}
+{"t":"wl_hist","side":"primary","b":"2026-11-10 12:00","e":"2026-11-10 13:00","redo":1.85,"redo_max":3.35,"txn":39.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-10 13:00","e":"2026-11-10 14:00","redo":2.3,"redo_max":4.11,"txn":49.4}
+{"t":"wl_hist","side":"primary","b":"2026-11-10 14:00","e":"2026-11-10 15:00","redo":2.0,"redo_max":3.6,"txn":43.0}
+{"t":"wl_hist","side":"primary","b":"2026-11-10 15:00","e":"2026-11-10 16:00","redo":1.7,"redo_max":3.09,"txn":36.5}
+{"t":"wl_hist","side":"primary","b":"2026-11-10 16:00","e":"2026-11-10 17:00","redo":2.15,"redo_max":3.85,"txn":46.2}
+{"t":"wl_hist","side":"primary","b":"2026-11-10 17:00","e":"2026-11-10 18:00","redo":1.85,"redo_max":3.35,"txn":39.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-10 18:00","e":"2026-11-10 19:00","redo":2.3,"redo_max":4.11,"txn":49.4}
+{"t":"wl_hist","side":"primary","b":"2026-11-10 19:00","e":"2026-11-10 20:00","redo":2.0,"redo_max":3.6,"txn":43.0}
+{"t":"wl_hist","side":"primary","b":"2026-11-10 20:00","e":"2026-11-10 21:00","redo":1.7,"redo_max":3.09,"txn":36.5}
+{"t":"wl_hist","side":"primary","b":"2026-11-10 21:00","e":"2026-11-10 22:00","redo":2.15,"redo_max":3.85,"txn":46.2}
+{"t":"wl_hist","side":"primary","b":"2026-11-10 22:00","e":"2026-11-10 23:00","redo":1.85,"redo_max":3.35,"txn":39.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-10 23:00","e":"2026-11-11 00:00","redo":2.3,"redo_max":4.11,"txn":49.4}
+{"t":"wl_hist","side":"primary","b":"2026-11-11 00:00","e":"2026-11-11 01:00","redo":0.5,"redo_max":1.05,"txn":10.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-11 01:00","e":"2026-11-11 02:00","redo":0.5,"redo_max":1.05,"txn":10.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-11 02:00","e":"2026-11-11 03:00","redo":0.6,"redo_max":1.22,"txn":12.9}
+{"t":"wl_hist","side":"primary","b":"2026-11-11 03:00","e":"2026-11-11 04:00","redo":0.6,"redo_max":1.22,"txn":12.9}
+{"t":"wl_hist","side":"primary","b":"2026-11-11 04:00","e":"2026-11-11 05:00","redo":0.5,"redo_max":1.05,"txn":10.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-11 05:00","e":"2026-11-11 06:00","redo":0.5,"redo_max":1.05,"txn":10.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-11 06:00","e":"2026-11-11 07:00","redo":1.7,"redo_max":3.09,"txn":36.5}
+{"t":"wl_hist","side":"primary","b":"2026-11-11 07:00","e":"2026-11-11 08:00","redo":2.15,"redo_max":3.85,"txn":46.2}
+{"t":"wl_hist","side":"primary","b":"2026-11-11 08:00","e":"2026-11-11 09:00","redo":1.85,"redo_max":3.35,"txn":39.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-11 09:00","e":"2026-11-11 10:00","redo":2.3,"redo_max":4.11,"txn":49.4}
+{"t":"wl_hist","side":"primary","b":"2026-11-11 10:00","e":"2026-11-11 11:00","redo":2.0,"redo_max":3.6,"txn":43.0}
+{"t":"wl_hist","side":"primary","b":"2026-11-11 11:00","e":"2026-11-11 12:00","redo":1.7,"redo_max":3.09,"txn":36.5}
+{"t":"wl_hist","side":"primary","b":"2026-11-11 12:00","e":"2026-11-11 13:00","redo":2.15,"redo_max":3.85,"txn":46.2}
+{"t":"wl_hist","side":"primary","b":"2026-11-11 13:00","e":"2026-11-11 14:00","redo":1.85,"redo_max":3.35,"txn":39.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-11 14:00","e":"2026-11-11 15:00","redo":2.3,"redo_max":4.11,"txn":49.4}
+{"t":"wl_hist","side":"primary","b":"2026-11-11 15:00","e":"2026-11-11 16:00","redo":2.0,"redo_max":3.6,"txn":43.0}
+{"t":"wl_hist","side":"primary","b":"2026-11-11 16:00","e":"2026-11-11 17:00","redo":1.7,"redo_max":3.09,"txn":36.5}
+{"t":"wl_hist","side":"primary","b":"2026-11-11 17:00","e":"2026-11-11 18:00","redo":2.15,"redo_max":3.85,"txn":46.2}
+{"t":"wl_hist","side":"primary","b":"2026-11-11 18:00","e":"2026-11-11 19:00","redo":1.85,"redo_max":3.35,"txn":39.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-11 19:00","e":"2026-11-11 20:00","redo":2.3,"redo_max":4.11,"txn":49.4}
+{"t":"wl_hist","side":"primary","b":"2026-11-11 20:00","e":"2026-11-11 21:00","redo":2.0,"redo_max":3.6,"txn":43.0}
+{"t":"wl_hist","side":"primary","b":"2026-11-11 21:00","e":"2026-11-11 22:00","redo":1.7,"redo_max":3.09,"txn":36.5}
+{"t":"wl_hist","side":"primary","b":"2026-11-11 22:00","e":"2026-11-11 23:00","redo":2.15,"redo_max":3.85,"txn":46.2}
+{"t":"wl_hist","side":"primary","b":"2026-11-11 23:00","e":"2026-11-12 00:00","redo":1.85,"redo_max":3.35,"txn":39.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-12 00:00","e":"2026-11-12 01:00","redo":0.5,"redo_max":1.05,"txn":10.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-12 01:00","e":"2026-11-12 02:00","redo":0.5,"redo_max":1.05,"txn":10.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-12 02:00","e":"2026-11-12 03:00","redo":0.6,"redo_max":1.22,"txn":12.9}
+{"t":"wl_hist","side":"primary","b":"2026-11-12 03:00","e":"2026-11-12 04:00","redo":0.6,"redo_max":1.22,"txn":12.9}
+{"t":"wl_hist","side":"primary","b":"2026-11-12 04:00","e":"2026-11-12 05:00","redo":0.5,"redo_max":1.05,"txn":10.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-12 05:00","e":"2026-11-12 06:00","redo":0.5,"redo_max":1.05,"txn":10.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-12 06:00","e":"2026-11-12 07:00","redo":2.0,"redo_max":3.6,"txn":43.0}
+{"t":"wl_hist","side":"primary","b":"2026-11-12 07:00","e":"2026-11-12 08:00","redo":1.7,"redo_max":3.09,"txn":36.5}
+{"t":"wl_hist","side":"primary","b":"2026-11-12 08:00","e":"2026-11-12 09:00","redo":2.15,"redo_max":3.85,"txn":46.2}
+{"t":"wl_hist","side":"primary","b":"2026-11-12 09:00","e":"2026-11-12 10:00","redo":1.85,"redo_max":3.35,"txn":39.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-12 10:00","e":"2026-11-12 11:00","redo":2.3,"redo_max":4.11,"txn":49.4}
+{"t":"wl_hist","side":"primary","b":"2026-11-12 11:00","e":"2026-11-12 12:00","redo":2.0,"redo_max":3.6,"txn":43.0}
+{"t":"wl_hist","side":"primary","b":"2026-11-12 12:00","e":"2026-11-12 13:00","redo":1.7,"redo_max":3.09,"txn":36.5}
+{"t":"wl_hist","side":"primary","b":"2026-11-12 13:00","e":"2026-11-12 14:00","redo":2.15,"redo_max":3.85,"txn":46.2}
+{"t":"wl_hist","side":"primary","b":"2026-11-12 14:00","e":"2026-11-12 15:00","redo":1.85,"redo_max":3.35,"txn":39.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-12 15:00","e":"2026-11-12 16:00","redo":2.3,"redo_max":4.11,"txn":49.4}
+{"t":"wl_hist","side":"primary","b":"2026-11-12 16:00","e":"2026-11-12 17:00","redo":2.0,"redo_max":3.6,"txn":43.0}
+{"t":"wl_hist","side":"primary","b":"2026-11-12 17:00","e":"2026-11-12 18:00","redo":1.7,"redo_max":3.09,"txn":36.5}
+{"t":"wl_hist","side":"primary","b":"2026-11-12 18:00","e":"2026-11-12 19:00","redo":2.15,"redo_max":3.85,"txn":46.2}
+{"t":"wl_hist","side":"primary","b":"2026-11-12 19:00","e":"2026-11-12 20:00","redo":1.85,"redo_max":3.35,"txn":39.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-12 20:00","e":"2026-11-12 21:00","redo":2.3,"redo_max":4.11,"txn":49.4}
+{"t":"wl_hist","side":"primary","b":"2026-11-12 21:00","e":"2026-11-12 22:00","redo":2.0,"redo_max":3.6,"txn":43.0}
+{"t":"wl_hist","side":"primary","b":"2026-11-12 22:00","e":"2026-11-12 23:00","redo":1.7,"redo_max":3.09,"txn":36.5}
+{"t":"wl_hist","side":"primary","b":"2026-11-12 23:00","e":"2026-11-13 00:00","redo":2.15,"redo_max":3.85,"txn":46.2}
+{"t":"wl_hist","side":"primary","b":"2026-11-13 00:00","e":"2026-11-13 01:00","redo":0.5,"redo_max":1.05,"txn":10.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-13 01:00","e":"2026-11-13 02:00","redo":0.5,"redo_max":1.05,"txn":10.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-13 02:00","e":"2026-11-13 03:00","redo":0.6,"redo_max":1.22,"txn":12.9}
+{"t":"wl_hist","side":"primary","b":"2026-11-13 03:00","e":"2026-11-13 04:00","redo":0.6,"redo_max":1.22,"txn":12.9}
+{"t":"wl_hist","side":"primary","b":"2026-11-13 04:00","e":"2026-11-13 05:00","redo":0.5,"redo_max":1.05,"txn":10.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-13 05:00","e":"2026-11-13 06:00","redo":0.5,"redo_max":1.05,"txn":10.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-13 06:00","e":"2026-11-13 07:00","redo":2.3,"redo_max":4.11,"txn":49.4}
+{"t":"wl_hist","side":"primary","b":"2026-11-13 07:00","e":"2026-11-13 08:00","redo":2.0,"redo_max":3.6,"txn":43.0}
+{"t":"wl_hist","side":"primary","b":"2026-11-13 08:00","e":"2026-11-13 09:00","redo":1.7,"redo_max":3.09,"txn":36.5}
+{"t":"wl_hist","side":"primary","b":"2026-11-13 09:00","e":"2026-11-13 10:00","redo":2.15,"redo_max":3.85,"txn":46.2}
+{"t":"wl_hist","side":"primary","b":"2026-11-13 10:00","e":"2026-11-13 11:00","redo":1.85,"redo_max":3.35,"txn":39.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-13 11:00","e":"2026-11-13 12:00","redo":2.3,"redo_max":4.11,"txn":49.4}
+{"t":"wl_hist","side":"primary","b":"2026-11-13 12:00","e":"2026-11-13 13:00","redo":2.0,"redo_max":3.6,"txn":43.0}
+{"t":"wl_hist","side":"primary","b":"2026-11-13 13:00","e":"2026-11-13 14:00","redo":1.7,"redo_max":3.09,"txn":36.5}
+{"t":"wl_hist","side":"primary","b":"2026-11-13 14:00","e":"2026-11-13 15:00","redo":2.15,"redo_max":3.85,"txn":46.2}
+{"t":"wl_hist","side":"primary","b":"2026-11-13 15:00","e":"2026-11-13 16:00","redo":1.85,"redo_max":3.35,"txn":39.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-13 16:00","e":"2026-11-13 17:00","redo":2.3,"redo_max":4.11,"txn":49.4}
+{"t":"wl_hist","side":"primary","b":"2026-11-13 17:00","e":"2026-11-13 18:00","redo":2.0,"redo_max":3.6,"txn":43.0}
+{"t":"wl_hist","side":"primary","b":"2026-11-13 18:00","e":"2026-11-13 19:00","redo":1.7,"redo_max":3.09,"txn":36.5}
+{"t":"wl_hist","side":"primary","b":"2026-11-13 19:00","e":"2026-11-13 20:00","redo":2.15,"redo_max":3.85,"txn":46.2}
+{"t":"wl_hist","side":"primary","b":"2026-11-13 20:00","e":"2026-11-13 21:00","redo":1.31,"redo_max":2.4,"txn":28.2}
+{"t":"wl_hist","side":"primary","b":"2026-11-13 21:00","e":"2026-11-13 22:00","redo":2.3,"redo_max":4.11,"txn":49.4}
+{"t":"wl_hist","side":"primary","b":"2026-11-13 22:00","e":"2026-11-13 23:00","redo":2.0,"redo_max":3.6,"txn":43.0}
+{"t":"wl_hist","side":"primary","b":"2026-11-13 23:00","e":"2026-11-14 00:00","redo":1.7,"redo_max":3.09,"txn":36.5}
+{"t":"wl_hist","side":"primary","b":"2026-11-14 00:00","e":"2026-11-14 01:00","redo":0.5,"redo_max":1.05,"txn":10.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-14 01:00","e":"2026-11-14 02:00","redo":0.5,"redo_max":1.05,"txn":10.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-14 02:00","e":"2026-11-14 03:00","redo":0.6,"redo_max":1.22,"txn":12.9}
+{"t":"wl_hist","side":"primary","b":"2026-11-14 03:00","e":"2026-11-14 04:00","redo":0.6,"redo_max":1.22,"txn":12.9}
+{"t":"wl_hist","side":"primary","b":"2026-11-14 04:00","e":"2026-11-14 05:00","redo":0.5,"redo_max":1.05,"txn":10.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-14 05:00","e":"2026-11-14 06:00","redo":0.5,"redo_max":1.05,"txn":10.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-14 06:00","e":"2026-11-14 07:00","redo":1.85,"redo_max":3.35,"txn":39.8}
+{"t":"wl_hist","side":"primary","b":"2026-11-14 07:00","e":"2026-11-14 08:00","redo":2.3,"redo_max":4.11,"txn":49.4}
+{"t":"wl_hist","side":"primary","b":"2026-11-14 08:00","e":"2026-11-14 09:00","redo":2.0,"redo_max":3.6,"txn":43.0}
+{"t":"alsync","side":"primary","ts":"2026-10-16 20:55:42","msg":"LGWR (PID:10224042): LAD:2 is SYNCHRONIZED"}
+{"t":"alsync","side":"primary","ts":"2026-10-23 20:53:44","msg":"LGWR (PID:10224042): LAD:2 is SYNCHRONIZED"}
+{"t":"alsync","side":"primary","ts":"2026-10-30 20:59:43","msg":"LGWR (PID:10224042): LAD:2 is SYNCHRONIZED"}
+{"t":"alsync","side":"primary","ts":"2026-11-06 20:52:27","msg":"LGWR (PID:10224042): LAD:2 is SYNCHRONIZED"}
+{"t":"alsync","side":"primary","ts":"2026-11-13 20:53:27","msg":"LGWR (PID:10224042): LAD:2 is SYNCHRONIZED"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-10-16 02:00:02","z":"2026-10-16 02:04:38","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP DB INCR","a":"2026-10-16 20:32:10","z":"2026-10-16 21:13:30","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-10-17 02:00:03","z":"2026-10-17 02:04:40","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-10-18 02:00:04","z":"2026-10-18 02:04:42","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"DELETE","a":"2026-10-18 03:30:12","z":"2026-10-18 03:31:07","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-10-19 02:00:05","z":"2026-10-19 02:04:44","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-10-20 02:00:06","z":"2026-10-20 02:04:46","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-10-21 02:00:00","z":"2026-10-21 02:04:41","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-10-22 02:00:01","z":"2026-10-22 02:04:43","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-10-23 02:00:02","z":"2026-10-23 02:04:45","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP DB INCR","a":"2026-10-23 20:33:00","z":"2026-10-23 21:14:20","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-10-24 02:00:03","z":"2026-10-24 02:04:47","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-10-25 02:00:04","z":"2026-10-25 02:04:49","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"DELETE","a":"2026-10-25 03:30:12","z":"2026-10-25 03:31:07","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-10-26 02:00:05","z":"2026-10-26 02:04:51","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-10-27 02:00:06","z":"2026-10-27 02:04:53","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-10-28 02:00:00","z":"2026-10-28 02:04:48","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-10-29 02:00:01","z":"2026-10-29 02:04:50","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-10-30 02:00:02","z":"2026-10-30 02:04:52","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP DB INCR","a":"2026-10-30 20:29:50","z":"2026-10-30 21:11:10","st":"COMPLETED WITH WARNINGS"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-10-31 02:00:03","z":"2026-10-31 02:04:54","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-11-01 02:00:01","z":"2026-11-01 02:04:22","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"DELETE","a":"2026-11-01 03:30:12","z":"2026-11-01 03:31:07","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-11-02 02:00:02","z":"2026-11-02 02:04:24","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-11-03 02:00:03","z":"2026-11-03 02:04:26","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-11-04 02:00:04","z":"2026-11-04 02:04:28","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-11-05 02:00:05","z":"2026-11-05 02:04:30","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-11-06 02:00:06","z":"2026-11-06 02:04:32","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP DB INCR","a":"2026-11-06 20:31:05","z":"2026-11-06 21:12:25","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-11-07 02:00:00","z":"2026-11-07 02:04:27","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-11-08 02:00:01","z":"2026-11-08 02:04:29","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"DELETE","a":"2026-11-08 03:30:12","z":"2026-11-08 03:31:07","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-11-09 02:00:02","z":"2026-11-09 02:04:31","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-11-10 02:00:03","z":"2026-11-10 02:04:33","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-11-11 02:00:04","z":"2026-11-11 02:04:35","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-11-12 02:00:05","z":"2026-11-12 02:04:37","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-11-13 02:00:06","z":"2026-11-13 02:04:39","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP DB INCR","a":"2026-11-13 20:31:30","z":"2026-11-13 21:12:50","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-11-14 02:00:00","z":"2026-11-14 02:04:34","st":"COMPLETED"}
+{"t":"act","side":"primary","kind":"job","name":"APP_OWNER.NIGHTLY_CLEANUP","con":0,"a":"2026-10-16 01:30:00","z":"2026-10-16 01:33:00","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"SYS.PURGE_LOG","con":0,"a":"2026-10-16 03:00:00","z":"2026-10-16 03:00:13","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"APP_OWNER.EXPORT_REPORTS","con":0,"a":"2026-10-16 20:40:30","z":"2026-10-16 20:43:12","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"APP_OWNER.NIGHTLY_CLEANUP","con":0,"a":"2026-10-17 01:30:00","z":"2026-10-17 01:33:07","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"SYS.PURGE_LOG","con":0,"a":"2026-10-17 03:00:00","z":"2026-10-17 03:00:14","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"APP_OWNER.NIGHTLY_CLEANUP","con":0,"a":"2026-10-18 01:30:00","z":"2026-10-18 01:33:14","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"SYS.PURGE_LOG","con":0,"a":"2026-10-18 03:00:00","z":"2026-10-18 03:00:12","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"APP_OWNER.NIGHTLY_CLEANUP","con":0,"a":"2026-10-19 01:30:00","z":"2026-10-19 01:33:21","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"SYS.PURGE_LOG","con":0,"a":"2026-10-19 03:00:00","z":"2026-10-19 03:00:13","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"APP_OWNER.NIGHTLY_CLEANUP","con":0,"a":"2026-10-20 01:30:00","z":"2026-10-20 01:33:00","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"SYS.PURGE_LOG","con":0,"a":"2026-10-20 03:00:00","z":"2026-10-20 03:00:14","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"APP_OWNER.NIGHTLY_CLEANUP","con":0,"a":"2026-10-21 01:30:00","z":"2026-10-21 01:33:07","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"SYS.PURGE_LOG","con":0,"a":"2026-10-21 03:00:00","z":"2026-10-21 03:00:12","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"APP_OWNER.NIGHTLY_CLEANUP","con":0,"a":"2026-10-22 01:30:00","z":"2026-10-22 01:33:14","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"SYS.PURGE_LOG","con":0,"a":"2026-10-22 03:00:00","z":"2026-10-22 03:00:13","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"APP_OWNER.NIGHTLY_CLEANUP","con":0,"a":"2026-10-23 01:30:00","z":"2026-10-23 01:33:21","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"SYS.PURGE_LOG","con":0,"a":"2026-10-23 03:00:00","z":"2026-10-23 03:00:14","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"APP_OWNER.NIGHTLY_CLEANUP","con":0,"a":"2026-10-24 01:30:00","z":"2026-10-24 01:33:00","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"SYS.PURGE_LOG","con":0,"a":"2026-10-24 03:00:00","z":"2026-10-24 03:00:12","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"APP_OWNER.NIGHTLY_CLEANUP","con":0,"a":"2026-10-25 01:30:00","z":"2026-10-25 01:33:07","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"SYS.PURGE_LOG","con":0,"a":"2026-10-25 03:00:00","z":"2026-10-25 03:00:13","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"APP_OWNER.NIGHTLY_CLEANUP","con":0,"a":"2026-10-26 01:30:00","z":"2026-10-26 01:33:14","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"SYS.PURGE_LOG","con":0,"a":"2026-10-26 03:00:00","z":"2026-10-26 03:00:14","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"APP_OWNER.NIGHTLY_CLEANUP","con":0,"a":"2026-10-27 01:30:00","z":"2026-10-27 01:33:21","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"SYS.PURGE_LOG","con":0,"a":"2026-10-27 03:00:00","z":"2026-10-27 03:00:12","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"APP_OWNER.NIGHTLY_CLEANUP","con":0,"a":"2026-10-28 01:30:00","z":"2026-10-28 01:33:00","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"SYS.PURGE_LOG","con":0,"a":"2026-10-28 03:00:00","z":"2026-10-28 03:00:13","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"APP_OWNER.NIGHTLY_CLEANUP","con":0,"a":"2026-10-29 01:30:00","z":"2026-10-29 01:33:07","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"SYS.PURGE_LOG","con":0,"a":"2026-10-29 03:00:00","z":"2026-10-29 03:00:14","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"APP_OWNER.NIGHTLY_CLEANUP","con":0,"a":"2026-10-30 01:30:00","z":"2026-10-30 01:33:14","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"SYS.PURGE_LOG","con":0,"a":"2026-10-30 03:00:00","z":"2026-10-30 03:00:12","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"APP_OWNER.NIGHTLY_CLEANUP","con":0,"a":"2026-10-31 01:30:00","z":"2026-10-31 01:33:21","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"SYS.PURGE_LOG","con":0,"a":"2026-10-31 03:00:00","z":"2026-10-31 03:00:13","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"APP_OWNER.NIGHTLY_CLEANUP","con":0,"a":"2026-11-01 01:30:00","z":"2026-11-01 01:33:07","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"SYS.PURGE_LOG","con":0,"a":"2026-11-01 03:00:00","z":"2026-11-01 03:00:13","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"APP_OWNER.NIGHTLY_CLEANUP","con":0,"a":"2026-11-02 01:30:00","z":"2026-11-02 01:33:14","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"SYS.PURGE_LOG","con":0,"a":"2026-11-02 03:00:00","z":"2026-11-02 03:00:14","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"APP_OWNER.NIGHTLY_CLEANUP","con":0,"a":"2026-11-03 01:30:00","z":"2026-11-03 01:33:21","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"SYS.PURGE_LOG","con":0,"a":"2026-11-03 03:00:00","z":"2026-11-03 03:00:12","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"APP_OWNER.NIGHTLY_CLEANUP","con":0,"a":"2026-11-04 01:30:00","z":"2026-11-04 01:33:00","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"SYS.PURGE_LOG","con":0,"a":"2026-11-04 03:00:00","z":"2026-11-04 03:00:13","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"APP_OWNER.NIGHTLY_CLEANUP","con":0,"a":"2026-11-05 01:30:00","z":"2026-11-05 01:33:07","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"SYS.PURGE_LOG","con":0,"a":"2026-11-05 03:00:00","z":"2026-11-05 03:00:14","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"APP_OWNER.NIGHTLY_CLEANUP","con":0,"a":"2026-11-06 01:30:00","z":"2026-11-06 01:33:14","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"SYS.PURGE_LOG","con":0,"a":"2026-11-06 03:00:00","z":"2026-11-06 03:00:12","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"APP_OWNER.EXPORT_REPORTS","con":0,"a":"2026-11-06 20:37:10","z":"2026-11-06 20:40:05","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"APP_OWNER.NIGHTLY_CLEANUP","con":0,"a":"2026-11-07 01:30:00","z":"2026-11-07 01:33:21","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"SYS.PURGE_LOG","con":0,"a":"2026-11-07 03:00:00","z":"2026-11-07 03:00:13","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"APP_OWNER.NIGHTLY_CLEANUP","con":0,"a":"2026-11-08 01:30:00","z":"2026-11-08 01:33:00","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"SYS.PURGE_LOG","con":0,"a":"2026-11-08 03:00:00","z":"2026-11-08 03:00:14","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"APP_OWNER.NIGHTLY_CLEANUP","con":0,"a":"2026-11-09 01:30:00","z":"2026-11-09 01:33:07","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"SYS.PURGE_LOG","con":0,"a":"2026-11-09 03:00:00","z":"2026-11-09 03:00:12","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"APP_OWNER.NIGHTLY_CLEANUP","con":0,"a":"2026-11-10 01:30:00","z":"2026-11-10 01:33:14","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"SYS.PURGE_LOG","con":0,"a":"2026-11-10 03:00:00","z":"2026-11-10 03:00:13","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"APP_OWNER.NIGHTLY_CLEANUP","con":0,"a":"2026-11-11 01:30:00","z":"2026-11-11 01:33:21","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"SYS.PURGE_LOG","con":0,"a":"2026-11-11 03:00:00","z":"2026-11-11 03:00:14","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"APP_OWNER.NIGHTLY_CLEANUP","con":0,"a":"2026-11-12 01:30:00","z":"2026-11-12 01:33:00","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"SYS.PURGE_LOG","con":0,"a":"2026-11-12 03:00:00","z":"2026-11-12 03:00:12","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"APP_OWNER.NIGHTLY_CLEANUP","con":0,"a":"2026-11-13 01:30:00","z":"2026-11-13 01:33:07","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"SYS.PURGE_LOG","con":0,"a":"2026-11-13 03:00:00","z":"2026-11-13 03:00:13","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"APP_OWNER.NIGHTLY_CLEANUP","con":0,"a":"2026-11-14 01:30:00","z":"2026-11-14 01:33:14","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"SYS.PURGE_LOG","con":0,"a":"2026-11-14 03:00:00","z":"2026-11-14 03:00:14","st":"SUCCEEDED","freq":false,"n":1}
+{"t":"act","side":"primary","kind":"job","name":"APP_OWNER.REFRESH_MV_STOCK","con":0,"a":"2026-10-15 09:15:00","z":"2026-11-14 09:00:00","st":null,"freq":true,"n":2880}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-18 03:12:09","thr":1,"seq":114059}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-18 04:40:09","thr":1,"seq":114060}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-18 06:12:09","thr":1,"seq":114061}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-18 07:37:09","thr":1,"seq":114062}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-18 09:06:09","thr":1,"seq":114063}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-18 10:39:09","thr":1,"seq":114064}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-18 12:05:09","thr":1,"seq":114065}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-18 13:35:09","thr":1,"seq":114066}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-18 15:09:09","thr":1,"seq":114067}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-18 16:36:09","thr":1,"seq":114068}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-18 18:07:09","thr":1,"seq":114069}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-18 19:31:09","thr":1,"seq":114070}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-18 20:59:09","thr":1,"seq":114071}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-18 22:31:09","thr":1,"seq":114072}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-18 23:56:09","thr":1,"seq":114073}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-19 01:25:09","thr":1,"seq":114074}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-19 02:58:09","thr":1,"seq":114075}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-19 04:24:09","thr":1,"seq":114076}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-19 05:54:09","thr":1,"seq":114077}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-19 07:28:09","thr":1,"seq":114078}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-19 08:55:09","thr":1,"seq":114079}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-19 10:26:09","thr":1,"seq":114080}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-19 11:50:09","thr":1,"seq":114081}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-19 13:18:09","thr":1,"seq":114082}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-19 14:50:09","thr":1,"seq":114083}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-19 16:15:09","thr":1,"seq":114084}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-19 17:44:09","thr":1,"seq":114085}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-19 19:17:09","thr":1,"seq":114086}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-19 20:43:09","thr":1,"seq":114087}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-19 22:13:09","thr":1,"seq":114088}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-19 23:47:09","thr":1,"seq":114089}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-20 01:14:09","thr":1,"seq":114090}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-20 02:45:09","thr":1,"seq":114091}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-20 04:09:09","thr":1,"seq":114092}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-20 05:37:09","thr":1,"seq":114093}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-20 07:09:09","thr":1,"seq":114094}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-20 08:34:09","thr":1,"seq":114095}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-20 10:03:09","thr":1,"seq":114096}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-20 11:36:09","thr":1,"seq":114097}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-20 13:02:09","thr":1,"seq":114098}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-20 14:32:09","thr":1,"seq":114099}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-20 16:06:09","thr":1,"seq":114100}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-20 17:33:09","thr":1,"seq":114101}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-20 19:04:09","thr":1,"seq":114102}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-20 20:28:09","thr":1,"seq":114103}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-20 21:56:09","thr":1,"seq":114104}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-20 23:28:09","thr":1,"seq":114105}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-21 00:53:09","thr":1,"seq":114106}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-21 02:22:09","thr":1,"seq":114107}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-21 03:55:09","thr":1,"seq":114108}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-21 05:21:09","thr":1,"seq":114109}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-21 06:51:09","thr":1,"seq":114110}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-21 08:25:09","thr":1,"seq":114111}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-21 09:52:09","thr":1,"seq":114112}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-21 11:23:09","thr":1,"seq":114113}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-21 12:47:09","thr":1,"seq":114114}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-21 14:15:09","thr":1,"seq":114115}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-21 15:47:09","thr":1,"seq":114116}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-21 17:12:09","thr":1,"seq":114117}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-21 18:41:09","thr":1,"seq":114118}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-21 20:14:09","thr":1,"seq":114119}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-21 21:40:09","thr":1,"seq":114120}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-21 23:10:09","thr":1,"seq":114121}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-22 00:44:09","thr":1,"seq":114122}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-22 02:11:09","thr":1,"seq":114123}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-22 03:42:09","thr":1,"seq":114124}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-22 05:06:09","thr":1,"seq":114125}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-22 06:34:09","thr":1,"seq":114126}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-22 08:06:09","thr":1,"seq":114127}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-22 09:31:09","thr":1,"seq":114128}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-22 11:00:09","thr":1,"seq":114129}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-22 12:33:09","thr":1,"seq":114130}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-22 13:59:09","thr":1,"seq":114131}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-22 15:29:09","thr":1,"seq":114132}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-22 17:03:09","thr":1,"seq":114133}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-22 18:30:09","thr":1,"seq":114134}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-22 20:01:09","thr":1,"seq":114135}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-22 21:25:09","thr":1,"seq":114136}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-22 22:53:09","thr":1,"seq":114137}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-23 00:25:09","thr":1,"seq":114138}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-23 01:50:09","thr":1,"seq":114139}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-23 03:19:09","thr":1,"seq":114140}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-23 04:52:09","thr":1,"seq":114141}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-23 06:18:09","thr":1,"seq":114142}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-23 07:48:09","thr":1,"seq":114143}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-23 09:22:09","thr":1,"seq":114144}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-23 10:49:09","thr":1,"seq":114145}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-23 12:20:09","thr":1,"seq":114146}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-23 13:44:09","thr":1,"seq":114147}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-23 15:12:09","thr":1,"seq":114148}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-23 16:44:09","thr":1,"seq":114149}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-23 18:09:09","thr":1,"seq":114150}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-23 19:38:09","thr":1,"seq":114151}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-23 20:39:41","thr":1,"seq":114152}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-23 21:11:09","thr":1,"seq":114153}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-23 22:37:09","thr":1,"seq":114154}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-24 00:07:09","thr":1,"seq":114155}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-24 01:41:09","thr":1,"seq":114156}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-24 03:08:09","thr":1,"seq":114157}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-24 04:39:09","thr":1,"seq":114158}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-24 06:03:09","thr":1,"seq":114159}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-24 07:31:09","thr":1,"seq":114160}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-24 09:03:09","thr":1,"seq":114161}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-24 10:28:09","thr":1,"seq":114162}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-24 11:57:09","thr":1,"seq":114163}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-24 13:30:09","thr":1,"seq":114164}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-24 14:56:09","thr":1,"seq":114165}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-24 16:26:09","thr":1,"seq":114166}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-24 18:00:09","thr":1,"seq":114167}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-24 19:27:09","thr":1,"seq":114168}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-24 20:58:09","thr":1,"seq":114169}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-24 22:22:09","thr":1,"seq":114170}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-24 23:50:09","thr":1,"seq":114171}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-25 01:22:09","thr":1,"seq":114172}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-25 02:47:09","thr":1,"seq":114173}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-25 04:16:09","thr":1,"seq":114174}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-25 05:49:09","thr":1,"seq":114175}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-25 07:15:09","thr":1,"seq":114176}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-25 08:45:09","thr":1,"seq":114177}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-25 10:19:09","thr":1,"seq":114178}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-25 11:46:09","thr":1,"seq":114179}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-25 13:17:09","thr":1,"seq":114180}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-25 14:41:09","thr":1,"seq":114181}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-25 16:09:09","thr":1,"seq":114182}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-25 17:41:09","thr":1,"seq":114183}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-25 19:06:09","thr":1,"seq":114184}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-25 20:35:09","thr":1,"seq":114185}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-25 22:08:09","thr":1,"seq":114186}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-25 23:34:09","thr":1,"seq":114187}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-26 01:04:09","thr":1,"seq":114188}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-26 02:38:09","thr":1,"seq":114189}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-26 04:05:09","thr":1,"seq":114190}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-26 05:36:09","thr":1,"seq":114191}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-26 07:00:09","thr":1,"seq":114192}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-26 08:28:09","thr":1,"seq":114193}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-26 10:00:09","thr":1,"seq":114194}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-26 11:25:09","thr":1,"seq":114195}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-26 12:54:09","thr":1,"seq":114196}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-26 14:27:09","thr":1,"seq":114197}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-26 15:53:09","thr":1,"seq":114198}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-26 17:23:09","thr":1,"seq":114199}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-26 18:57:09","thr":1,"seq":114200}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-26 20:24:09","thr":1,"seq":114201}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-26 21:55:09","thr":1,"seq":114202}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-26 23:19:09","thr":1,"seq":114203}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-27 00:47:09","thr":1,"seq":114204}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-27 02:19:09","thr":1,"seq":114205}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-27 03:44:09","thr":1,"seq":114206}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-27 05:13:09","thr":1,"seq":114207}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-27 06:46:09","thr":1,"seq":114208}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-27 08:12:09","thr":1,"seq":114209}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-27 09:42:09","thr":1,"seq":114210}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-27 11:16:09","thr":1,"seq":114211}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-27 12:43:09","thr":1,"seq":114212}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-27 14:14:09","thr":1,"seq":114213}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-27 15:38:09","thr":1,"seq":114214}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-27 17:06:09","thr":1,"seq":114215}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-27 18:38:09","thr":1,"seq":114216}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-27 20:03:09","thr":1,"seq":114217}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-27 21:32:09","thr":1,"seq":114218}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-27 23:05:09","thr":1,"seq":114219}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-28 00:31:09","thr":1,"seq":114220}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-28 02:01:09","thr":1,"seq":114221}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-28 03:35:09","thr":1,"seq":114222}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-28 05:02:09","thr":1,"seq":114223}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-28 06:33:09","thr":1,"seq":114224}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-28 07:57:09","thr":1,"seq":114225}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-28 09:25:09","thr":1,"seq":114226}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-28 10:57:09","thr":1,"seq":114227}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-28 12:22:09","thr":1,"seq":114228}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-28 13:51:09","thr":1,"seq":114229}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-28 15:24:09","thr":1,"seq":114230}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-28 16:50:09","thr":1,"seq":114231}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-28 18:20:09","thr":1,"seq":114232}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-28 19:54:09","thr":1,"seq":114233}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-28 21:21:09","thr":1,"seq":114234}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-28 22:52:09","thr":1,"seq":114235}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-29 00:16:09","thr":1,"seq":114236}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-29 01:44:09","thr":1,"seq":114237}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-29 03:16:09","thr":1,"seq":114238}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-29 04:41:09","thr":1,"seq":114239}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-29 06:10:09","thr":1,"seq":114240}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-29 07:43:09","thr":1,"seq":114241}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-29 09:09:09","thr":1,"seq":114242}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-29 10:39:09","thr":1,"seq":114243}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-29 12:13:09","thr":1,"seq":114244}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-29 13:40:09","thr":1,"seq":114245}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-29 15:11:09","thr":1,"seq":114246}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-29 16:35:09","thr":1,"seq":114247}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-29 18:03:09","thr":1,"seq":114248}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-29 19:35:09","thr":1,"seq":114249}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-29 21:00:09","thr":1,"seq":114250}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-29 22:29:09","thr":1,"seq":114251}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-30 00:02:09","thr":1,"seq":114252}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-30 01:28:09","thr":1,"seq":114253}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-30 02:58:09","thr":1,"seq":114254}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-30 04:32:09","thr":1,"seq":114255}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-30 05:59:09","thr":1,"seq":114256}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-30 07:30:09","thr":1,"seq":114257}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-30 08:54:09","thr":1,"seq":114258}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-30 10:22:09","thr":1,"seq":114259}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-30 11:54:09","thr":1,"seq":114260}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-30 13:19:09","thr":1,"seq":114261}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-30 14:48:09","thr":1,"seq":114262}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-30 16:21:09","thr":1,"seq":114263}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-30 17:47:09","thr":1,"seq":114264}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-30 19:17:09","thr":1,"seq":114265}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-30 20:51:09","thr":1,"seq":114266}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-30 22:18:09","thr":1,"seq":114267}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-30 23:49:09","thr":1,"seq":114268}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-31 01:13:09","thr":1,"seq":114269}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-31 02:41:09","thr":1,"seq":114270}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-31 04:13:09","thr":1,"seq":114271}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-31 05:38:09","thr":1,"seq":114272}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-31 07:07:09","thr":1,"seq":114273}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-31 08:40:09","thr":1,"seq":114274}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-31 10:06:09","thr":1,"seq":114275}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-31 11:36:09","thr":1,"seq":114276}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-31 13:10:09","thr":1,"seq":114277}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-31 14:37:09","thr":1,"seq":114278}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-31 16:08:09","thr":1,"seq":114279}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-31 17:32:09","thr":1,"seq":114280}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-31 19:00:09","thr":1,"seq":114281}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-31 20:32:09","thr":1,"seq":114282}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-31 21:57:09","thr":1,"seq":114283}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-10-31 23:26:09","thr":1,"seq":114284}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-01 00:59:09","thr":1,"seq":114285}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-01 02:25:09","thr":1,"seq":114286}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-01 03:55:09","thr":1,"seq":114287}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-01 05:29:09","thr":1,"seq":114288}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-01 06:56:09","thr":1,"seq":114289}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-01 08:27:09","thr":1,"seq":114290}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-01 09:51:09","thr":1,"seq":114291}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-01 11:19:09","thr":1,"seq":114292}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-01 12:51:09","thr":1,"seq":114293}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-01 14:16:09","thr":1,"seq":114294}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-01 15:45:09","thr":1,"seq":114295}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-01 17:18:09","thr":1,"seq":114296}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-01 18:44:09","thr":1,"seq":114297}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-01 20:14:09","thr":1,"seq":114298}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-01 21:48:09","thr":1,"seq":114299}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-01 23:15:09","thr":1,"seq":114300}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-02 00:46:09","thr":1,"seq":114301}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-02 02:10:09","thr":1,"seq":114302}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-02 03:38:09","thr":1,"seq":114303}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-02 05:10:09","thr":1,"seq":114304}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-02 06:35:09","thr":1,"seq":114305}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-02 08:04:09","thr":1,"seq":114306}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-02 09:37:09","thr":1,"seq":114307}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-02 11:03:09","thr":1,"seq":114308}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-02 12:33:09","thr":1,"seq":114309}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-02 14:07:09","thr":1,"seq":114310}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-02 15:34:09","thr":1,"seq":114311}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-02 17:05:09","thr":1,"seq":114312}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-02 18:29:09","thr":1,"seq":114313}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-02 19:57:09","thr":1,"seq":114314}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-02 21:29:09","thr":1,"seq":114315}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-02 22:54:09","thr":1,"seq":114316}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-03 00:23:09","thr":1,"seq":114317}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-03 01:56:09","thr":1,"seq":114318}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-03 03:22:09","thr":1,"seq":114319}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-03 04:52:09","thr":1,"seq":114320}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-03 06:26:09","thr":1,"seq":114321}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-03 07:53:09","thr":1,"seq":114322}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-03 09:24:09","thr":1,"seq":114323}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-03 10:48:09","thr":1,"seq":114324}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-03 12:16:09","thr":1,"seq":114325}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-03 13:48:09","thr":1,"seq":114326}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-03 15:13:09","thr":1,"seq":114327}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-03 16:42:09","thr":1,"seq":114328}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-03 18:15:09","thr":1,"seq":114329}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-03 19:41:09","thr":1,"seq":114330}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-03 21:11:09","thr":1,"seq":114331}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-03 22:45:09","thr":1,"seq":114332}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-04 00:12:09","thr":1,"seq":114333}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-04 01:43:09","thr":1,"seq":114334}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-04 03:07:09","thr":1,"seq":114335}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-04 04:35:09","thr":1,"seq":114336}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-04 06:07:09","thr":1,"seq":114337}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-04 07:32:09","thr":1,"seq":114338}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-04 09:01:09","thr":1,"seq":114339}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-04 10:34:09","thr":1,"seq":114340}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-04 12:00:09","thr":1,"seq":114341}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-04 13:30:09","thr":1,"seq":114342}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-04 15:04:09","thr":1,"seq":114343}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-04 16:31:09","thr":1,"seq":114344}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-04 18:02:09","thr":1,"seq":114345}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-04 19:26:09","thr":1,"seq":114346}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-04 20:54:09","thr":1,"seq":114347}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-04 22:26:09","thr":1,"seq":114348}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-04 23:51:09","thr":1,"seq":114349}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-05 01:20:09","thr":1,"seq":114350}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-05 02:53:09","thr":1,"seq":114351}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-05 04:19:09","thr":1,"seq":114352}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-05 05:49:09","thr":1,"seq":114353}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-05 07:23:09","thr":1,"seq":114354}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-05 08:50:09","thr":1,"seq":114355}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-05 10:21:09","thr":1,"seq":114356}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-05 11:45:09","thr":1,"seq":114357}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-05 13:13:09","thr":1,"seq":114358}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-05 14:45:09","thr":1,"seq":114359}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-05 16:10:09","thr":1,"seq":114360}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-05 17:39:09","thr":1,"seq":114361}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-05 19:12:09","thr":1,"seq":114362}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-05 20:38:09","thr":1,"seq":114363}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-05 22:08:09","thr":1,"seq":114364}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-05 23:42:09","thr":1,"seq":114365}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-06 01:09:09","thr":1,"seq":114366}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-06 02:40:09","thr":1,"seq":114367}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-06 04:04:09","thr":1,"seq":114368}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-06 05:32:09","thr":1,"seq":114369}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-06 07:04:09","thr":1,"seq":114370}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-06 08:29:09","thr":1,"seq":114371}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-06 09:58:09","thr":1,"seq":114372}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-06 11:31:09","thr":1,"seq":114373}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-06 12:57:09","thr":1,"seq":114374}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-06 14:27:09","thr":1,"seq":114375}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-06 16:01:09","thr":1,"seq":114376}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-06 17:28:09","thr":1,"seq":114377}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-06 18:59:09","thr":1,"seq":114378}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-06 20:38:30","thr":1,"seq":114379}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-06 21:51:09","thr":1,"seq":114380}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-06 23:23:09","thr":1,"seq":114381}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-07 00:48:09","thr":1,"seq":114382}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-07 02:17:09","thr":1,"seq":114383}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-07 03:50:09","thr":1,"seq":114384}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-07 05:16:09","thr":1,"seq":114385}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-07 06:46:09","thr":1,"seq":114386}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-07 08:20:09","thr":1,"seq":114387}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-07 09:47:09","thr":1,"seq":114388}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-07 11:18:09","thr":1,"seq":114389}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-07 12:42:09","thr":1,"seq":114390}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-07 14:10:09","thr":1,"seq":114391}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-07 15:42:09","thr":1,"seq":114392}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-07 17:07:09","thr":1,"seq":114393}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-07 18:36:09","thr":1,"seq":114394}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-07 20:09:09","thr":1,"seq":114395}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-07 21:35:09","thr":1,"seq":114396}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-07 23:05:09","thr":1,"seq":114397}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-08 00:39:09","thr":1,"seq":114398}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-08 02:06:09","thr":1,"seq":114399}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-08 03:37:09","thr":1,"seq":114400}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-08 05:01:09","thr":1,"seq":114401}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-08 06:29:09","thr":1,"seq":114402}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-08 08:01:09","thr":1,"seq":114403}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-08 09:26:09","thr":1,"seq":114404}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-08 10:55:09","thr":1,"seq":114405}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-08 12:28:09","thr":1,"seq":114406}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-08 13:54:09","thr":1,"seq":114407}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-08 15:24:09","thr":1,"seq":114408}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-08 16:58:09","thr":1,"seq":114409}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-08 18:25:09","thr":1,"seq":114410}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-08 19:56:09","thr":1,"seq":114411}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-08 21:20:09","thr":1,"seq":114412}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-08 22:48:09","thr":1,"seq":114413}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-09 00:20:09","thr":1,"seq":114414}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-09 01:45:09","thr":1,"seq":114415}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-09 03:14:09","thr":1,"seq":114416}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-09 04:47:09","thr":1,"seq":114417}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-09 06:13:09","thr":1,"seq":114418}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-09 07:43:09","thr":1,"seq":114419}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-09 09:17:09","thr":1,"seq":114420}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-09 10:44:09","thr":1,"seq":114421}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-09 12:15:09","thr":1,"seq":114422}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-09 13:39:09","thr":1,"seq":114423}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-09 15:07:09","thr":1,"seq":114424}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-09 16:39:09","thr":1,"seq":114425}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-09 18:04:09","thr":1,"seq":114426}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-09 19:33:09","thr":1,"seq":114427}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-09 21:06:09","thr":1,"seq":114428}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-09 22:32:09","thr":1,"seq":114429}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-10 00:02:09","thr":1,"seq":114430}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-10 01:36:09","thr":1,"seq":114431}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-10 03:03:09","thr":1,"seq":114432}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-10 04:34:09","thr":1,"seq":114433}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-10 05:58:09","thr":1,"seq":114434}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-10 07:26:09","thr":1,"seq":114435}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-10 08:58:09","thr":1,"seq":114436}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-10 10:23:09","thr":1,"seq":114437}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-10 11:52:09","thr":1,"seq":114438}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-10 13:25:09","thr":1,"seq":114439}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-10 14:51:09","thr":1,"seq":114440}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-10 16:21:09","thr":1,"seq":114441}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-10 17:55:09","thr":1,"seq":114442}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-10 19:22:09","thr":1,"seq":114443}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-10 20:53:09","thr":1,"seq":114444}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-10 22:17:09","thr":1,"seq":114445}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-10 23:45:09","thr":1,"seq":114446}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-11 01:17:09","thr":1,"seq":114447}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-11 02:42:09","thr":1,"seq":114448}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-11 04:11:09","thr":1,"seq":114449}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-11 05:44:09","thr":1,"seq":114450}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-11 07:10:09","thr":1,"seq":114451}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-11 08:40:09","thr":1,"seq":114452}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-11 10:14:09","thr":1,"seq":114453}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-11 11:41:09","thr":1,"seq":114454}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-11 13:12:09","thr":1,"seq":114455}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-11 14:36:09","thr":1,"seq":114456}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-11 16:04:09","thr":1,"seq":114457}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-11 17:36:09","thr":1,"seq":114458}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-11 19:01:09","thr":1,"seq":114459}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-11 20:30:09","thr":1,"seq":114460}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-11 22:03:09","thr":1,"seq":114461}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-11 23:29:09","thr":1,"seq":114462}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-12 00:59:09","thr":1,"seq":114463}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-12 02:33:09","thr":1,"seq":114464}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-12 04:00:09","thr":1,"seq":114465}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-12 05:31:09","thr":1,"seq":114466}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-12 06:55:09","thr":1,"seq":114467}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-12 08:23:09","thr":1,"seq":114468}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-12 09:55:09","thr":1,"seq":114469}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-12 11:20:09","thr":1,"seq":114470}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-12 12:49:09","thr":1,"seq":114471}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-12 14:22:09","thr":1,"seq":114472}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-12 15:48:09","thr":1,"seq":114473}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-12 17:18:09","thr":1,"seq":114474}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-12 18:52:09","thr":1,"seq":114475}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-12 20:19:09","thr":1,"seq":114476}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-12 21:50:09","thr":1,"seq":114477}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-12 23:14:09","thr":1,"seq":114478}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-13 00:42:09","thr":1,"seq":114479}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-13 02:14:09","thr":1,"seq":114480}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-13 03:39:09","thr":1,"seq":114481}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-13 05:08:09","thr":1,"seq":114482}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-13 06:41:09","thr":1,"seq":114483}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-13 08:07:09","thr":1,"seq":114484}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-13 09:37:09","thr":1,"seq":114485}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-13 11:11:09","thr":1,"seq":114486}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-13 12:38:09","thr":1,"seq":114487}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-13 14:09:09","thr":1,"seq":114488}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-13 15:33:09","thr":1,"seq":114489}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-13 17:01:09","thr":1,"seq":114490}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-13 18:33:09","thr":1,"seq":114491}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-13 19:58:09","thr":1,"seq":114492}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-13 20:31:02","thr":1,"seq":114493}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-13 20:36:41","thr":1,"seq":114494}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-13 20:52:10","thr":1,"seq":114495}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-13 21:27:09","thr":1,"seq":114496}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-13 23:00:09","thr":1,"seq":114497}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-14 00:26:09","thr":1,"seq":114498}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-14 01:56:09","thr":1,"seq":114499}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-14 03:30:09","thr":1,"seq":114500}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-14 04:57:09","thr":1,"seq":114501}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-14 06:28:09","thr":1,"seq":114502}
+{"t":"act","side":"primary","kind":"logsw","a":"2026-11-14 07:52:09","thr":1,"seq":114503}
+{"t":"cov","side":"primary","src":"lfs_by","st":"ok","first":"2026-11-06 09:00:03","last":"2026-11-14 08:59:53","n":10,"cap":15,"capped":false,"note":"log file sync samples in ASH (H) by service, module and machine, the 15 groups with the most samples kept per list; n = groups found over the three lists; first/last = what ASH holds"}
+{"t":"cov","side":"primary","src":"wl_hist","st":"ok","first":"2026-11-06 09:00:00","last":"2026-11-14 09:00:00","n":192,"cap":1500,"capped":false,"note":"dba_hist_sysmetric_summary, group 2, lookback 30 days, one record per AWR snapshot interval, newest 1500 kept; first/last = the span the view holds, n = intervals in the lookback"}
+{"t":"cov","side":"primary","src":"alsync","kind":"sql","st":"ok","first":"2026-10-15 09:12:41","last":"2026-11-14 09:12:39","n":5,"cap":300,"capped":false,"note":"v$diag_alert_ext, lookback 30 days, newest 300 kept; lines that end an UNSYNCHRONIZED period of a destination (LAD:n is SYNCHRONIZED, LAD:n level SYNCHRONIZED)"}
+{"t":"cov","side":"primary","src":"act","kind":"rman","st":"ok","first":"2026-09-18 02:00:04","last":"2026-11-14 02:00:05","n":39,"cap":500,"capped":false,"note":"v$rman_status, rows of type COMMAND, lookback 30 days, newest 500 kept; first/last = the oldest and newest start time the view holds"}
+{"t":"cov","side":"primary","src":"act","kind":"job","st":"ok","first":"2026-10-15 09:15:00","last":"2026-11-14 09:00:00","n":2942,"cap":2000,"capped":false,"note":"cdb_scheduler_job_run_details, lookback 30 days, newest 2000 run records kept, a job with more than 24 runs a day is one summary record; n = all rows in the lookback; first/last = the oldest and newest start the view holds, in the UTC offset this host has now"}
+{"t":"cov","side":"primary","src":"act","kind":"logsw","st":"ok","first":"2026-10-18 03:12:09","last":"2026-11-14 07:52:09","n":445,"cap":5000,"capped":false,"note":"v$log_history, lookback 30 days, newest 5000 kept; first/last = the oldest and newest first_time the view holds"}

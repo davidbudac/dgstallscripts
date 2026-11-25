@@ -1,0 +1,98 @@
+SUB: proddb on prim-host → proddb_s on stby-host · 2026-11-20 10:00:00 to 10:30:00 (UTC+00:00)
+BADGES: 19.27.0.0.0 · Linux SYNC AFFIRM (as collected) MAXIMUM AVAILABILITY (as collected) LAD:2 ASH 1 s samples
+NOTICES: Some sources do not reach the whole window Primary, collected 4 h 0 min after the window: every source reached the window Standby, collected 4 h 0 min after the window: ASH (V) holds none of the window (11-20 13:30 to 11-20 14:29); ASH sampler gaps holds none of the window (no entries); ASH wait samples (tx) holds none of the window (11-20 13:30 to 11-20 14:29)
+STAT: Incidents 1 10:05:30 to 10:10:20 · ORA-16198, destination UNSYNCHRONIZED
+STAT: Commit waits ≥ 1 s None no log file sync behind LGWR sampled
+STAT: Longest SYNC write 3 ms LGWR at 10:00:20 · time_waited, exact · NET_TIMEOUT 30 s (as collected)
+STAT: Destination not synchronized 4 min 50 s 10:05:30 → 10:10:20
+STAT: Transport errors 1 ORA-16198 ×1, first 10:05:30
+STAT: Refused at standby 0 none in the standby listener log
+STAT: Host or clock indicators 4 VKTM time drift: primary 1, standby 1 · ASH sampler gaps over 2 s, 10:00:00 to 10:30:00: primary 1, standby – (gap check not usable) · trace clock mismatch 1
+SIGNAL: Incident 1 · 10:05:30 to 10:10:20 · ORA-16198, destination UNSYNCHRONIZED
+  OBSERVED: 10:04:30 – 10:05:35 | Primary | ASH (v$active_session_history, 1 s samples) | 4 LGWR/LGnn wait samples between 10:04:30 and 10:05:35: SYNC Remote Write ×4 (largest time_waited 3 ms) | 1 s samples; ASH records only non-idle waits
+  OBSERVED: 10:05:00 – 10:05:29 | Primary | ASH sample_id against sample_time | consecutive samples 10:05:00 (sample_id 100000) and 10:05:29 (sample_id 100001): 1 sampling interval by sample_id, 29.4 s on the clock, 28.4 s more than the ids account for | 1 s
+  OBSERVED: 10:05:30.100 | Standby | alert log file | "Warning: VKTM detected a forward time drift."; the log names the VKTM trace file /u01/app/oracle/diag/rdbms/proddb_s/proddb1/trace/proddb1_vktm_2251.trc | ms
+  OBSERVED: 10:05:30.197 | Primary | alert log (v$diag_alert_ext) | "Warning: VKTM detected a forward time drift." | ms
+  OBSERVED: 10:05:30.201 | Primary | alert log (v$diag_alert_ext) | ORA-16198: 4 lines until 10:05:30.217: "LGWR (PID:2201): ORA-16198: Received timed out error from KSR"; "LGWR (PID:2201): Attempting LAD:2 network reconnect (16198)"; "Errors in file /u01/app/oracle/diag/rdbms/proddb/proddb1/trace/proddb1_lgwr_2201.trc: / ORA-16198: Timeout incurred on internal channel during remote…"; "LGWR (PID:2201): Error 16198 for LNO:3 to 'proddb_s_dgmgrl'" | ms
+  OBSERVED: 10:05:30.201 | Primary | trace proddb1_lgwr_2201.trc | "krsw_ksr_receive: Current time <11/20/2026 09:48:12> exceeds begin time <11/20/2026 09:48:12> by <30> seconds, return timed out error" | ms
+  OBSERVED: 10:05:30.201 | Primary | trace proddb1_lgwr_2201.trc | the line is stamped 2026-11-20 10:05:30; its begin time 11/20/2026 09:48:12 is 17 min 18 s earlier, while the message states 30 s | ms
+  OBSERVED: 10:05:30.400 | Primary | alert log (v$diag_alert_ext) | "LGWR (PID:2201): RT_PMODE: LAD:2 changing to level UNSYNCHRONIZED reason no connection" | ms
+  OBSERVED: 10:10:20.500 | Primary | alert log (v$diag_alert_ext) | "LGWR (PID:2201): RT_PMODE: LAD:2 changing to level SYNCHRONIZED" | ms
+  OBSERVED: as collected | Primary | v$archive_dest, v$archive_dest_status | at collection time (2026-11-20 14:30:00): LAD:2 destination proddb_s_dgmgrl (proddb_s), PARALLELSYNC AFFIRM=YES, NET_TIMEOUT 30 s, REOPEN 300 s, MAX_FAILURE 0, status VALID, synchronization OK, synchronized YES, gap NO GAP; protection mode MAXIMUM AVAILABILITY, level MAXIMUM AVAILABILITY | as collected
+  OBSERVED: as collected | Primary | bundle headers, meta, v$archive_dest, net records | endpoints: primary host prim-host.example (instance proddb1, database proddb, UTC+00:00); standby host stby-host.example (instance proddb1, database proddb_s, UTC+00:00); the primary ships to proddb_s_dgmgrl (LAD:2); no network check in the bundles | as collected
+  READING: The primary's LGWR gave up on a SYNC wait (ORA-16198 at 10:05:30.201) together with host or clock indicators (listed under Observed). This data cannot show whether the reply was lost on the network or at the standby, or whether the wait ended because of a pause or clock step. | Assumes: nothing about the cause. | Also consistent with: A pause or clock step on either host fits; so does a network or standby fault that happened to coincide.
+  READING: The primary logged LAD:2 as UNSYNCHRONIZED with the reason "no connection". The reason is the primary's own label for the state, not a diagnosis. | Assumes: the destination state lines are complete in the alert log. | Also consistent with: Which of the possible failures produced the state is not recorded in the line.
+  READING: The unsynchronized period (4 min 50 s) is of the order of REOPEN (300 s): after a failed attempt the primary waits that long before it retries. That explains the length of the period, not what failed. | Assumes: REOPEN was 300 s then; the value is from collection time. | Also consistent with: A period of similar length can also come from the catch-up of a gap after the connection returned.
+  READING: A VKTM time-drift line on the standby and the primary, an ASH sampler gap of 29.4 s and an LGWR trace line whose begin time is 17 min 18 s off its own timestamp while the message reports 30 s within 29.8 s of the first event. VKTM reports a time drift when its timer and the system clock disagree, which a paused host or VM, a starved CPU or a clock step produces; a sampler gap or a trace line like that means the same for the instance. Both hosts logged it within 97 ms of each other: a shared cause (a hypervisor or VM pause, a shared clock step) fits; a fault confined to the network would not make either host report a drift. A timeout that overlaps such a pause is not evidence of a fault elsewhere. | Assumes: a pause or clock step happened; the lines show only that the instance's own checks saw a discrepancy. | Also consistent with: A network or standby fault that happened to coincide with a pause is not excluded.
+  READING: Lines of the two hosts are ordered here by their timestamps. At second precision that assumes the hosts' clocks agree; NTP state is not part of this bundle.
+RULED/NC HEADING: None found (not a ruling-out)
+NONEFOUND: Refused logins at the standby listener · none between 10:04:00.201 and 10:11:20.500; the listener log covers it
+RULED/NC HEADING: Not checked
+NOTCHECKED: SYNC write stall before the first event · ASH sampler gap 2026-11-20 10:05:00 to 2026-11-20 10:05:29
+NOTCHECKED: Local redo write stall before the first event · ASH sampler gap 2026-11-20 10:05:00 to 2026-11-20 10:05:29
+NOTCHECKED: A host stopped during the incident · the interval of the wait is unknown: the LGWR trace line is inconsistent with the clock
+HINT: Adds Observed rows: The primary sampler log does not hold this interval; start the sampler before the next occurrence (one line every 5 s), then add its log: nohup sh sh/net_sampler.sh <peer IP> <listener port> 5 /var/tmp/net_sampler.log >/dev/null 2>&1 & sh/collect.sh -n /var/tmp/net_sampler.log primary "<from>" "<to>"
+HINT: Adds Observed rows: The standby sampler log does not hold this interval; start the sampler before the next occurrence (one line every 5 s), then add its log: nohup sh sh/net_sampler.sh <peer IP> <listener port> 5 /var/tmp/net_sampler.log >/dev/null 2>&1 & sh/collect.sh -n /var/tmp/net_sampler.log standby "<from>" "<to>"
+COV: primary/database | ok | – – – | 1 | not a window source
+COV: primary/ash/V | ok | 11-20 09:00 – 11-20 10:45 | 60 | yes
+COV: primary/awr_snap | ok | 10-21 10:00 – 11-20 10:40 | 1 | yes
+COV: primary/sysmetric | ok | 10-21 10:00 – 11-20 10:40 | 0 | yes
+COV: primary/lfs | empty | 11-20 09:00 – 11-20 10:45 | 0 / cap 200 | yes
+COV: primary/ashgap | ok | 11-20 09:59 – 11-20 10:31 | 1 / cap 50 | yes
+COV: primary/tx | ok | 11-20 09:00 – 11-20 10:45 | 60 | yes
+COV: primary/alert_sql | ok | 10-21 10:00 – 11-20 10:45 | 49 | yes
+COV: primary/alert_text | skipped | – – – | 0 | not requested; pass -a to read the text alert log
+COV: primary/alhist/sql | ok | 10-21 10:00 – 11-20 10:45 | 0 / cap 300 | not a window source
+COV: primary/dgstatus | empty | 11-20 07:00 – 11-20 14:29 | 0 / cap 500 | yes
+COV: primary/trace | ok | 10-21 10:00 – 11-20 10:45 | 1 / cap 400 | yes
+COV: primary/listener | ok | 10-21 10:00 – 11-20 10:45 | 31 | yes
+COV: primary/lsnr_ref | empty | 10-21 10:00 – 11-20 10:45 | 0 / cap 500 | yes
+COV: primary/lsnr_srv | empty | 10-21 10:00 – 11-20 10:45 | 0 / cap 500 | yes
+COV: primary/cid | skipped | – – – | 0 / cap 2000 | option -c not given
+COV: primary/net | skipped | – – – | 0 | not a window source
+COV: primary/ep | skipped | – – – | 0 | not a window source
+COV: primary/conn | skipped | – – – | 0 / cap 200 | not a window source
+COV: primary/sqlnet | skipped | – – – | 0 | not a window source
+COV: primary/ostcp | skipped | – – – | 0 | not a window source
+COV: primary/ntp | skipped | – – – | 0 | not a window source
+COV: primary/sar/ETCP | skipped | – – – | 0 / cap 2000 | no sysstat network history read
+COV: primary/sar/TCP | skipped | – – – | 0 / cap 2000 | no sysstat network history read
+COV: primary/sar/DEV | skipped | – – – | 0 / cap 2000 | no sysstat network history read
+COV: primary/sar/EDEV | skipped | – – – | 0 / cap 2000 | no sysstat network history read
+COV: primary/netsamp | skipped | – – – | 0 / cap 5000 | option -n not given
+COV: primary/dest_hist | empty | 11-20 14:30 – 11-20 14:30 | 0 | not a window source
+COV: primary/base_hist | skipped | – – – | 0 | not a window source
+COV: standby/database | ok | – – – | 1 | not a window source
+COV: standby/ash/V | empty | 11-20 13:30 – 11-20 14:29 | 0 | holds nothing before 2026-11-20 13:30:00; the interval starts 2026-11-20 10:00:00
+COV: standby/awr_snap | skipped | – – – | 0 | not collected on the standby
+COV: standby/sysmetric | skipped | – – – | 0 | not collected on the standby
+COV: standby/lfs | skipped | – – – | 0 | not collected on the standby
+COV: standby/ashgap | empty | – – – | 0 / cap 50 | holds nothing before n/a; the interval starts 2026-11-20 10:00:00
+COV: standby/tx | empty | 11-20 13:30 – 11-20 14:29 | 0 / cap 5000 | holds nothing before 2026-11-20 13:30:00; the interval starts 2026-11-20 10:00:00
+COV: standby/alert_sql | skipped | – – – | 0 | not collected on the standby
+COV: standby/alert_text | ok | 10-21 10:00 – 11-20 10:45 | 42 | yes
+COV: standby/alhist/text | ok | 10-21 10:00 – 11-20 10:45 | 0 / cap 300 | not a window source
+COV: standby/dgstatus | empty | 11-20 07:00 – 11-20 14:29 | 0 / cap 500 | yes
+COV: standby/trace | empty | 10-21 10:00 – 11-20 10:45 | 0 / cap 400 | yes
+COV: standby/listener | ok | 10-21 10:00 – 11-20 10:45 | 31 | yes
+COV: standby/lsnr_ref | empty | 10-21 10:00 – 11-20 10:45 | 0 / cap 500 | yes
+COV: standby/lsnr_srv | empty | 10-21 10:00 – 11-20 10:45 | 0 / cap 500 | yes
+COV: standby/cid | skipped | – – – | 0 / cap 2000 | option -c not given
+COV: standby/net | skipped | – – – | 0 | not a window source
+COV: standby/ep | skipped | – – – | 0 | not a window source
+COV: standby/conn | skipped | – – – | 0 / cap 200 | not a window source
+COV: standby/sqlnet | skipped | – – – | 0 | not a window source
+COV: standby/ostcp | skipped | – – – | 0 | not a window source
+COV: standby/ntp | skipped | – – – | 0 | not a window source
+COV: standby/sar/ETCP | skipped | – – – | 0 / cap 2000 | no sysstat network history read
+COV: standby/sar/TCP | skipped | – – – | 0 / cap 2000 | no sysstat network history read
+COV: standby/sar/DEV | skipped | – – – | 0 / cap 2000 | no sysstat network history read
+COV: standby/sar/EDEV | skipped | – – – | 0 / cap 2000 | no sysstat network history read
+COV: standby/netsamp | skipped | – – – | 0 / cap 5000 | option -n not given
+COV: standby/rfs_ev | empty | 10-31 10:00 – 11-20 14:30 | 0 | not a window source
+COV: standby/rfs_hist | empty | 10-31 10:00 – 11-20 14:30 | 0 | not a window source
+COV: standby/dgproc | empty | 11-20 14:30 – 11-20 14:30 | 0 | not a window source
+COV: standby/archgap | empty | 11-20 14:30 – 11-20 14:30 | 0 | not a window source
+COVNOTE: 
+HISTNOTE: No problem episodes outside the window in the history collected.
+FGNOTE: Average foreground sessions per minute, ASH (1 s samples).

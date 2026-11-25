@@ -1,0 +1,9 @@
+RECURBARS: 0 RMAN bars, 0 job bars; legend: none
+EPNOTE: none: the source holds the interval and has nothing there. not covered: it does not hold it, or was capped.
+EP: Not collected: no alsync, wl_hist or act records in these bundles.
+WHONOTE: Sessions sampled on log file sync, by service, module and machine.
+WHOTABS: Window
+WHO: Whole window · 09:20:00 to 09:45:00
+  WHOLISTS: Not collected: no lfs_by records in this bundle.
+  WHOPEAK: Peak in one sample: 1 at 09:37:40.412; behind LGWR 1 at 09:37:40.412 (lfs_sum, whole window).
+  WHOWL: Per-minute workload (wl): no records in these bundles.

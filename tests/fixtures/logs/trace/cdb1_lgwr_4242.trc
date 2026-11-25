@@ -1,0 +1,13 @@
+Trace file /u01/app/oracle/diag/rdbms/cdb1/cdb1/trace/cdb1_lgwr_4242.trc
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+
+*** 2026-11-13T23:49:00.000001+01:00 (CDB$ROOT(1))
+krsw_ksr_receive: ORA-16198 before the window
+*** 2026-11-13T23:58:19.452100+01:00 (CDB$ROOT(1))
+Error 16198 for LNO:2 to 'cdb1_s'
+krsw_ksr_receive: Current time <11/13/2026 23:58:19> exceeds begin time <11/13/2026 23:57:49> by  <30> seconds, return timed out error
+a line that is not interesting
+*** 2026-11-14T00:01:00.000020+01:00 (CDB$ROOT(1))
+krsu_upi_status: Error 16198 detaching RFS from standby instance at host 'cdb1_s'
+*** 2026-11-14T00:30:00.000000+01:00 (CDB$ROOT(1))
+ORA-03135: connection lost contact (after the window)

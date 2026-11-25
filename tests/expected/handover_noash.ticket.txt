@@ -1,0 +1,24 @@
+#### incident 1
+Databases: proddb (primary, host prim-host.example, instance proddb1, 19.27.0.0.0 Linux) and proddb_s
+(standby, host stby-host.example, instance proddb1, 19.27.0.0.0 Linux).
+Transport as collected: SYNC AFFIRM, destination LAD:2, NET_TIMEOUT 30 s, REOPEN 300 s; protection mode
+MAXIMUM AVAILABILITY.
+Data window: 2026-11-20 10:00:00Z to 10:30:00Z (primary local 10:00:00 to 10:30:00 +00:00); collected primary
+2026-11-20 14:30:00Z, standby 2026-11-20 14:30:00Z.
+Incident 1 of 1: 2026-11-20 10:05:30Z to 10:10:50Z (primary local 10:05:30 to 10:10:50 +00:00).
+Destination LAD:2 not synchronized: 5 min 20 s, 10:05:30 to 10:10:50 primary local.
+Commit waits: none sampled per wait for this incident; not checked, holds nothing before 2026-11-20 10:20:10Z;
+the interval starts 2026-11-20 10:00:00Z.
+Longest SYNC write: ASH sampled no SYNC wait of 1 s or more in this incident (10 s samples); not checked,
+holds nothing before 2026-11-20 10:20:10Z; the interval starts 2026-11-20 10:04:00Z; the LGWR trace line at
+10:05:30.200Z reports a wait of <30> seconds (begin time <11/20/2026 10:05:00>).
+Transport errors: ORA-16198 at 10:05:30.000Z (primary alert log, 4 lines).
+Host-side observations: VKTM time-drift lines none in either alert log from 2026-11-20 10:04:00Z to 10:11:50Z.
+ASH sampler gaps over 2 s, primary: not checked from 2026-11-20 10:05:00Z to 10:05:30Z (the SYNC wait): no ASH
+rows before 10:20:10Z; standby: not checked from 2026-11-20 10:04:58Z to 10:05:32Z (the SYNC wait +-2 s): gap
+check inconclusive.
+Covered by the data for the incident interval 2026-11-20 10:04:00Z to 10:11:50Z: primary alert log, standby
+alert log, primary listener log, standby listener log.
+Not covered for that interval: primary ASH source (holds nothing before 2026-11-20 10:20:10Z; the interval
+starts 2026-11-20 10:04:00Z); standby ASH source (holds nothing before 2026-11-20 13:30:00Z; the interval
+starts 2026-11-20 10:04:00Z).

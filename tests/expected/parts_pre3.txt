@@ -1,0 +1,75 @@
+HISTCAPT: Waits per bucket, log scale; red: 1 s and longer.
+HISTFOOT: 
+HISTTABS: Window (AWR) | Since startup
+ALNOTE: 
+ALTABS: All | Matches | Primary | Standby
+DGROWS: 0
+BASENOTE: 
+RFSNOTE: No RFS counters in this bundle (older collector).
+SBNOTE: Standby ASH not read; does not cover the whole window: standby ASH: not read (not collected on the standby). Non-idle waits only.
+PROCNOTE: Not collected (older collector).
+SBPROCTXT: 
+NETCHART: 
+NETWORK CARDS: When the bundle was collected, not during the window | Primary → 198.51.100.12 | Standby → 198.51.100.11
+SARROWS: 1, of them overlapping an incident: 1
+SARCARD: sh(`${SIDE[c.side]} ${c.kind || ''}`); }); return Object.values(g).map(x => `${esc(x.who.join(', '))}: ${esc(x.c.st === 'error' ? 'the read failed' : 'not read')}${x.c.note ? ' (' + esc(String(x.c.note).slice(0, 160)) + ')' : ''}`).join(' '); })()} ` : '') + '
+CONNROWS: 2
+RECURNOTE: Episode starts by day (rows, newest first) and hour, primary local time; outlined row: window day.
+HISTREADING: Reading (1) Recurrence at one time of day is what a scheduled task produces; with few episodes it can also be chance.
+RECURCELLS: 4
+REACH: primary/database | as collected
+REACH: primary/ash/H | whole window
+REACH: primary/awr_snap | whole window
+REACH: primary/sysmetric | whole window
+REACH: primary/lfs | whole window
+REACH: primary/ashgap | whole window
+REACH: primary/alert_sql | whole window
+REACH: primary/alert_text | not applicable
+REACH: primary/alhist/sql | as collected
+REACH: primary/trace | whole window
+REACH: primary/listener | whole window
+REACH: primary/lsnr_ref | whole window
+REACH: primary/cid | whole window
+REACH: primary/net | as collected
+REACH: standby/database | as collected
+REACH: standby/ash | not applicable
+REACH: standby/awr_snap | not applicable
+REACH: standby/sysmetric | not applicable
+REACH: standby/lfs | not applicable
+REACH: standby/ashgap | not applicable
+REACH: standby/alert_sql | not applicable
+REACH: standby/alert_text | whole window
+REACH: standby/alhist/text | as collected
+REACH: standby/trace | whole window
+REACH: standby/listener | whole window
+REACH: standby/lsnr_ref | whole window
+REACH: standby/cid | not applicable
+REACH: standby/net | as collected
+EXPLNOTE: Cells are entries of Signals, linked to their rows.
+EXPL: Incident 1 · 20:38:01 to 20:53:27 · ORA-16198, standby: possible network disconnect, destination UNSYNCHRONIZED, LGWR SYNC wait ≥ 20.0 s
+  EXPLEVERY: Observed in every case: Commit waits on log file sync (LGWR) 20:37:40 ; Longest log file sync behind LGWR 20:38:30 ; ORA-16198 (primary) 20:38:58.734 ; LGWR trace line: begin time and seconds of the wait 20:38:58.734 ; LAD:2 UNSYNCHRONIZED 20:38:58.740 ; RT_PMODE PRIMARY/PHYSICAL lines (standby), 2 rows, 20:43:59.402 to 20:53:27.950 ; LAD:2 SYNCHRONIZED 20:53:27.905
+  EXPLROW: Redo or its acknowledgement lost on the network path | Observed: LGWR wait on 'SYNC Remote Write' in ASH, 3 rows, 20:38:01 to 20:39:02 ; NSS2 wait on 'Redo Transport MISC' in ASH, 2 rows, 20:38:11 to 20:39:42 ; TNS line in a trace (standby) 20:39:09.110 ; Fatal NI connect error 12170 (standby) 20:39:09.112 ; Possible network disconnect (standby) 20:39:09.141 | Ruled out:  | None found:  | Not checked: 
+  EXPLROW: Idle timeout on a connection (a device between the hosts dropped an idle session) | Observed: LGWR wait on 'SYNC Remote Write' in ASH, 3 rows, 20:38:01 to 20:39:02 ; NSS2 wait on 'Redo Transport MISC' in ASH, 2 rows, 20:38:11 to 20:39:42 ; Last completed SYNC write 20:38:22 ; TNS line in a trace (standby) 20:39:09.110 ; Fatal NI connect error 12170 (standby) 20:39:09.112 ; Possible network disconnect (standby) 20:39:09.141 | Ruled out: Idle timeout on the LGWR/NSS SYNC connection | None found:  | Not checked: Idle timeout on the archiver (ARCn/TTnn) connections
+  EXPLROW: Standby slow to write or to answer (RFS, standby redo log I/O) | Observed: LGWR wait on 'SYNC Remote Write' in ASH, 3 rows, 20:38:01 to 20:39:02 ; NSS2 wait on 'Redo Transport MISC' in ASH, 2 rows, 20:38:11 to 20:39:42 | Ruled out:  | None found:  | Not checked: 
+  EXPLROW: Standby host stopped (pause, VM stun, starvation) | Observed: LGWR wait on 'SYNC Remote Write' in ASH, 3 rows, 20:38:01 to 20:39:02 ; NSS2 wait on 'Redo Transport MISC' in ASH, 2 rows, 20:38:11 to 20:39:42 ; TNS line in a trace (standby) 20:39:09.110 ; Fatal NI connect error 12170 (standby) 20:39:09.112 | Ruled out: Standby host stopped for the whole wait | None found: VKTM time-drift warning on either host | Not checked: 
+  EXPLROW: Standby instance or process shut down or restarted | Observed: LGWR wait on 'SYNC Remote Write' in ASH, 3 rows, 20:38:01 to 20:39:02 ; NSS2 wait on 'Redo Transport MISC' in ASH, 2 rows, 20:38:11 to 20:39:42 ; Refused logins at the standby listener, 3 rows, 20:38:19 to 20:50:10 | Ruled out:  | None found:  | Not checked: 
+  EXPLROW: Primary host stopped or its clock jumped | Observed: Possible network disconnect (standby) 20:39:09.141 | Ruled out: Primary host stopped for the whole wait | None found: VKTM time-drift warning on either host | Not checked: 
+  EXPLROW: Local redo write on the primary slow | Observed:  | Ruled out:  | None found:  | Not checked: Local redo write stall before the first event
+  EXPLUNPLACED: Not placed here, in Signals: LGWR wait samples before the first event; Archiver trouble (primary); Endpoints and destination as collected.
+NEXT: Primary ASH was read from the AWR copy (10 s samples, one in ten):
+  CMD: sh/collect.sh primary "2026-11-13 20:35" "2026-11-13 20:58"
+  FOR: Would settle: Local redo write stall before the first event
+SEQNOTE: Shaded band: ±2 s clock margin between the hosts; order inside it is not established.
+SEQ: Incident 1 · 20:38:01 to 20:53:27 · ORA-16198, standby: possible network disconnect, destination UNSYNCHRONIZED, LGWR SYNC wait ≥ 20.0 s
+  SEQARIA: Sequence of incident 1: 8 events on a primary lane above a standby lane
+  SEQPANEL: Stall | 20:38:19.767 to 20:39:11.492 (51.7 s)
+  SEQPANEL: Recovery | 20:53:26.405 to 20:53:29.405 (3.0 s)
+  SEQMARKS: 8 shapes with a tooltip, 3 margin bands, 2 margin scale marks
+  SEQMARK 1 | 20:38:22 – 20:38:32 | Primary | Last completed SYNC write: time_waited 640 ms on the last sample, the exact length | AWR ASH (dba_hist_active_sess_history, 10 s samples) · ASH 10 s samples
+  SEQMARK 2 | 20:38:28 – 20:38:58 | Primary | SYNC wait that timed out: from 20:38:28 to 20:38:58.734 | begin time in the LGWR trace (11/13/2026 20:38:28) · interval
+  SEQMARK 3 | 20:38:58.734 | Primary | ORA-16198 (primary): ORA-16198: 3 lines until 20:38:58.736: "LGWR (PID:10224042): ORA-16198: Received timed out error from KSR"; "LGWR (PID:10224042): Attempting LAD:2 ne… | alert log (v$diag_alert_ext) · millisecond timestamp
+  SEQMARK 4 | 20:38:58.740 | Primary | LAD:2 UNSYNCHRONIZED: "LGWR (PID:10224042): LAD:2 is UNSYNCHRONIZED" | alert log (v$diag_alert_ext) · millisecond timestamp
+  SEQMARK 5 | 20:39:09.110 | Standby | TNS line in a trace (standby): "TNS-12535: TNS:operation timed out" | trace proddb1_rfs_21299312.trc · millisecond timestamp
+  SEQMARK 6 | 20:39:09.112 | Standby | Fatal NI connect error 12170 (standby): Fatal NI connect error block: error 12170; TNS-12535: TNS:operation timed out; ns main 12535, ns secondary 12560, nt main 0, nt secondary 0, nt OS 0;… | alert log file · millisecond timestamp
+  SEQMARK 7 | 20:39:09.141 | Standby | Possible network disconnect (standby): 1 line: "rfs (PID:21299312): Possible network disconnect with primary database" | alert log file · millisecond timestamp
+  SEQMARK 8 | 20:53:27.905 | Primary | LAD:2 SYNCHRONIZED: "LGWR (PID:10224042): LAD:2 is SYNCHRONIZED" | alert log (v$diag_alert_ext) · millisecond timestamp

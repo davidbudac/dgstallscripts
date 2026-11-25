@@ -1,0 +1,13 @@
+# fictional names, documentation addresses
+PRODDB_S_DGMGRL =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = stby-host.example)(PORT = 1526))
+    (CONNECT_DATA = (SERVER = DEDICATED)(SERVICE_NAME = proddb_s)))
+
+PRODDB_P.EXAMPLE =
+  (DESCRIPTION_LIST = (DESCRIPTION = (FAILOVER = ON)
+    (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = prim-host.example)(PORT = 1526))
+                    (ADDRESS = (PROTOCOL = TCP)(HOST = prim-host2.example)(PORT = 1526)))
+    (CONNECT_DATA = (SERVICE_NAME = proddb))))   # trailing comment
+
+LOST_ALIAS = (DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = nosuch.example)(PORT = 1599)) (CONNECT_DATA = (SID = x)))

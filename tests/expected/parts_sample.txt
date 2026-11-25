@@ -1,0 +1,163 @@
+HISTCAPT: Waits per bucket, log scale; red: 1 s and longer.
+HISTFOOT: 
+HISTTABS: Window (AWR) | Since startup | Destination
+ALNOTE: dgstatus rows (v$dataguard_status, in memory): 10 in the window; the view holds primary 11-13 14:35 to 11-14 09:12, standby 11-13 18:35 to 11-14 09:09.
+ALTABS: All | Matches | Primary | Standby | dgstatus
+DGROWS: 10
+  DGROW: 20:38:58 | Primary dgstatus | Log Transport Services · Error · dest 2 · error 16198 LGWR: Error 16198 for archive log file 3 to 'proddb_s_dgmgrl'
+  DGROW: 20:38:58 | Primary dgstatus | Log Transport Services · Warning · dest 2 LGWR: LAD:2 network reconnect abandoned
+  DGROW: 20:39:09 | Standby dgstatus | Network Services · Error · error 12535 TNS-12535: TNS:operation timed out
+  DGROW: 20:39:09 | Standby dgstatus | Remote File Server · Warning RFS[7]: Possible network disconnect with primary database
+  DGROW: 20:47:57 | Primary dgstatus | Log Transport Services · Control · dest 2 LGWR: Attempting destination LAD:2 network reconnect
+  DGROW: 20:47:58 | Standby dgstatus | Remote File Server · Informational RFS[8]: Assigned to RFS process (PID:22872070)
+  DGROW: 20:53:23 | Primary dgstatus | Log Transport Services · Error · dest 2 · error 16198 ARC1: FAL archive of T-1.S-114495 to LAD:2 failed
+  DGROW: 20:53:25 | Primary dgstatus | Log Transport Services · Control · dest 2 LGWR: LAD:2 SYNC destination is SYNCHRONIZED
+  DGROW: 20:53:25 | Standby dgstatus | Fetch Archive Log · Informational Fetching gap sequence in thread 1, gap sequence 114495-114495
+  DGROW: 20:53:27 | Standby dgstatus | Remote File Server · Informational Primary database is in MAXIMUM AVAILABILITY mode, level SYNCHRONIZED
+BASENOTE: 7 of 7 baseline days had usable data (AWR holds 2026-11-05 21:35 to 2026-11-14 09:00). Share over 1 s: this window 0.01 %; the 7 baseline days 0.00 % to 0.01 %.
+  BASE: This window | 20:30–21:00 | – | 13,560 | 2 | 0.01 % | 
+  BASE: 2026-11-12 (1 day earlier) 20:35–20:58 | 20:30–21:00 | 1 / 1 | 11,489 | 0 | 0.00 % | 
+  BASE: 2026-11-11 (2 days earlier) 20:35–20:58 | 20:30–21:00 | 1 / 1 | 11,739 | 0 | 0.00 % | 
+  BASE: 2026-11-10 (3 days earlier) 20:35–20:58 | 20:30–21:00 | 1 / 1 | 11,989 | 0 | 0.00 % | 
+  BASE: 2026-11-09 (4 days earlier) 20:35–20:58 | 20:30–21:00 | 1 / 1 | 12,238 | 0 | 0.00 % | 
+  BASE: 2026-11-08 (5 days earlier) 20:35–20:58 | 20:30–21:00 | 1 / 1 | 12,491 | 0 | 0.00 % | 
+  BASE: 2026-11-07 (6 days earlier) 20:35–20:58 | 20:30–21:00 | 1 / 1 | 12,739 | 0 | 0.00 % | 
+  BASE: 2026-11-06 (7 days earlier) 20:35–20:58 | 20:30–21:00 | 1 / 1 | 12,989 | 1 | 0.01 % | 
+RFSNOTE: Counted from instance start to collection (2026-11-14 09:10, standby clock), not the window. Standby instance started 2026-09-02 03:12.
+  RFSEV: RFS write | 412,880,311 | 0 | 4 h 1 min | 35 µs
+  RFSEV: RFS random i/o | 1,903,442 | 0 | 6 min 47 s | 214 µs
+  RFSEV: RFS ping | 91,822 | 0 | 4 min 45 s | 3.1 ms
+  RFSEV: RFS dispatch | 3,812,004 | 0 | 45.7 s | 12 µs
+  RFSEV: RFS create | 1,180 | 0 | 3.5 s | 2.98 ms
+  RFSEV: RFS sequential i/o | 9,213 | 0 | 1.7 s | 188 µs
+  RFSEV: RFS close | 1,180 | 0 | 1.4 s | 1.22 ms
+  RFSEV: RFS attach | 2,210 | 0 | 906 ms | 410 µs
+  RFSEV: RFS detach | 2,205 | 0 | 331 ms | 150 µs
+SBNOTE: Standby ASH (1 s samples) holds 2026-11-14 04:51 to 2026-11-14 09:10; does not cover the whole window: standby ASH holds nothing before 2026-11-14 04:51:20; the interval starts 2026-11-13 20:35:00. Non-idle waits only.
+PROCNOTE: v$dataguard_process and v$archive_gap, collected 2026-11-14 09:10 (standby clock), not the window.
+  SBPROC: ARC0 | archive local | IDLE | – | – | 03:12:48 2026-09-04
+  SBPROC: ARC1 | archive redo | IDLE | – | – | 03:12:48 2026-09-04
+  SBPROC: RFS | RFS sync | IDLE | 1 · 114712 · 0 | log writer (pid 10224042) | 03:12:48 2026-09-04
+  SBPROC: RFS | RFS archive | IDLE | – | archive redo (pid 16974138) | 03:12:48 2026-09-04
+  SBPROC: MRP0 | managed recovery | APPLYING_LOG | 1 · 114711 · 4210/2048 | – | 03:12:47 2026-09-04
+  SBPROC: TMON | redo transport monitor | IDLE | – | – | 03:12:47 2026-09-04
+SBPROCTXT: -04 MRP0 managed recovery APPLYING_LOG 1 · 114711 · 4210/2048 – 03:12:47 2026-09-04 TMON redo transport monitor IDLE – – 03:12:47 2026-09-04 Archive gap when collected: none (v$archive_gap was empty).
+NETCHART: Sampler of the window (net_sampler.sh)
+NETWORK CARDS: During the window | Network history (sysstat) | When the bundle was collected, not during the window | Primary → 198.51.100.12 | Standby → 198.51.100.11 | TCP connections between the hosts
+SARROWS: 1, of them overlapping an incident: 1
+SARCARD: haded rows overlap an incident. No sysstat rows in the window. Primary ETCP, Primary TCP, Primary DEV, Primary EDEV, Standby ETCP, Standby TCP, Standby DEV, Standby EDEV: not read (AIX has no network history by default (sar on AIX does not keep these reports))
+CONNROWS: 5
+RECURNOTE: Episode starts by day (rows, newest first) and hour, primary local time; outlined row: window day.
+HISTREADING: Reading (1) Recurrence at one time of day is what a scheduled task produces; with few episodes it can also be chance.
+RECURCELLS: 4
+  CFG: Endpoint (primary) | LAD:2 proddb_s_dgmgrl → stby-host.example:1526 | Note | address not resolved: getent not found: host name not resolved
+  CFG: Endpoint (standby) | proddb_p_dgmgrl → prim-host.example:1526 | Note | address not resolved: getent not found: host name not resolved
+  CFG: sqlnet.ora timeouts (primary) | SQLNET.EXPIRE_TIME 10 | Note | /u01/app/oracle/product/19.0.0/dbhome_1/network/admin/sqlnet.ora; a parameter that is not set means its default applies. Not set: SQLNET.OUTBOUND_CONNECT_TIMEOUT, SQLNET.INBOUND_CONNECT_TIMEOUT, SQLNET.RECV_TIMEOUT, SQLNET.SEND_TIMEOUT, TCP.CONNECT_TIMEOUT
+  CFG: sqlnet.ora timeouts (standby) | SQLNET.EXPIRE_TIME 10 | Note | /u01/app/oracle/product/19.0.0/dbhome_1/network/admin/sqlnet.ora; a parameter that is not set means its default applies. Not set: SQLNET.OUTBOUND_CONNECT_TIMEOUT, SQLNET.INBOUND_CONNECT_TIMEOUT, SQLNET.RECV_TIMEOUT, SQLNET.SEND_TIMEOUT, TCP.CONNECT_TIMEOUT
+  CFG: OS TCP settings (primary) | rfc1323 1, sb_max 4194304, tcp_keepcnt 8, tcp_keepidle 14400, tcp_keepinit 150, tcp_keepintvl 150, tcp_recvspace 262144, tcp_sendspace 262144 | Note | no -a, as collected: keepalive times in seconds (AIX: half seconds for tcp_keepidle and tcp_keepintvl, unverified here)
+  CFG: OS TCP settings (standby) | rfc1323 1, sb_max 4194304, tcp_keepcnt 8, tcp_keepidle 14400, tcp_keepinit 150, tcp_keepintvl 150, tcp_recvspace 262144, tcp_sendspace 262144 | Note | no -a, as collected: keepalive times in seconds (AIX: half seconds for tcp_keepidle and tcp_keepintvl, unverified here)
+REACH: primary/database | as collected
+REACH: primary/ash/H | whole window
+REACH: primary/awr_snap | whole window
+REACH: primary/sysmetric | whole window
+REACH: primary/lfs | whole window
+REACH: primary/lfs_by | whole window
+REACH: primary/ashgap | whole window
+REACH: primary/tx | whole window
+REACH: primary/alert_sql | whole window
+REACH: primary/alert_text | not applicable
+REACH: primary/alhist/sql | as collected
+REACH: primary/alsync/sql | as collected
+REACH: primary/wl_hist | as collected
+REACH: primary/act/rman | as collected
+REACH: primary/act/job | as collected
+REACH: primary/act/logsw | as collected
+REACH: primary/dgstatus | whole window
+REACH: primary/trace | whole window
+REACH: primary/listener | whole window
+REACH: primary/lsnr_ref | whole window
+REACH: primary/lsnr_srv | whole window
+REACH: primary/cid | whole window
+REACH: primary/net | as collected
+REACH: primary/ep | as collected
+REACH: primary/conn | as collected
+REACH: primary/sqlnet | as collected
+REACH: primary/ostcp | as collected
+REACH: primary/ntp | as collected
+REACH: primary/sar/ETCP | not applicable
+REACH: primary/sar/TCP | not applicable
+REACH: primary/sar/DEV | not applicable
+REACH: primary/sar/EDEV | not applicable
+REACH: primary/netsamp | whole window
+REACH: primary/dest_hist | as collected
+REACH: primary/base_hist | as collected
+REACH: standby/database | as collected
+REACH: standby/ash/V | not at all
+REACH: standby/awr_snap | not applicable
+REACH: standby/sysmetric | not applicable
+REACH: standby/lfs | not applicable
+REACH: standby/ashgap | whole window
+REACH: standby/tx | not at all
+REACH: standby/alert_sql | not applicable
+REACH: standby/alert_text | whole window
+REACH: standby/alhist/text | as collected
+REACH: standby/alsync/text | as collected
+REACH: standby/act/rman | as collected
+REACH: standby/dgstatus | whole window
+REACH: standby/trace | whole window
+REACH: standby/listener | whole window
+REACH: standby/lsnr_ref | whole window
+REACH: standby/lsnr_srv | whole window
+REACH: standby/cid | not applicable
+REACH: standby/net | as collected
+REACH: standby/ep | as collected
+REACH: standby/conn | as collected
+REACH: standby/sqlnet | as collected
+REACH: standby/ostcp | as collected
+REACH: standby/ntp | as collected
+REACH: standby/sar/ETCP | not applicable
+REACH: standby/sar/TCP | not applicable
+REACH: standby/sar/DEV | not applicable
+REACH: standby/sar/EDEV | not applicable
+REACH: standby/netsamp | not applicable
+REACH: standby/rfs_ev | as collected
+REACH: standby/rfs_hist | as collected
+REACH: standby/dgproc | as collected
+REACH: standby/archgap | as collected
+EXPLNOTE: Cells are entries of Signals, linked to their rows.
+EXPL: Incident 1 · 20:38:01 to 20:53:27 · ORA-16198, standby: possible network disconnect, destination UNSYNCHRONIZED, LGWR SYNC wait ≥ 20.0 s
+  EXPLEVERY: Observed in every case: Commit waits on log file sync (LGWR) 20:37:40 ; Longest log file sync behind LGWR 20:38:30 ; ORA-16198 (primary) 20:38:58.734 ; LGWR trace line: begin time and seconds of the wait 20:38:58.734 ; LAD:2 UNSYNCHRONIZED 20:38:58.740 ; RT_PMODE PRIMARY/PHYSICAL lines (standby), 2 rows, 20:43:59.402 to 20:53:27.950 ; LAD:2 SYNCHRONIZED 20:53:27.905
+  EXPLROW: Redo or its acknowledgement lost on the network path | Observed: Sampler lines (primary) 20:37:05 ; LGWR wait on 'SYNC Remote Write' in ASH, 3 rows, 20:38:01 to 20:39:02 ; NSS2 wait on 'Redo Transport MISC' in ASH, 2 rows, 20:38:11 to 20:39:42 ; TNS line in a trace (standby) 20:39:09.110 ; Fatal NI connect error 12170 (standby) 20:39:09.112 ; Possible network disconnect (standby) 20:39:09.141 | Ruled out:  | None found:  | Not checked: 
+  EXPLROW: Idle timeout on a connection (a device between the hosts dropped an idle session) | Observed: LGWR wait on 'SYNC Remote Write' in ASH, 3 rows, 20:38:01 to 20:39:02 ; NSS2 wait on 'Redo Transport MISC' in ASH, 2 rows, 20:38:11 to 20:39:42 ; Last completed SYNC write 20:38:22 ; TNS line in a trace (standby) 20:39:09.110 ; Fatal NI connect error 12170 (standby) 20:39:09.112 ; Possible network disconnect (standby) 20:39:09.141 | Ruled out: Idle timeout on the LGWR/NSS SYNC connection | None found:  | Not checked: Idle timeout on the archiver (ARCn/TTnn) connections
+  EXPLROW: Standby slow to write or to answer (RFS, standby redo log I/O) | Observed: LGWR wait on 'SYNC Remote Write' in ASH, 3 rows, 20:38:01 to 20:39:02 ; NSS2 wait on 'Redo Transport MISC' in ASH, 2 rows, 20:38:11 to 20:39:42 | Ruled out:  | None found:  | Not checked: Standby ASH samples of redo-related processes during the wait
+  EXPLROW: Standby host stopped (pause, VM stun, starvation) | Observed: Sampler lines (primary) 20:37:05 ; LGWR wait on 'SYNC Remote Write' in ASH, 3 rows, 20:38:01 to 20:39:02 ; NSS2 wait on 'Redo Transport MISC' in ASH, 2 rows, 20:38:11 to 20:39:42 ; TNS line in a trace (standby) 20:39:09.110 ; Fatal NI connect error 12170 (standby) 20:39:09.112 | Ruled out: Standby host stopped for the whole wait | None found: VKTM time-drift warning on either host | Not checked: 
+  EXPLROW: Standby instance or process shut down or restarted | Observed: LGWR wait on 'SYNC Remote Write' in ASH, 3 rows, 20:38:01 to 20:39:02 ; NSS2 wait on 'Redo Transport MISC' in ASH, 2 rows, 20:38:11 to 20:39:42 ; Refused logins at the standby listener, 3 rows, 20:38:19 to 20:50:10 ; Connections of the peer at the primary listener 20:39:15 ; Connections of the peer at the standby listener 20:47:58 | Ruled out:  | None found:  | Not checked: 
+  EXPLROW: Primary host stopped or its clock jumped | Observed: Possible network disconnect (standby) 20:39:09.141 | Ruled out: Primary host stopped for the whole wait | None found: VKTM time-drift warning on either host | Not checked: 
+  EXPLROW: Local redo write on the primary slow | Observed:  | Ruled out:  | None found:  | Not checked: Local redo write stall before the first event
+  EXPLUNPLACED: Not placed here, in Signals: LGWR wait samples before the first event; Archiver trouble (primary); Endpoints and destination as collected; Clock state as collected (primary); Clock state as collected (standby).
+NEXT: Primary ASH was read from the AWR copy (10 s samples, one in ten):
+  CMD: sh/collect.sh primary "2026-11-13 20:35" "2026-11-13 20:58"
+  FOR: Would settle: Local redo write stall before the first event
+NEXT: Standby ASH holds nothing before 2026-11-14 04:51:20; collected 12 h 12 min after the window:
+  CMD: sh/collect.sh standby "2026-11-13 20:35" "2026-11-13 20:58"
+  FOR: Would settle: Standby ASH samples of redo-related processes during the wait
+SEQNOTE: Shaded band: ±2 s clock margin between the hosts; order inside it is not established.
+SEQ: Incident 1 · 20:38:01 to 20:53:27 · ORA-16198, standby: possible network disconnect, destination UNSYNCHRONIZED, LGWR SYNC wait ≥ 20.0 s
+  SEQARIA: Sequence of incident 1: 14 events on a primary lane above a standby lane
+  SEQPANEL: Stall | 20:38:19.424 to 20:39:18.694 (59.3 s)
+  SEQPANEL: Recovery | 20:47:41.505 to 20:53:44.400 (6 min 3 s)
+  SEQMARKS: 14 shapes with a tooltip, 7 margin bands, 2 margin scale marks
+  SEQMARK 1 | 20:38:22 – 20:38:32 | Primary | Last completed SYNC write: time_waited 640 ms on the last sample, the exact length | AWR ASH (dba_hist_active_sess_history, 10 s samples) · ASH 10 s samples
+  SEQMARK 2 | 20:38:28 – 20:38:58 | Primary | SYNC wait that timed out: from 20:38:28 to 20:38:58.734 | begin time in the LGWR trace (11/13/2026 20:38:28) · interval
+  SEQMARK 3 | 20:38:58.734 | Primary | ORA-16198 (primary): ORA-16198: 3 lines until 20:38:58.736: "LGWR (PID:10224042): ORA-16198: Received timed out error from KSR"; "LGWR (PID:10224042): Attempting LAD:2 ne… | alert log (v$diag_alert_ext) · millisecond timestamp
+  SEQMARK 4 | 20:38:58.740 | Primary | LAD:2 UNSYNCHRONIZED: "LGWR (PID:10224042): LAD:2 is UNSYNCHRONIZED" | alert log (v$diag_alert_ext) · millisecond timestamp
+  SEQMARK 5 | 20:39:09.110 | Standby | TNS line in a trace (standby): "TNS-12535: TNS:operation timed out" | trace proddb1_rfs_21299312.trc · millisecond timestamp
+  SEQMARK 6 | 20:39:09.112 | Standby | Fatal NI connect error 12170 (standby): Fatal NI connect error block: error 12170; TNS-12535: TNS:operation timed out; ns main 12535, ns secondary 12560, nt main 0, nt secondary 0, nt OS 0;… | alert log file · millisecond timestamp
+  SEQMARK 7 | 20:39:09.141 | Standby | Possible network disconnect (standby): 1 line: "rfs (PID:21299312): Possible network disconnect with primary database" | alert log file · millisecond timestamp
+  SEQMARK 8 | 20:39:15 – 20:39:16 | Primary | Connection of the peer at the primary listener, return code 0: from 198.51.100.12:51234, service SID:proddb | listener log (CID with PROGRAM=oracle) · 1 s timestamp
+  SEQMARK 9 | 20:47:58 – 20:47:59 | Standby | Connection of the peer at the standby listener, return code 0: from 198.51.100.11:41872, service SID:proddb_s | listener log (CID with PROGRAM=oracle) · 1 s timestamp
+  SEQMARK 10 | 20:47:59 – 20:48:00 | Standby | Connection of the peer at the standby listener, return code 0: from 198.51.100.11:41874, service SID:proddb_s | listener log (CID with PROGRAM=oracle) · 1 s timestamp
+  SEQMARK 11 | 20:48:24 – 20:48:25 | Standby | Connection of the peer at the standby listener, return code 12518: from 198.51.100.11:42011, service SID:proddb_s | listener log (CID with PROGRAM=oracle) · 1 s timestamp
+  SEQMARK 12 | 20:53:20 – 20:53:21 | Primary | Connection of the peer at the primary listener, return code 0: from 198.51.100.12:51301, service SID:proddb | listener log (CID with PROGRAM=oracle) · 1 s timestamp
+  SEQMARK 13 | 20:53:22 – 20:53:23 | Standby | Connection of the peer at the standby listener, return code 0: from 198.51.100.11:42650, service SID:proddb_s | listener log (CID with PROGRAM=oracle) · 1 s timestamp
+  SEQMARK 14 | 20:53:27.905 | Primary | LAD:2 SYNCHRONIZED: "LGWR (PID:10224042): LAD:2 is SYNCHRONIZED" | alert log (v$diag_alert_ext) · millisecond timestamp

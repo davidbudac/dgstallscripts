@@ -1,0 +1,27 @@
+#### incident 1
+Databases: proddb (primary, host prim-host.example, instance proddb1, 19.30.0.0.0 AIX) and proddb_s (standby,
+host stby-host.example, instance proddb1, 19.30.0.0.0 AIX).
+Transport as collected: FASTSYNC (SYNC NOAFFIRM), destination LAD:2, NET_TIMEOUT 30 s, REOPEN 300 s;
+protection mode MAXIMUM AVAILABILITY.
+Data window: 2026-11-13 19:35:00Z to 19:58:00Z (primary local 20:35:00 to 20:58:00 +01:00); collected primary
+2026-11-14 08:12:40Z, standby 2026-11-14 08:10:02Z.
+Incident 1 of 1: 2026-11-13 19:38:01Z to 19:53:27Z (primary local 20:38:01 to 20:53:27 +01:00).
+Destination LAD:2 not synchronized: 14 min 29 s, 20:38:58 to 20:53:27 primary local.
+Commit waits (log file sync behind LGWR): 8 buckets of 10 s with samples, up to 18 samples in one bucket;
+bucket counts only, no length per wait in the bundle [10 s samples].
+Longest SYNC write: LGWR 'SYNC Remote Write', 26.4 s (time_waited, exact), first sample 20:38:32 primary local
+[10 s samples]; NET_TIMEOUT 30 s as collected; the LGWR trace line at 19:38:58.734Z reports a wait of <30>
+seconds (begin time <11/13/2026 20:38:28>).
+Transport errors: ORA-16198 at 19:38:58.734Z (primary alert log, 3 lines); "rfs (PID:21299312): Possible
+network disconnect with primary database" at 19:39:09.141Z (standby alert log).
+Host-side observations: VKTM time-drift lines not checked from 2026-11-13 19:36:31Z to 19:54:27Z. ASH sampler
+gaps over 2 s, primary: not checked from 2026-11-13 19:38:28Z to 19:38:58Z (the SYNC wait): no gap check in
+the bundle; standby: not checked from 2026-11-13 19:38:26Z to 19:39:00Z (the SYNC wait +-2 s): no gap check in
+the bundle.
+Covered by the data for the incident interval 2026-11-13 19:36:31Z to 19:54:27Z: none of the sources listed
+here.
+Not covered for that interval: primary alert log (coverage unknown: the bundle has no cov records (format
+v1)); standby alert log (coverage unknown: the bundle has no cov records (format v1)); primary ASH source
+(coverage unknown: the bundle has no cov records (format v1)); standby ASH source (coverage unknown: the
+bundle has no cov records (format v1)); primary listener log (coverage unknown: the bundle has no cov records
+(format v1)); standby listener log (coverage unknown: the bundle has no cov records (format v1)).

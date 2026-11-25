@@ -1,0 +1,75 @@
+SUB: proddb on prim-host → proddb_s on stby-host · 2026-11-20 09:20:00 to 09:45:00 (UTC+00:00)
+BADGES: 19.27.0.0.0 · Linux SYNC AFFIRM (as collected) MAXIMUM AVAILABILITY (as collected) LAD:2 ASH 1 s samples
+NOTICES: Some sources do not reach the whole window Primary, collected 4 h 0 min after the window: every source reached the window Standby, collected 4 h 0 min after the window: ASH (V) holds none of the window (11-20 12:45 to 11-20 13:44); ASH sampler gaps holds none of the window (no entries); ASH wait samples (tx) holds none of the window (11-20 12:45 to 11-20 13:44)
+STAT: Incidents None no transport error, destination state change or SYNC stall found
+STAT: Commit waits ≥ 1 s None longest single wait under 2.0 s (one sample)
+STAT: Longest SYNC write 347 ms LGWR at 09:22:20 · time_waited, exact · NET_TIMEOUT 30 s (as collected)
+STAT: Destination not synchronized None no LAD:n state change in the primary alert log
+STAT: Transport errors None no ORA-16198, ORA-03135 or ORA-03113 in the primary alert log
+STAT: Refused at standby 0 none in the standby listener log
+STAT: Host or clock indicators – VKTM time drift: primary 0, standby 0 · ASH sampler gaps over 2 s, 09:20:00 to 09:45:00: primary 0, standby – (gap check not usable)
+RULED/NC HEADING: Ruled out
+RULED: SYNC write stall · ASH 1 s samples cover the whole window and the sampler ran through it; the longest SYNC wait sampled was 347 ms
+COV: primary/database | ok | – – – | 1 | not a window source
+COV: primary/ash/V | ok | 11-20 08:20 – 11-20 10:00 | 151 | yes
+COV: primary/awr_snap | ok | 10-21 09:20 – 11-20 09:55 | 1 | yes
+COV: primary/sysmetric | ok | 10-21 09:20 – 11-20 09:55 | 0 | yes
+COV: primary/lfs | ok | 11-20 08:20 – 11-20 10:00 | 3 / cap 200 | yes
+COV: primary/ashgap | empty | 11-20 09:19 – 11-20 09:46 | 0 / cap 50 | yes
+COV: primary/tx | ok | 11-20 08:20 – 11-20 10:00 | 151 | yes
+COV: primary/alert_sql | ok | 10-21 09:20 – 11-20 10:00 | 34 | yes
+COV: primary/alert_text | skipped | – – – | 0 | not requested; pass -a to read the text alert log
+COV: primary/alhist/sql | ok | 10-21 09:20 – 11-20 10:00 | 0 / cap 300 | not a window source
+COV: primary/dgstatus | empty | 11-20 06:20 – 11-20 13:44 | 0 / cap 500 | yes
+COV: primary/trace | empty | 10-21 09:20 – 11-20 10:00 | 0 / cap 400 | yes
+COV: primary/listener | ok | 10-21 09:20 – 11-20 10:00 | 26 | yes
+COV: primary/lsnr_ref | empty | 10-21 09:20 – 11-20 10:00 | 0 / cap 500 | yes
+COV: primary/lsnr_srv | empty | 10-21 09:20 – 11-20 10:00 | 0 / cap 500 | yes
+COV: primary/cid | skipped | – – – | 0 / cap 2000 | option -c not given
+COV: primary/net | skipped | – – – | 0 | not a window source
+COV: primary/ep | skipped | – – – | 0 | not a window source
+COV: primary/conn | skipped | – – – | 0 / cap 200 | not a window source
+COV: primary/sqlnet | skipped | – – – | 0 | not a window source
+COV: primary/ostcp | skipped | – – – | 0 | not a window source
+COV: primary/ntp | skipped | – – – | 0 | not a window source
+COV: primary/sar/ETCP | skipped | – – – | 0 / cap 2000 | no sysstat network history read
+COV: primary/sar/TCP | skipped | – – – | 0 / cap 2000 | no sysstat network history read
+COV: primary/sar/DEV | skipped | – – – | 0 / cap 2000 | no sysstat network history read
+COV: primary/sar/EDEV | skipped | – – – | 0 / cap 2000 | no sysstat network history read
+COV: primary/netsamp | skipped | – – – | 0 / cap 5000 | option -n not given
+COV: primary/dest_hist | empty | 11-20 13:45 – 11-20 13:45 | 0 | not a window source
+COV: primary/base_hist | skipped | – – – | 0 | not a window source
+COV: standby/database | ok | – – – | 1 | not a window source
+COV: standby/ash/V | empty | 11-20 12:45 – 11-20 13:44 | 0 | holds nothing before 2026-11-20 12:45:00; the interval starts 2026-11-20 09:20:00
+COV: standby/awr_snap | skipped | – – – | 0 | not collected on the standby
+COV: standby/sysmetric | skipped | – – – | 0 | not collected on the standby
+COV: standby/lfs | skipped | – – – | 0 | not collected on the standby
+COV: standby/ashgap | empty | – – – | 0 / cap 50 | holds nothing before n/a; the interval starts 2026-11-20 09:20:00
+COV: standby/tx | empty | 11-20 12:45 – 11-20 13:44 | 0 / cap 5000 | holds nothing before 2026-11-20 12:45:00; the interval starts 2026-11-20 09:20:00
+COV: standby/alert_sql | skipped | – – – | 0 | not collected on the standby
+COV: standby/alert_text | ok | 10-21 09:20 – 11-20 10:00 | 34 | yes
+COV: standby/alhist/text | ok | 10-21 09:20 – 11-20 10:00 | 0 / cap 300 | not a window source
+COV: standby/dgstatus | empty | 11-20 06:20 – 11-20 13:44 | 0 / cap 500 | yes
+COV: standby/trace | empty | 10-21 09:20 – 11-20 10:00 | 0 / cap 400 | yes
+COV: standby/listener | ok | 10-21 09:20 – 11-20 10:00 | 26 | yes
+COV: standby/lsnr_ref | empty | 10-21 09:20 – 11-20 10:00 | 0 / cap 500 | yes
+COV: standby/lsnr_srv | empty | 10-21 09:20 – 11-20 10:00 | 0 / cap 500 | yes
+COV: standby/cid | skipped | – – – | 0 / cap 2000 | option -c not given
+COV: standby/net | skipped | – – – | 0 | not a window source
+COV: standby/ep | skipped | – – – | 0 | not a window source
+COV: standby/conn | skipped | – – – | 0 / cap 200 | not a window source
+COV: standby/sqlnet | skipped | – – – | 0 | not a window source
+COV: standby/ostcp | skipped | – – – | 0 | not a window source
+COV: standby/ntp | skipped | – – – | 0 | not a window source
+COV: standby/sar/ETCP | skipped | – – – | 0 / cap 2000 | no sysstat network history read
+COV: standby/sar/TCP | skipped | – – – | 0 / cap 2000 | no sysstat network history read
+COV: standby/sar/DEV | skipped | – – – | 0 / cap 2000 | no sysstat network history read
+COV: standby/sar/EDEV | skipped | – – – | 0 / cap 2000 | no sysstat network history read
+COV: standby/netsamp | skipped | – – – | 0 / cap 5000 | option -n not given
+COV: standby/rfs_ev | empty | 10-31 09:20 – 11-20 13:45 | 0 | not a window source
+COV: standby/rfs_hist | empty | 10-31 09:20 – 11-20 13:45 | 0 | not a window source
+COV: standby/dgproc | empty | 11-20 13:45 – 11-20 13:45 | 0 | not a window source
+COV: standby/archgap | empty | 11-20 13:45 – 11-20 13:45 | 0 | not a window source
+COVNOTE: 
+HISTNOTE: No problem episodes outside the window in the history collected.
+FGNOTE: Average foreground sessions per minute, ASH (1 s samples).

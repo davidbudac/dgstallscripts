@@ -1,0 +1,13 @@
+Reference ID    : B0092CD4 (server1a.example.net)
+Stratum         : 3
+Ref time (UTC)  : Sat Nov 21 09:01:46 2026
+System time     : 0.000041695 seconds fast of NTP time
+Last offset     : +0.000015823 seconds
+RMS offset      : 0.000047200 seconds
+Frequency       : 12.345 ppm slow
+Residual freq   : +0.001 ppm
+Skew            : 0.123 ppm
+Root delay      : 0.020712 seconds
+Root dispersion : 0.001084 seconds
+Update interval : 1024.1 seconds
+Leap status     : Normal

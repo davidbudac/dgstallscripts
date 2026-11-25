@@ -1,0 +1,2 @@
+198.51.100.12   stby-host.example
+198.51.100.11   prim-host.example

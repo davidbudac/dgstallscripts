@@ -13,16 +13,21 @@ and    cast(originating_timestamp as timestamp)
 order  by originating_timestamp;
 
 prompt
-prompt ### 21 Earlier occurrences, last &hist_days days (same time of day = scheduled cause?)
+prompt ### 21 Earlier occurrences, last &hist_days days (same time of day = scheduled cause?; routine RT_PMODE lines are left out)
 select to_char(originating_timestamp,'YYYY-MM-DD HH24:MI:SS.FF3') t,
        message_text
 from   v$diag_alert_ext
 where  component_id = 'rdbms'
 and    originating_timestamp > systimestamp - numtodsinterval(&hist_days,'DAY')
-and   (message_text like '%UNSYNCHRONIZED%'
-       or message_text like '%ORA-16198%'
-       or message_text like '%ORA-03135%'
-       or message_text like '%ORA-16055%'
-       or message_text like '%TNS-12535%'
-       or message_text like '%TNS-12170%')
+and    (
+-- hist-pattern: begin
+case when message_text like '%UNSYNCHRONIZED%'
+          and not (regexp_like(message_text, 'RT_PMODE:[[:space:]]+(PRIMARY|PHYSICAL)[[:space:]]')
+                   or regexp_like(message_text, 'UNSYNCHRONIZED[[:space:]]+reason[[:space:]]+ASYNC configuration')) then 1
+     when message_text like '%ORA-16198%' or message_text like '%ORA-03135%' or message_text like '%ORA-03113%' or message_text like '%ORA-16055%'
+       or message_text like '%ORA-16191%' or message_text like '%TNS-12535%' or message_text like '%TNS-12170%' or message_text like '%TNS-12609%'
+       or message_text like '%Possible network disconnect%' then 1
+     else 0 end
+-- hist-pattern: end
+) = 1
 order  by originating_timestamp;

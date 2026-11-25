@@ -1,0 +1,109 @@
+#!/bin/sh
+# Stand-in for sqlplus in the collect.sh tests (no database here). STUB_MODE:
+#   fail  the connect fails, as with a wrong password
+#   meta  connects, writes the meta line and one coverage record, then a statement fails (ORA-00942 lands in the spool, as it would)
+#   clock as meta, and the SQL also wrote a clock record
+#   list / list1219  (collect.sh list) print the file STUB_LIST, or the ORA-01219 a mounted standby gives for v$diag_alert_ext
+#   list also answers sql/list_sources.sql (oldest ASH sample and AWR snapshot): the file STUB_SRC, or ASH 2026-11-14 03:51:20 and AWR 2026-10-21 10:00:00 without it;
+#   listsrcfail  as list, but the AWR statement fails (ORA-01219, as on a mounted standby) after the ASH one succeeded;  listsrcdown  as list, but sql/list_sources.sql cannot connect (ORA-01017)
+#   STUB_ARGS=file  the arguments of the call are written there
+#   peer  as meta, plus what the real SQL writes for the endpoints: a dest record (primary) and the fal_server parameter
+#   full  as meta, plus the records and coverage records of the newer statements, in the shapes of sql/json_primary.sql and sql/json_standby.sql:
+#         primary: lfs_by (three dims), wl_hist, alhist and alsync (both kind sql), act rman, act job (with one frequent-job summary, freq true) and act logsw; standby: act rman
+#         STUB_OMIT="act:job lfs_by"  those sources write neither records nor a coverage record (the statement failed before its coverage statement); a source is its name, act as act:KIND
+#         STUB_ERR="wl_hist act:rman"  those sources write no records and the error coverage record the SQL writes when their count statement failed (n 0, no first/last)
+[ -n "$STUB_ARGS" ] && echo "$@" > "$STUB_ARGS"      # tests: what collect.sh passed
+case $STUB_MODE in
+  fail) printf 'ERROR:\nORA-01017: invalid username/password; logon denied\n\n\nSP2-0157: unable to CONNECT to ORACLE after 3 attempts, exiting SQL*Plus\n'; exit 1 ;;
+esac
+SIDE= SCRIPT= NARG=0 HD=30
+for a in "$@"; do
+  [ -n "$SCRIPT" ] && { NARG=$((NARG + 1)); [ $NARG = 3 ] && HD=$a; }   # json_*.sql: from, to, then the history days
+  case $a in @*list_alerts.sql) if [ "$STUB_MODE" = list1219 ]; then printf 'ORA-01219: database or pluggable database not open: queries allowed on fixed tables or views only\n'; else cat "$STUB_LIST"; fi; exit 0 ;; esac
+  case $a in @*list_sources.sql)
+    case $STUB_MODE in
+      listsrcdown) printf 'ERROR:\nORA-01017: invalid username/password; logon denied\n\n\nSP2-0157: unable to CONNECT to ORACLE after 3 attempts, exiting SQL*Plus\n' ;;
+      listsrcfail) printf 'SRC:ASH\nASH\t2026-11-14 03:51:20\nSRC:AWR\nselect 1 from dba_hist_snapshot\n                    *\nERROR at line 1:\nORA-01219: database or pluggable database not open: queries allowed on fixed tables or views only\n' ;;
+      *) if [ -n "$STUB_SRC" ]; then cat "$STUB_SRC"; else printf 'SRC:ASH\nASH\t2026-11-14 03:51:20\nSRC:AWR\nAWR\t2026-10-21 10:00:00\n'; fi ;;
+    esac; exit 0 ;; esac
+  case $a in @*json_primary.sql) SIDE=primary SCRIPT=1 ;; @*json_standby.sql) SIDE=standby SCRIPT=1 ;; esac
+  OUT=$a
+done
+[ -n "$SCRIPT" ] || { echo "$STUB_TRACE"; exit 0; }    # the "Diag Trace" lookup
+printf '{"t":"meta","side":"%s","db":"CDB1","uniq":"cdb1","role":"PRIMARY","tz":"+01:00","from":"x","to":"y"}\n' "$SIDE" >> "$OUT"
+[ "$SIDE" = primary ] && printf '{"t":"cov","side":"primary","src":"ash","kind":"V","st":"ok","first":null,"last":null,"n":5,"cap":null,"capped":false,"note":"stub"}\n' >> "$OUT"
+[ "$STUB_MODE" = clock ] && printf '{"t":"clock","side":"primary","utc_off":"+05:30","src":"alert log"}\n' >> "$OUT"
+if [ "$STUB_MODE" = peer ]; then
+  [ "$SIDE" = primary ] && printf '{"t":"dest","side":"primary","id":2,"dest":"proddb_s_dgmgrl","uniq":"proddb_s","status":"VALID","mode":"PARALLELSYNC","affirm":"YES","net_timeout":30,"reopen":300,"max_failure":0,"failures":0,"error":null,"sync":"OK","synced":"YES","gap":"NO GAP"}\n' >> "$OUT"
+  printf '{"t":"param","side":"%s","name":"fal_server","value":"proddb_p, lost_alias"}\n' "$SIDE" >> "$OUT"
+fi
+if [ "$STUB_MODE" = full ]; then
+  want() { case " $STUB_OMIT " in *" $1 "*) return 1 ;; esac; return 0; }   # not left out by STUB_OMIT
+  bad() { case " $STUB_ERR " in *" $1 "*) return 0 ;; esac; return 1; }    # named in STUB_ERR
+  rec() { s=$1; shift; bad "$s" || printf '%s\n' "$@" >> "$OUT"; }          # SOURCE RECORD...: the records of a source, none for a failed one
+  # cvr SOURCE FIRST LAST N CAP CAPPED NOTE ERRNOTE: FIRST and LAST are null or a quoted time; a source in STUB_ERR gets st error, n 0, no first/last and ERRNOTE (alsync and alhist are kind sql)
+  cvr() {
+    case $1 in act:*) K=",\"kind\":\"${1#*:}\"" ;; alsync|alhist) K=',"kind":"sql"' ;; *) K= ;; esac
+    if bad "$1"; then printf '{"t":"cov","side":"%s","src":"%s"%s,"st":"error","first":null,"last":null,"n":0,"cap":%s,"capped":false,"note":"%s"}\n' "$SIDE" "${1%%:*}" "$K" "$5" "$8"
+    else if [ "$4" -gt 0 ]; then ST=ok; else ST=empty; fi
+      printf '{"t":"cov","side":"%s","src":"%s"%s,"st":"%s","first":%s,"last":%s,"n":%s,"cap":%s,"capped":%s,"note":"%s"}\n' "$SIDE" "${1%%:*}" "$K" "$ST" "$2" "$3" "$4" "$5" "$6" "$7"
+    fi >> "$OUT"; }
+  RMAN="v\$rman_status, rows of type COMMAND, lookback $HD days, newest 500 kept; first/last = the oldest and newest start time the view holds"
+  if [ "$SIDE" = primary ]; then
+    if want lfs_by; then
+      rec lfs_by \
+        '{"t":"lfs_by","side":"primary","dim":"service","name":"svc_oltp","n":120,"lg":96,"sess":14,"a":"2026-11-13 23:51:02","z":"2026-11-14 00:08:41"}' \
+        '{"t":"lfs_by","side":"primary","dim":"service","name":"hash 4274321","n":9,"lg":2,"sess":3,"a":"2026-11-14 00:01:10","z":"2026-11-14 00:03:55"}' \
+        '{"t":"lfs_by","side":"primary","dim":"module","name":"JDBC Thin Client","n":101,"lg":80,"sess":12,"a":"2026-11-13 23:51:02","z":"2026-11-14 00:08:41"}' \
+        '{"t":"lfs_by","side":"primary","dim":"module","name":null,"n":28,"lg":18,"sess":5,"a":"2026-11-13 23:52:30","z":"2026-11-14 00:07:12"}' \
+        '{"t":"lfs_by","side":"primary","dim":"machine","name":"appsrv01.example.com","n":77,"lg":60,"sess":9,"a":"2026-11-13 23:51:02","z":"2026-11-14 00:08:41"}' \
+        '{"t":"lfs_by","side":"primary","dim":"machine","name":"appsrv02.example.com","n":45,"lg":38,"sess":6,"a":"2026-11-13 23:55:00","z":"2026-11-14 00:06:30"}' \
+        '{"t":"lfs_by","side":"primary","dim":"machine","name":"batch01","n":7,"lg":0,"sess":2,"a":"2026-11-14 00:02:00","z":"2026-11-14 00:04:00"}'
+      cvr lfs_by '"2026-11-13 20:00:00"' '"2026-11-14 00:40:00"' 7 15 false "log file sync samples in ASH (V) by service, module and machine, the 15 groups with the most samples kept per list; n = groups found over the three lists; first/last = what ASH holds" "the statement over ASH failed"
+    fi
+    if want wl_hist; then
+      rec wl_hist \
+        '{"t":"wl_hist","side":"primary","b":"2026-11-13 21:00","e":"2026-11-13 22:00","redo":0.812,"redo_max":3.455,"txn":41.5}' \
+        '{"t":"wl_hist","side":"primary","b":"2026-11-13 22:00","e":"2026-11-13 23:00","redo":1.2,"redo_max":6.1,"txn":88.25}' \
+        '{"t":"wl_hist","side":"primary","b":"2026-11-13 23:00","e":"2026-11-14 00:00","redo":null,"redo_max":null,"txn":null}'
+      cvr wl_hist '"2026-10-21 10:00:00"' '"2026-11-14 00:00:00"' 3 1500 false "dba_hist_sysmetric_summary, group 2, lookback $HD days, one record per AWR snapshot interval, newest 1500 kept; first/last = the span the view holds, n = intervals in the lookback" "the dba_hist_sysmetric_summary statement failed"
+    fi
+    if want alsync; then
+      rec alsync \
+        '{"t":"alsync","side":"primary","ts":"2026-11-06 20:53:27","msg":"LGWR (PID:4242): RT_PMODE: LAD:2              changing to                             level SYNCHRONIZED"}' \
+        '{"t":"alsync","side":"primary","ts":"2026-11-14 00:09:59","msg":"LGWR (PID:4242): LAD:2 is SYNCHRONIZED"}'
+      cvr alsync '"2026-10-21 12:00:01"' '"2026-11-19 09:00:00"' 2 300 false "v\$diag_alert_ext, lookback $HD days, newest 300 kept; lines that end an UNSYNCHRONIZED period of a destination (LAD:n is SYNCHRONIZED, LAD:n level SYNCHRONIZED)" "v\$diag_alert_ext, lookback $HD days, newest 300 kept; lines that end an UNSYNCHRONIZED period of a destination (LAD:n is SYNCHRONIZED, LAD:n level SYNCHRONIZED)"
+    fi
+    if want alhist; then   # not a newer statement, but the same pass as alsync: the primary with -a then has both kinds of both
+      rec alhist \
+        '{"t":"alhist","side":"primary","ts":"2026-11-06 20:38:07","msg":"LGWR (PID:4242): ORA-16198: Received timed out error from KSR"}' \
+        '{"t":"alhist","side":"primary","ts":"2026-11-13 23:58:19","msg":"LGWR (PID:4242): LAD:2 is UNSYNCHRONIZED"}'
+      cvr alhist '"2026-10-21 12:00:01"' '"2026-11-19 09:00:00"' 2 300 false "v\$diag_alert_ext, lookback $HD days, newest 300 kept; routine RT_PMODE lines (PRIMARY, PHYSICAL, reason ASYNC configuration) excluded" "v\$diag_alert_ext, lookback $HD days, newest 300 kept; routine RT_PMODE lines (PRIMARY, PHYSICAL, reason ASYNC configuration) excluded"
+    fi
+    if want act:rman; then
+      rec act:rman \
+        '{"t":"act","side":"primary","kind":"rman","name":"BACKUP DB INCR","a":"2026-11-13 22:00:01","z":"2026-11-13 22:41:07","st":"COMPLETED"}' \
+        '{"t":"act","side":"primary","kind":"rman","name":"DELETE OBSOLETE","a":"2026-11-14 00:02:15","z":null,"st":"RUNNING"}'
+      cvr act:rman '"2026-10-21 22:00:00"' '"2026-11-14 00:02:15"' 2 500 false "$RMAN" "the v\$rman_status statement failed"
+    fi
+    if want act:job; then
+      rec act:job \
+        '{"t":"act","side":"primary","kind":"job","name":"SYS.PURGE_LOG","con":1,"a":"2026-11-14 03:00:00","z":"2026-11-14 03:00:07","st":"SUCCEEDED","freq":false,"n":1}' \
+        '{"t":"act","side":"primary","kind":"job","name":"APP.QUEUE_POLL","con":3,"a":"2026-10-21 12:00:05","z":"2026-11-20 11:59:05","st":null,"freq":true,"n":43200}'
+      cvr act:job '"2026-10-21 12:00:05"' '"2026-11-20 11:59:05"' 43201 2000 false "cdb_scheduler_job_run_details, lookback $HD days, newest 2000 run records kept, a job with more than 24 runs a day is one summary record; n = all rows in the lookback; first/last = the oldest and newest start the view holds, in the UTC offset this host has now" "the cdb_scheduler_job_run_details statement failed"
+    fi
+    if want act:logsw; then
+      rec act:logsw \
+        '{"t":"act","side":"primary","kind":"logsw","a":"2026-11-13 23:21:40","thr":1,"seq":114488}' \
+        '{"t":"act","side":"primary","kind":"logsw","a":"2026-11-13 23:41:02","thr":1,"seq":114489}' \
+        '{"t":"act","side":"primary","kind":"logsw","a":"2026-11-14 00:00:30","thr":1,"seq":114490}'
+      cvr act:logsw '"2026-10-21 12:30:00"' '"2026-11-14 00:00:30"' 3 5000 false "v\$log_history, lookback $HD days, newest 5000 kept; first/last = the oldest and newest first_time the view holds" "the v\$log_history statement failed"
+    fi
+  elif want act:rman; then
+    rec act:rman \
+      '{"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-11-13 23:30:00","z":"2026-11-13 23:35:12","st":"COMPLETED"}'
+    cvr act:rman '"2026-11-01 23:30:00"' '"2026-11-13 23:30:00"' 1 500 false "$RMAN" "the v\$rman_status statement failed"
+  fi
+fi
+echo 'ORA-00942: table or view does not exist' >> "$OUT"
+exit 0

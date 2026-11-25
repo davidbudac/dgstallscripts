@@ -1,0 +1,50 @@
+#### incident 1
+Oracle Data Guard redo transport (TCP) from primary prim-host.example (address not collected) to standby
+stby-host.example (address not collected), port not collected.
+Incident 1 of 1: 2026-11-20 10:05:30Z to 10:10:20Z (primary local 10:05:30 to 10:10:20 +00:00).
+Collected: primary 2026-11-20 14:30:00Z, standby 2026-11-20 14:30:00Z. Columns: UTC (Z), then host local time
+(primary +00:00, standby +00:00). Tags: [ms] [1 s] resolution of the logged time, [ASH] [sampler] sampled,
+[avg] average over the interval ending at that time.
+ENDPOINTS (as collected, not the state at the incident)
+endpoint aliases (ep): not collected (primary and standby: "no destination or fal_server alias known").
+TCP connections between the hosts (conn): not collected (primary and standby: "no peer address: -p not given
+and none could be derived").
+TIMELINE
+10:05:30.201Z 10:05:30.201 primary LGWR trace line reports a SYNC wait of <30> seconds; its begin time
+                                   <11/20/2026 09:48:12> disagrees with the line's own time (see host-side
+                                   observations) [ms]
+10:05:30.201Z 10:05:30.201 primary ORA-16198 (4 lines until 10:05:30.217): "LGWR (PID:2201): ORA-16198:
+                                   Received timed out error from KSR" [ms]
+10:05:30.400Z 10:05:30.400 primary LAD:2 UNSYNCHRONIZED, reason as logged "no connection" [ms]
+10:10:20.500Z 10:10:20.500 primary LAD:2 SYNCHRONIZED [ms]
+primary and standby listeners: no PROGRAM=oracle connection from the other host during 2026-11-20 10:04:00Z to
+10:11:20Z (the listener log covers it)
+HOST-SIDE OBSERVATIONS
+10:05:00Z     10:05:00     primary ASH sampler: sample_id 100000 to 100001 (1 second by sample_id), 29.4 s on
+                                   the clock, next sample 10:05:29 [1 s]
+10:05:30.100Z 10:05:30.100 standby alert log "Warning: VKTM detected a forward time drift." [ms]
+10:05:30.197Z 10:05:30.197 primary alert log "Warning: VKTM detected a forward time drift." [ms]
+10:05:30.201Z 10:05:30.201 primary LGWR trace line: begin time <11/20/2026 09:48:12> is 17 min 18 s earlier
+                                   than the time of the line, which states <30> seconds [ms]
+ASH sampler gaps over 2 s, primary: a gap over 2 s (10:05:00Z to 10:05:29Z) overlaps 2026-11-20 10:04:00Z to
+  10:11:20Z
+ASH sampler gaps over 2 s, standby: not checked from 2026-11-20 10:04:00Z to 10:11:20Z: gap check inconclusive
+NETWORK MEASUREMENTS DURING THE WINDOW (the length of a sar interval is not in the bundle)
+no sar row overlapping the incident interval and no sampler line in it
+not available, primary and standby: sar ETCP, TCP, DEV, EDEV: not read: "no sysstat network history read"
+not available, primary and standby: sampler log: no sampler log was given to collect.sh (-n)
+NETWORK MEASUREMENTS AT COLLECTION TIME (not during the window; times UTC; retransmits are host-wide)
+network check (ping, retransmit counter, Send-Q): not run (primary and standby: "option -p not given").
+TIMEOUTS AND SETTINGS (as collected, not the state at the incident)
+NET_TIMEOUT 30 s, REOPEN 300 s, MAX_FAILURE 0 (v$archive_dest LAD:2, PARALLELSYNC AFFIRM=YES)
+sqlnet.ora: not collected (primary and standby: "neither TNS_ADMIN nor ORACLE_HOME is set: sqlnet.ora not
+located")
+OS TCP: not collected (primary and standby: "no TCP tunables read for this OS")
+CLOCKS (NTP state as collected, times UTC; offset = system clock minus source)
+UTC offset in the window: primary +00:00 (alert log), standby +00:00 (alert log)
+NTP state: not collected (primary and standby: "no clock synchronisation state could be read").
+OTHER EPISODES IN THE ALERT-LOG HISTORY (UTC, window offset)
+before the window: none found; after it: none found.
+History read: primary and standby alert logs 2026-10-21 to 2026-11-20, newest 300 lines kept, capped: no.
+NOT AVAILABLE FOR THE INCIDENT INTERVAL 2026-11-20 10:04:00Z to 10:11:20Z
+standby ASH: holds nothing before 2026-11-20 13:30:00Z; the interval starts 2026-11-20 10:04:00Z

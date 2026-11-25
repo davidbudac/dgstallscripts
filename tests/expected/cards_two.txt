@@ -1,0 +1,13 @@
+RECURBARS: 0 RMAN bars, 0 job bars; legend: none
+EPNOTE: none: the source holds the interval and has nothing there. not covered: it does not hold it, or was capped.
+EP: Not collected: no alsync, wl_hist or act records in these bundles.
+WHONOTE: Sessions sampled on log file sync, by service, module and machine.
+WHOTABS: Incident 1 | Incident 2
+WHO: Incident 1 · 10:05:00 to 10:10:20 · ORA-16198, destination UNSYNCHRONIZED, LGWR SYNC wait 30.2 s
+  WHOLISTS: Not collected: no lfs_by records in this bundle.
+  WHOPEAK: Peak in one sample: 12 at 10:05:25.500; behind LGWR 12 at 10:05:25.500 (lfs_sum, whole window).
+  WHOWL: Per-minute workload (wl): no records in these bundles.
+WHO: Incident 2 · 10:30:00 to 10:31:40 · ORA-03135, standby: possible network disconnect, destination UNSYNCHRONIZED (hidden tab)
+  WHOLISTS: Not collected: no lfs_by records in this bundle.
+  WHOPEAK: Peak in one sample: 12 at 10:05:25.500; behind LGWR 12 at 10:05:25.500 (lfs_sum, whole window).
+  WHOWL: Per-minute workload (wl): no records in these bundles.

@@ -1,0 +1,6 @@
+PING 198.51.100.12 (198.51.100.12) 56(84) bytes of data.
+64 bytes from 198.51.100.12: icmp_seq=1 ttl=64 time=0.412 ms
+
+--- 198.51.100.12 ping statistics ---
+10 packets transmitted, 10 received, 0% packet loss, time 9012ms
+rtt min/avg/max/mdev = 0.380/0.412/0.480/0.031 ms

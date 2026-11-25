@@ -1,0 +1,4 @@
+Linux 5.14.0-427.el9.x86_64 (stby-host.example) 	2026-10-14 	_x86_64_	(2 CPU)
+
+00:00:01        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+00:00:01         eth0     12.00     12.00      1.00      1.00      0.00      0.00      0.00      0.00

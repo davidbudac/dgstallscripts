@@ -1,0 +1,118 @@
+<!-- gate.sh puts this into the report it renders: it hovers every chart mark and logs the tooltips into <pre id="hovertest">,
+     so tooltips and hover handlers are part of the rendered DOM that the tests compare -->
+<script>
+window.addEventListener('load', () => setTimeout(() => {
+  if (document.querySelector('.pane[data-pane="report"]').hidden) return;   // a page opened on the hand-over pane: the charts are hidden and have no geometry to hover
+  const out = [], seen = [];
+  document.querySelectorAll('.viz svg').forEach((svg, k) => {
+    const tip = svg.parentElement.querySelector('.tip'), r = svg.getBoundingClientRect();
+    const fire = (el, x, y) => { el.dispatchEvent(new MouseEvent('mousemove', { clientX: x, clientY: y, bubbles: true })); out.push(k + '|' + (tip.style.display === 'none' ? '' : tip.innerHTML)); };
+    svg.querySelectorAll('[data-tip],[data-t],[data-i],[data-m]').forEach(el => { const b = el.getBoundingClientRect(); fire(el, b.left + b.width / 2, b.top + b.height / 2); });
+    for (let i = 0; i <= 60; i++) fire(svg, r.left + r.width * i / 60, r.top + r.height / 2);
+  });
+  // leave the page as a fresh draw would: the last tooltip and cursor line depend on whether a resize redraw came after this
+  document.querySelectorAll('.tip').forEach(t => { t.removeAttribute('style'); t.innerHTML = ''; });
+  const cx = document.getElementById('tlx'); if (cx) { cx.setAttribute('x1', 0); cx.setAttribute('x2', 0); cx.setAttribute('visibility', 'hidden'); }
+  const pre = document.createElement('pre'); pre.id = 'hovertest'; pre.style.cssText = 'position:fixed;left:-99999px;top:0';   // out of the layout: no resize, no redraw
+  pre.textContent = out.join('\n'); document.body.appendChild(pre);
+}, 2000));
+</script>
+<!-- the same for the buttons and tabs: clicks them with stubs for the clipboard and for downloads, and logs what happened into a hidden element (tests/extract.py --ui).
+     The sequence is synchronous up to the history steps (the dump does not wait for promises, but it does run timers), and everything is put back as it was: the report pane shown, the tabs
+     on their first entry, so the rest of the page is the one a fresh load draws. The hand-over buttons are clicked on the hand-over pane after the real tab was clicked (and checked to be shown) -->
+<script>
+window.addEventListener('load', () => setTimeout(() => {
+  const log = [], clips = [], downloads = [], blobs = [], execs = [], delivered = { copy: { net: {}, ticket: {} }, dl: { net: {}, ticket: {} } }, RealBlob = window.Blob;
+  const shown = (el) => !!el && el.getClientRects().length > 0 && getComputedStyle(el).visibility !== 'hidden';
+  const paneState = () => ['report', 'handover'].map(k => k + ':' + (shown(document.querySelector('.pane[data-pane="' + k + '"]')) ? 'shown' : 'hidden')).join(' ');
+  const selTab = () => { const b = document.querySelector('[data-pane-tab][aria-selected="true"]'); return b ? b.dataset.paneTab : 'none'; };
+  const state = () => paneState() + '; tab ' + selTab() + '; address ' + (location.hash || 'none');
+  const visible = () => Array.from(document.querySelectorAll('.hot')).filter(x => shown(x)).map(x => x.dataset.ho + ':' + x.dataset.inc);
+  Object.defineProperty(navigator, 'clipboard', { value: { writeText: (t) => { clips.push(t); return Promise.resolve(); } }, configurable: true });
+  window.Blob = class extends RealBlob { constructor(parts, opts) { super(parts, opts); blobs.push({ text: parts.join(''), type: opts && opts.type }); } };
+  URL.createObjectURL = () => 'blob:test'; URL.revokeObjectURL = () => {};
+  HTMLAnchorElement.prototype.click = function () { downloads.push(this.download); };
+  log.push('panes at start: ' + state());
+  const tab = (k) => document.querySelector('[data-pane-tab="' + k + '"]');
+  // the hand-over pane: opened with its tab
+  tab('handover').click();
+  log.push('after the Hand-over tab: ' + state() + '; Copy and Download buttons ' + (shown(document.querySelector('[data-copy="net"]')) && shown(document.querySelector('[data-dl="ticket"]')) ? 'shown' : 'hidden'));
+  log.push('visible at start: ' + visible().join(' '));
+  const inc = () => (document.querySelector('.hot[data-ho="net"]:not(.off)') || {dataset: {}}).dataset.inc;
+  for (const k of ['net', 'ticket']) {
+    const pre = document.querySelector('.hot[data-ho="' + k + '"]:not(.off)'), c = clips.length, nb = blobs.length, nd = downloads.length;
+    document.querySelector('[data-copy="' + k + '"]').click();
+    document.querySelector('[data-dl="' + k + '"]').click();
+    delivered.copy[k][inc()] = clips[clips.length - 1]; delivered.dl[k][inc()] = blobs[blobs.length - 1].text;
+    log.push(k + ': copy ' + (clips.length > c && clips[clips.length - 1] === pre.textContent + '\n' ? 'equals the shown text' : 'DIFFERS') + '; download ' + (blobs.length > nb && blobs[blobs.length - 1].text === pre.textContent + '\n' ? 'equals the shown text' : 'DIFFERS') + ' as ' + downloads[nd] + ' (' + (blobs.length > nb ? blobs[blobs.length - 1].type : 'no blob') + ')');
+  }
+  // the clipboard API missing (some file:// contexts): the fallback selects a text area and runs the copy command
+  Object.defineProperty(navigator, 'clipboard', { value: undefined, configurable: true });
+  document.execCommand = (c) => { const ta = document.querySelector('textarea'); execs.push(c + ':' + (ta ? ta.value.split('\n')[0].slice(0, 40) : 'no textarea')); return true; };
+  document.querySelector('[data-copy="ticket"]').click();
+  log.push('fallback: ' + (execs.length ? execs.join(' | ') : 'the copy command was not used'));
+  // incident tabs: the last incident (Copy and Download there too), then back to the first
+  const tabs = Array.from(document.querySelectorAll('[data-hi]'));
+  if (tabs.length > 1) { tabs[tabs.length - 1].click(); log.push('after choosing the last incident: ' + visible().join(' '));
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText: (t) => { clips.push(t); return Promise.resolve(); } }, configurable: true });
+    for (const k of ['net', 'ticket']) { document.querySelector('[data-copy="' + k + '"]').click(); document.querySelector('[data-dl="' + k + '"]').click(); delivered.copy[k][inc()] = clips[clips.length - 1]; delivered.dl[k][inc()] = blobs[blobs.length - 1].text; }
+    tabs[0].click(); }
+  // back to the report with its tab
+  tab('report').click();
+  log.push('after the Report tab: ' + state());
+  const tlv = document.querySelector('#tl svg'); log.push('timeline chart width after the Report tab: ' + (tlv ? tlv.getAttribute('viewBox').split(' ')[2] : 'none'));   // drawn again for the page that is shown: not the 320 of a hidden page
+  // the destination tab of the SYNC histogram, then the tab that was selected
+  const dt = document.querySelector('[data-h="dest"]'), was = document.querySelector('[data-h][aria-selected="true"]');
+  if (dt) { dt.click(); log.push('destination tab: ' + document.getElementById('histCapt').textContent.length + ' characters: ' + document.getElementById('histCapt').textContent.slice(0, 120) + ' | bars ' + document.querySelectorAll('#hist svg [data-i]').length); if (was) was.click(); }
+  const su = document.querySelector('[data-h="startup"]');
+  if (su) { su.click(); log.push('startup tab: ' + document.getElementById('histCapt').textContent.length + ' characters: ' + document.getElementById('histCapt').textContent.slice(0, 120)); if (was) was.click(); }
+  // the sequence of the incident: the incident tabs, a click on a mark, and a click on a title of the explanation table (the row it jumps to flashes; the flash is taken off again)
+  const seqVis = () => Array.from(document.querySelectorAll('#seqBody .seqv')).filter(x => getComputedStyle(x).display !== 'none').map(x => x.dataset.inc);
+  log.push('sequence at start: ' + seqVis().join(' '));
+  const sq = Array.from(document.querySelectorAll('[data-si]'));
+  if (sq.length > 1) { sq[sq.length - 1].click(); log.push('sequence after choosing the last incident: ' + seqVis().join(' ')); sq[0].click(); }
+  // who waited: the incident tabs of that card (its own attribute, data-wi)
+  const whoVis = () => Array.from(document.querySelectorAll('#whoBody .whov')).filter(x => getComputedStyle(x).display !== 'none').map(x => x.dataset.whoInc);
+  log.push('who at start: ' + whoVis().join(' '));
+  const wt = Array.from(document.querySelectorAll('[data-wi]'));
+  if (wt.length > 1) { wt[wt.length - 1].click(); log.push('who after choosing the last incident: ' + whoVis().join(' ')); wt[0].click(); }
+  const jump = (el, what) => { if (!el) return; el.dispatchEvent(new MouseEvent('click', { bubbles: true })); const t = document.querySelector(el.dataset.go);
+    log.push(what + ' click: ' + el.dataset.go + ' -> ' + (t ? t.tagName.toLowerCase() + (t.classList.contains('flash') ? ' flashed' : ' not flashed') : 'NO TARGET')); if (t) t.classList.remove('flash'); };
+  jump(document.querySelector('#seqBody .seqv:not(.off) svg [data-go^="#inc"]'), 'sequence mark');
+  jump(document.querySelector('#explBody .lk[data-go^="#en-"]'), 'explanation title');
+  jump(document.querySelector('#explBody .lk[data-go^="#inc"]'), 'explanation fact');
+  // the Reading disclosures: closed on the page, opened for the printout (the print events), closed again after it
+  const rdAll = Array.from(document.querySelectorAll('details.rd')), openN = () => rdAll.filter(x => x.open).length, rdAtStart = openN();
+  window.dispatchEvent(new Event('beforeprint')); const rdPrint = openN(); window.dispatchEvent(new Event('afterprint'));
+  log.push('Reading blocks: ' + rdAll.length + ', open at start ' + rdAtStart + ', open for printing ' + rdPrint + ', open after printing ' + openN());
+  // links across the panes: a link of the report that targets the hand-over pane, the sidebar entries, a link of the page that targets the report again
+  const press = (el) => el.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));   // not .click(): HTMLAnchorElement.click is the download stub here
+  const lk = document.querySelector('#signals a[href="#handover"]');
+  if (lk) { press(lk); log.push('link in Signals to the hand-over pane: ' + state()); }
+  const sbr = document.querySelector('#sidebar a[data-pane-link="report"]'), sbh = document.querySelector('#sidebar a[data-pane-link="handover"]');
+  if (sbr) { press(sbr); log.push('sidebar Report entry: ' + state()); }
+  if (sbh) { press(sbh); log.push('sidebar Hand-over entry: ' + state() + '; report sections in the sidebar ' + (getComputedStyle(document.getElementById('navReport')).display !== 'none' ? 'listed' : 'not listed')); }
+  const sec = document.querySelector('#navReport a[href="#signals"]');
+  if (sbr) { press(sbr); log.push('report sections in the sidebar after the Report entry: ' + (getComputedStyle(document.getElementById('navReport')).display !== 'none' ? 'listed' : 'not listed')); }
+  if (sec) { press(sec); log.push('sidebar entry of a report section: ' + state()); }
+  const hl = document.querySelector('#report [data-go="#handover"]');
+  if (hl) { press(hl); log.push('data-go link to #handover: ' + state()); tab('report').click(); }
+  document.querySelectorAll('[data-copy] span').forEach(x => { x.textContent = 'Copy'; });
+  const fin = () => {
+    const pre = document.createElement('pre'); pre.id = 'uitest'; pre.style.cssText = 'position:fixed;left:-99999px;top:0'; pre.textContent = log.join('\n'); document.body.appendChild(pre);
+    const dl = document.createElement('pre'); dl.id = 'uidelivered'; dl.style.cssText = 'position:fixed;left:-99999px;top:0'; dl.textContent = JSON.stringify(delivered); document.body.appendChild(dl);
+  };
+  // Back and Forward: the history holds one entry per jump (the steps need a task each: hashchange is asynchronous)
+  setTimeout(() => {
+    tab('handover').click(); log.push('before Back, on the hand-over pane: ' + state());
+    history.back();
+    setTimeout(() => { log.push('Back: ' + state());
+      history.forward();
+      setTimeout(() => { log.push('Forward: ' + state());
+        location.hash = '#signals';
+        setTimeout(() => { log.push('address #signals typed: ' + state()); tab('report').click(); window.scrollTo(0, 0); fin(); }, 100);
+      }, 100);
+    }, 100);
+  }, 100);
+}, 2500));
+</script>

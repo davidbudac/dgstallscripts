@@ -1,0 +1,33 @@
+#### incident 0
+Oracle Data Guard redo transport (TCP) from primary prim-host.example (address not collected) to standby
+stby-host.example (address not collected), port not collected.
+No incident in the data of the window 2026-11-20 09:20:00Z to 09:45:00Z: the primary alert log covers the
+window and shows no transport error, destination state change or SYNC wait of 1 s or more.
+Collected: primary 2026-11-20 13:45:00Z, standby 2026-11-20 13:45:00Z. Columns: UTC (Z), then host local time
+(primary +00:00, standby +00:00). Tags: [ms] [1 s] resolution of the logged time, [ASH] [sampler] sampled,
+[avg] average over the interval ending at that time.
+ENDPOINTS (as collected, not the state at the incident)
+endpoint aliases (ep): not collected (primary and standby: "no destination or fal_server alias known").
+TCP connections between the hosts (conn): not collected (primary and standby: "no peer address: -p not given
+and none could be derived").
+TIMELINE
+no incident
+HOST-SIDE OBSERVATIONS
+no incident
+NETWORK MEASUREMENTS DURING THE WINDOW (the length of a sar interval is not in the bundle)
+no incident
+NETWORK MEASUREMENTS AT COLLECTION TIME (not during the window; times UTC; retransmits are host-wide)
+network check (ping, retransmit counter, Send-Q): not run (primary and standby: "option -p not given").
+TIMEOUTS AND SETTINGS (as collected, not the state at the incident)
+NET_TIMEOUT 30 s, REOPEN 300 s, MAX_FAILURE 0 (v$archive_dest LAD:2, PARALLELSYNC AFFIRM=YES)
+sqlnet.ora: not collected (primary and standby: "neither TNS_ADMIN nor ORACLE_HOME is set: sqlnet.ora not
+located")
+OS TCP: not collected (primary and standby: "no TCP tunables read for this OS")
+CLOCKS (NTP state as collected, times UTC; offset = system clock minus source)
+UTC offset in the window: primary +00:00 (alert log), standby +00:00 (alert log)
+NTP state: not collected (primary and standby: "no clock synchronisation state could be read").
+OTHER EPISODES IN THE ALERT-LOG HISTORY (UTC, window offset)
+before the window: none found; after it: none found.
+History read: primary and standby alert logs 2026-10-21 to 2026-11-20, newest 300 lines kept, capped: no.
+NOT AVAILABLE FOR THIS INTERVAL
+no incident

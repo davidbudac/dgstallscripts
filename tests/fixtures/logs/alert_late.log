@@ -1,0 +1,14 @@
+2026-11-12T10:11:21.100000+01:00
+LGWR (PID:4242): ORA-16198: Received timed out error from KSR
+2026-11-12T10:11:21.100900+01:00
+LGWR (PID:4242): RT_PMODE: LAD:2              changing to                             level UNSYNCHRONIZED reason no connection
+2026-11-12T10:16:21.000000+01:00
+Errors in file /u01/app/oracle/diag/rdbms/cdb1/cdb1/trace/cdb1_lgwr_4242.trc:
+ORA-16198: Timeout incurred on internal channel during remote archival
+2026-11-18T22:53:00.000000+01:00
+LGWR (PID:4242): RT_PMODE: LAD:2              changing to                             level SYNCHRONIZED  
+2026-11-18T22:55:00.000000+01:00
+Errors in file /u01/app/oracle/diag/rdbms/cdb1/cdb1/trace/cdb1_lgwr_4242.trc:
+ORA-03135: connection lost contact
+2026-11-19T09:00:00.000000+01:00
+Thread 1 advanced to log sequence 114500 (LGWR switch)

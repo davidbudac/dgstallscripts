@@ -1,0 +1,73 @@
+{"t":"bundle","side":"primary","host":"HOST","from":"2026-11-13 23:50:00","to":"2026-11-14 00:10:00","collected":"NOW","cidcheck":"no","v":2}
+{"t":"meta","side":"primary","db":"CDB1","uniq":"cdb1","role":"PRIMARY","tz":"+01:00","from":"x","to":"y"}
+{"t":"cov","side":"primary","src":"ash","kind":"V","st":"ok","first":null,"last":null,"n":5,"cap":null,"capped":false,"note":"stub"}
+ORA-00942: table or view does not exist
+{"t":"cov","side":"primary","src":"database","st":"ok","first":null,"last":null,"n":1,"cap":null,"capped":false,"note":"sqlplus connected, meta written"}
+{"t":"cov","side":"primary","src":"awr_snap","st":"error","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"primary","src":"sysmetric","st":"error","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"primary","src":"lfs","st":"error","first":null,"last":null,"n":0,"cap":200,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"primary","src":"lfs_by","st":"error","first":null,"last":null,"n":0,"cap":15,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"primary","src":"ashgap","st":"error","first":null,"last":null,"n":0,"cap":50,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"primary","src":"wl_hist","st":"error","first":null,"last":null,"n":0,"cap":1500,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"primary","src":"tx","st":"error","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"primary","src":"alert_sql","st":"error","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"primary","src":"alhist","kind":"sql","st":"error","first":null,"last":null,"n":0,"cap":300,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"primary","src":"alsync","kind":"sql","st":"error","first":null,"last":null,"n":0,"cap":300,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"primary","src":"dgstatus","st":"error","first":null,"last":null,"n":0,"cap":500,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"primary","src":"dest_hist","st":"error","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"primary","src":"base_hist","st":"error","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"primary","src":"act","kind":"rman","st":"error","first":null,"last":null,"n":0,"cap":500,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"primary","src":"act","kind":"job","st":"error","first":null,"last":null,"n":0,"cap":2000,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"primary","src":"act","kind":"logsw","st":"error","first":null,"last":null,"n":0,"cap":5000,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"primary","src":"rfs_ev","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the primary"}
+{"t":"cov","side":"primary","src":"rfs_hist","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the primary"}
+{"t":"cov","side":"primary","src":"dgproc","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the primary"}
+{"t":"cov","side":"primary","src":"archgap","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the primary"}
+{"t":"cov","side":"primary","src":"alert_text","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not readable: nosuch.log; use -a"}
+{"t":"cov","side":"primary","src":"alhist","kind":"text","st":"skipped","first":null,"last":null,"n":0,"cap":300,"capped":false,"note":"alert log not readable: nosuch.log"}
+{"t":"cov","side":"primary","src":"alsync","kind":"text","st":"skipped","first":null,"last":null,"n":0,"cap":300,"capped":false,"note":"alert log not readable: nosuch.log"}
+{"t":"trace","side":"primary","ts":"2026-11-13 23:58:19.452","file":"cdb1_lgwr_4242.trc","msg":"Error 16198 for LNO:2 to 'cdb1_s'"}
+{"t":"trace","side":"primary","ts":"2026-11-13 23:58:19.452","file":"cdb1_lgwr_4242.trc","msg":"krsw_ksr_receive: Current time <11/13/2026 23:58:19> exceeds begin time <11/13/2026 23:57:49> by  <30> seconds, return timed out error"}
+{"t":"trace","side":"primary","ts":"2026-11-14 00:01:00.000","file":"cdb1_lgwr_4242.trc","msg":"krsu_upi_status: Error 16198 detaching RFS from standby instance at host 'cdb1_s'"}
+{"t":"trace","side":"primary","ts":"2026-11-14 00:02:03.500","file":"cdb1_arc1_4300.trc","msg":"krsi_verify_network: Error 3113 verifying archive destination LAD:2"}
+{"t":"trace","side":"primary","ts":"2026-11-14 00:02:03.700","file":"cdb1_arc1_4300.trc","msg":"nt OS err code: 0"}
+{"t":"cov","side":"primary","src":"trace","files":2,"st":"ok","first":"2026-11-13 23:49:00","last":"2026-11-14 00:30:00","n":5,"cap":400,"capped":false,"note":"files modified in the last 45 days"}
+{"t":"lsnr","side":"primary","m":"2026-11-13 23:50","code":"0","n":1}
+{"t":"lsnr","side":"primary","m":"2026-11-13 23:58","code":"0","n":1}
+{"t":"lsnr","side":"primary","m":"2026-11-13 23:58","code":"12514","n":2}
+{"t":"lsnr","side":"primary","m":"2026-11-13 23:58","code":"12518","n":1}
+{"t":"lsnr","side":"primary","m":"2026-11-13 23:59","code":"0","n":1}
+{"t":"lsnr","side":"primary","m":"2026-11-14 00:01","code":"0","n":1}
+{"t":"lsnr","side":"primary","m":"2026-11-14 00:02","code":"0","n":1}
+{"t":"lsnr","side":"primary","m":"2026-11-14 00:03","code":"12514","n":1}
+{"t":"lsnr_ip","side":"primary","ip":"192.0.2.21","code":"0","n":2}
+{"t":"lsnr_ip","side":"primary","ip":"192.0.2.22","code":"12514","n":1}
+{"t":"lsnr_ip","side":"primary","ip":"192.0.2.23","code":"12514","n":1}
+{"t":"lsnr_ip","side":"primary","ip":"192.0.2.24","code":"12514","n":1}
+{"t":"lsnr_ip","side":"primary","ip":"198.51.100.11","code":"0","n":2}
+{"t":"lsnr_ip","side":"primary","ip":"198.51.100.11","code":"12518","n":1}
+{"t":"lsnr_ip","side":"primary","ip":"198.51.100.13","code":"0","n":1}
+{"t":"lsnr_ref","side":"primary","ts":"2026-11-13 23:58:19","ip":"192.0.2.23","code":"12514","cid":"Q1w2E3r4T5y6U7i8O9p0Aa==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"primary","ts":"2026-11-13 23:58:44","ip":"192.0.2.22","code":"12514","cid":"Zx9c8V7b6N5m4L3k2J1h0Gg==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"primary","ts":"2026-11-13 23:58:40","ip":"198.51.100.11","code":"12518","cid":"","svc":"SID:cdb1"}
+{"t":"lsnr_ref","side":"primary","ts":"2026-11-14 00:03:10","ip":"192.0.2.24","code":"12514","cid":"Mn8b7V6c5X4z3L2k1J0hGg==","svc":"APP_RW"}
+{"t":"cov","side":"primary","src":"listener","st":"ok","first":"2026-08-09 20:31:24","last":"2026-11-21 09:01:46","n":11,"cap":null,"capped":false,"note":"listener.log"}
+{"t":"cov","side":"primary","src":"lsnr_ref","st":"ok","first":"2026-08-09 20:31:24","last":"2026-11-21 09:01:46","n":4,"cap":500,"capped":false,"note":"refused establish lines in the window"}
+{"t":"lsnr_srv","side":"primary","ts":"2026-11-13 23:58:12","host":"HOST","ip":"198.51.100.11","port":33001,"svc":"SID:cdb1","code":"0"}
+{"t":"lsnr_srv","side":"primary","ts":"2026-11-13 23:58:40","host":"HOST","ip":"198.51.100.11","port":33002,"svc":"SID:cdb1","code":"12518"}
+{"t":"lsnr_srv","side":"primary","ts":"2026-11-13 23:59:01","host":"HOST","ip":"198.51.100.13","port":33010,"svc":"proddb_s_dgmgrl","code":"0"}
+{"t":"lsnr_srv","side":"primary","ts":"2026-11-14 00:01:30","host":"HOST","ip":"198.51.100.11","port":33007,"svc":"SID:cdb1","code":"0"}
+{"t":"cov","side":"primary","src":"lsnr_srv","st":"ok","first":"2026-08-09 20:31:24","last":"2026-11-21 09:01:46","n":4,"cap":500,"capped":false,"note":"establish lines with PROGRAM=oracle (an Oracle server process as the client: normally the other database host for redo transport, FAL or the broker, but database links match too) in the window"}
+{"t":"cov","side":"primary","src":"cid","st":"skipped","first":null,"last":null,"n":0,"cap":2000,"capped":false,"note":"option -c not given"}
+{"t":"cov","side":"primary","src":"ep","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"no destination or fal_server alias known"}
+{"t":"cov","side":"primary","src":"sqlnet","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"neither TNS_ADMIN nor ORACLE_HOME is set: sqlnet.ora not located"}
+{"t":"cov","side":"primary","src":"ostcp","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"sysctl not found"}
+{"t":"cov","side":"primary","src":"ntp","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"no clock synchronisation state could be read: chronyc not found; ntpq not found; timedatectl not found"}
+{"t":"cov","side":"primary","src":"sar","kind":"ETCP","st":"skipped","first":null,"last":null,"n":0,"cap":2000,"capped":false,"note":"sar not found (sysstat is not installed)"}
+{"t":"cov","side":"primary","src":"sar","kind":"TCP","st":"skipped","first":null,"last":null,"n":0,"cap":2000,"capped":false,"note":"sar not found (sysstat is not installed)"}
+{"t":"cov","side":"primary","src":"sar","kind":"DEV","st":"skipped","first":null,"last":null,"n":0,"cap":2000,"capped":false,"note":"sar not found (sysstat is not installed)"}
+{"t":"cov","side":"primary","src":"sar","kind":"EDEV","st":"skipped","first":null,"last":null,"n":0,"cap":2000,"capped":false,"note":"sar not found (sysstat is not installed)"}
+{"t":"cov","side":"primary","src":"netsamp","st":"skipped","first":null,"last":null,"n":0,"cap":5000,"capped":false,"note":"option -n not given"}
+{"t":"cov","side":"primary","src":"conn","st":"skipped","first":null,"last":null,"n":0,"cap":200,"capped":false,"note":"no peer address: -p not given and none could be derived"}
+{"t":"cov","side":"primary","src":"net","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"no peer address: option -p not given and none could be derived (destination descriptor, listener PROGRAM=oracle connections, fal_server)"}
+{"t":"clock","side":"primary","utc_off":"+00:00","src":"listener log"}

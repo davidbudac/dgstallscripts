@@ -1,0 +1,31 @@
+2026-11-06T20:38:07.123456+01:00
+LGWR (PID:4242): ORA-16198: Received timed out error from KSR
+2026-11-06T20:38:07.123900+01:00
+LGWR (PID:4242): LAD:2 is UNSYNCHRONIZED
+2026-11-10T03:04:05.000100+01:00
+rfs (PID:4400): Possible network disconnect with primary database
+2026-11-12T10:00:00.000000+01:00
+Fatal NI connect error 12170.
+  Time: 12-NOV-2026 10:00:00
+TNS-12535: TNS:operation timed out
+2026-11-13T23:49:59.900000+01:00
+Thread 1 advanced to log sequence 114490 (LGWR switch)
+  Current log# 1 seq# 114490 mem# 0: /u01/oradata/CDB1/redo01.log
+2026-11-13T23:50:00.000100+01:00
+ARC1 (PID:4300): Archived Log entry 114489 added for T-1.S-114489 ID 0x1a2b3c4d LAD:1
+2026-11-13T23:58:19.452100+01:00
+LGWR (PID:4242): ORA-16198: Received timed out error from KSR
+LGWR (PID:4242): Attempting LAD:2 network reconnect (16198)
+2026-11-13T23:58:19.452900+01:00
+LGWR (PID:4242): LAD:2 is UNSYNCHRONIZED
+2026-11-13T23:59:58.000123+01:00
+Errors in file /u01/app/oracle/diag/rdbms/cdb1/cdb1/trace/cdb1_lgwr_4242.trc:
+ORA-16198: Timeout incurred on internal channel during remote archival
+2026-11-14T00:00:01.250000+01:00
+TMON (PID:4301): ARC1 (PID:4300) hung for 260 s, killed
+2026-11-14T00:09:59.999999+01:00
+LGWR (PID:4242): LAD:2 is SYNCHRONIZED
+2026-11-14T00:10:00.000001+01:00
+Thread 1 advanced to log sequence 114491 (LGWR switch)
+2026-11-14T00:10:01.000000+01:00
+a message after the window with ORA-16198 in it

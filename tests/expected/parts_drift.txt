@@ -1,0 +1,112 @@
+HISTCAPT: Waits per bucket, log scale; red: 1 s and longer. Cumulative since instance start, as collected.
+HISTFOOT: Primary instance started 2026-10-31 10:00.
+HISTTABS: Window (AWR) | Since startup
+ALNOTE: dgstatus rows (v$dataguard_status, in memory): 0 in the window; the view holds primary 11-20 07:00 to 11-20 14:29, standby 11-20 07:00 to 11-20 14:29.
+ALTABS: All | Matches | Primary | Standby | dgstatus
+DGROWS: 0
+BASENOTE: 
+RFSNOTE: No RFS counters in this bundle: none found (v$system_event, cumulative since startup)
+SBNOTE: Standby ASH (1 s samples) holds 2026-11-20 13:30 to 2026-11-20 14:29; does not cover the whole window: standby ASH holds nothing before 2026-11-20 13:30:00; the interval starts 2026-11-20 10:00:00. Non-idle waits only.
+PROCNOTE: v$dataguard_process and v$archive_gap, collected 2026-11-20 14:30 (standby clock), not the window.
+SBPROCTXT: Archive gap when collected: none (v$archive_gap was empty).
+NETCHART: 
+NETWORK CARDS: During the window | Network history (sysstat) | Sampler of the window (net_sampler.sh) | When the bundle was collected, not during the window | Network and OS
+SARROWS: 1, of them overlapping an incident: 1
+SARCARD: row averages the interval ending at its time; shaded rows overlap an incident. No sysstat rows in the window. Primary ETCP, Primary TCP, Primary DEV, Primary EDEV, Standby ETCP, Standby TCP, Standby DEV, Standby EDEV: not read (no sysstat network history read)
+CONNROWS: 2
+RECURNOTE: Episode starts by day (rows, newest first) and hour, primary local time; outlined row: window day.
+HISTREADING: 
+RECURCELLS: 0
+REACH: primary/database | as collected
+REACH: primary/ash/V | whole window
+REACH: primary/awr_snap | whole window
+REACH: primary/sysmetric | whole window
+REACH: primary/lfs | whole window
+REACH: primary/ashgap | whole window
+REACH: primary/tx | whole window
+REACH: primary/alert_sql | whole window
+REACH: primary/alert_text | not applicable
+REACH: primary/alhist/sql | as collected
+REACH: primary/dgstatus | whole window
+REACH: primary/trace | whole window
+REACH: primary/listener | whole window
+REACH: primary/lsnr_ref | whole window
+REACH: primary/lsnr_srv | whole window
+REACH: primary/cid | not applicable
+REACH: primary/net | as collected
+REACH: primary/ep | as collected
+REACH: primary/conn | as collected
+REACH: primary/sqlnet | as collected
+REACH: primary/ostcp | as collected
+REACH: primary/ntp | as collected
+REACH: primary/sar/ETCP | not applicable
+REACH: primary/sar/TCP | not applicable
+REACH: primary/sar/DEV | not applicable
+REACH: primary/sar/EDEV | not applicable
+REACH: primary/netsamp | not applicable
+REACH: primary/dest_hist | as collected
+REACH: primary/base_hist | as collected
+REACH: standby/database | as collected
+REACH: standby/ash/V | not at all
+REACH: standby/awr_snap | not applicable
+REACH: standby/sysmetric | not applicable
+REACH: standby/lfs | not applicable
+REACH: standby/ashgap | not at all
+REACH: standby/tx | not at all
+REACH: standby/alert_sql | not applicable
+REACH: standby/alert_text | whole window
+REACH: standby/alhist/text | as collected
+REACH: standby/dgstatus | whole window
+REACH: standby/trace | whole window
+REACH: standby/listener | whole window
+REACH: standby/lsnr_ref | whole window
+REACH: standby/lsnr_srv | whole window
+REACH: standby/cid | not applicable
+REACH: standby/net | as collected
+REACH: standby/ep | as collected
+REACH: standby/conn | as collected
+REACH: standby/sqlnet | as collected
+REACH: standby/ostcp | as collected
+REACH: standby/ntp | as collected
+REACH: standby/sar/ETCP | not applicable
+REACH: standby/sar/TCP | not applicable
+REACH: standby/sar/DEV | not applicable
+REACH: standby/sar/EDEV | not applicable
+REACH: standby/netsamp | not applicable
+REACH: standby/rfs_ev | as collected
+REACH: standby/rfs_hist | as collected
+REACH: standby/dgproc | as collected
+REACH: standby/archgap | as collected
+EXPLNOTE: Cells are entries of Signals, linked to their rows.
+EXPL: Incident 1 · 10:05:30 to 10:10:20 · ORA-16198, destination UNSYNCHRONIZED
+  EXPLEVERY: Observed in every case: ORA-16198 (primary) 10:05:30.201 ; LGWR trace line: begin time and seconds of the wait 10:05:30.201 ; LAD:2 UNSYNCHRONIZED 10:05:30.400 ; LAD:2 SYNCHRONIZED 10:10:20.500
+  EXPLROW: Redo or its acknowledgement lost on the network path | Observed:  | Ruled out:  | None found:  | Not checked: SYNC write stall before the first event
+  EXPLROW: Idle timeout on a connection (a device between the hosts dropped an idle session) | Observed:  | Ruled out:  | None found:  | Not checked: 
+  EXPLROW: Standby slow to write or to answer (RFS, standby redo log I/O) | Observed:  | Ruled out:  | None found:  | Not checked: SYNC write stall before the first event
+  EXPLROW: Standby host stopped (pause, VM stun, starvation) | Observed: VKTM time-drift line (standby) 10:05:30.100 | Ruled out:  | None found:  | Not checked: A host stopped during the incident
+  EXPLROW: Standby instance or process shut down or restarted | Observed:  | Ruled out:  | None found: Refused logins at the standby listener | Not checked: 
+  EXPLROW: Primary host stopped or its clock jumped | Observed: ASH sampler gap (primary) 10:05:00 ; VKTM time-drift line (primary) 10:05:30.197 ; LGWR trace line against its own clock 10:05:30.201 | Ruled out:  | None found:  | Not checked: A host stopped during the incident
+  EXPLROW: Local redo write on the primary slow | Observed:  | Ruled out:  | None found:  | Not checked: Local redo write stall before the first event
+  EXPLUNPLACED: Not placed here, in Signals: LGWR wait samples before the first event; Endpoints and destination as collected.
+NEXT: The primary sampler log does not hold this interval; start the sampler before the next occurrence (one line every 5 s), then add its log:
+  CMD: nohup sh sh/net_sampler.sh <peer IP> <listener port> 5 /var/tmp/net_sampler.log >/dev/null 2>&1 &
+  CMD: sh/collect.sh -n /var/tmp/net_sampler.log primary "<from>" "<to>"
+  FOR: Adds Observed rows for: A host stopped during the incident
+NEXT: The standby sampler log does not hold this interval; start the sampler before the next occurrence (one line every 5 s), then add its log:
+  CMD: nohup sh sh/net_sampler.sh <peer IP> <listener port> 5 /var/tmp/net_sampler.log >/dev/null 2>&1 &
+  CMD: sh/collect.sh -n /var/tmp/net_sampler.log standby "<from>" "<to>"
+  FOR: Adds Observed rows for: A host stopped during the incident
+SEQNOTE: Shaded band: ±2 s clock margin between the hosts; order inside it is not established.
+SEQ: Incident 1 · 10:05:30 to 10:10:20 · ORA-16198, destination UNSYNCHRONIZED
+  SEQARIA: Sequence of incident 1: 8 events on a primary lane above a standby lane
+  SEQPANEL: Stall | 10:04:58.900 to 10:05:31.900 (33.0 s)
+  SEQPANEL: Recovery | 10:10:19.000 to 10:10:22.000 (3.0 s)
+  SEQMARKS: 8 shapes with a tooltip, 1 margin bands, 2 margin scale marks
+  SEQMARK 1 | 10:05:00 – 10:05:29 | Primary | ASH sampler gap (primary): consecutive samples 10:05:00 (sample_id 100000) and 10:05:29 (sample_id 100001): 1 sampling interval by sample_id, 29.4 s on the clock, 28.4 s more t… | ASH sample_id against sample_time · 1 s timestamp
+  SEQMARK 2 | 10:05:30.100 | Standby | VKTM time-drift line (standby): "Warning: VKTM detected a forward time drift."; the log names the VKTM trace file /u01/app/oracle/diag/rdbms/proddb_s/proddb1/trace/proddb1_vktm_2251… | alert log file · millisecond timestamp
+  SEQMARK 3 | 10:05:30.197 | Primary | VKTM time-drift line (primary): "Warning: VKTM detected a forward time drift." | alert log (v$diag_alert_ext) · millisecond timestamp
+  SEQMARK 4 | 10:05:30.201 | Primary | ORA-16198 (primary): ORA-16198: 4 lines until 10:05:30.217: "LGWR (PID:2201): ORA-16198: Received timed out error from KSR"; "LGWR (PID:2201): Attempting LAD:2 network re… | alert log (v$diag_alert_ext) · millisecond timestamp
+  SEQMARK 5 | 10:05:30.201 | Primary | LGWR trace line: begin time and seconds of the wait: "krsw_ksr_receive: Current time <11/20/2026 09:48:12> exceeds begin time <11/20/2026 09:48:12> by <30> seconds, return timed out error" | trace proddb1_lgwr_2201.trc · millisecond timestamp
+  SEQMARK 6 | 10:05:30.201 | Primary | LGWR trace line against its own clock: the line is stamped 2026-11-20 10:05:30; its begin time 11/20/2026 09:48:12 is 17 min 18 s earlier, while the message states 30 s | trace proddb1_lgwr_2201.trc · millisecond timestamp
+  SEQMARK 7 | 10:05:30.400 | Primary | LAD:2 UNSYNCHRONIZED: "LGWR (PID:2201): RT_PMODE: LAD:2 changing to level UNSYNCHRONIZED reason no connection" | alert log (v$diag_alert_ext) · millisecond timestamp
+  SEQMARK 8 | 10:10:20.500 | Primary | LAD:2 SYNCHRONIZED: "LGWR (PID:2201): RT_PMODE: LAD:2 changing to level SYNCHRONIZED" | alert log (v$diag_alert_ext) · millisecond timestamp

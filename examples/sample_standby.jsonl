@@ -1,91 +1,223 @@
-{"t":"bundle","side":"standby","host":"stby-host","from":"2026-11-13 20:35:00","to":"2026-11-13 20:58:00","collected":"2026-11-14 09:10:02","cidcheck":"no","v":1}
-{"t":"meta","side":"standby","db":"PRODDB","uniq":"proddb_s","role":"PHYSICAL STANDBY","open":"MOUNTED","pmode":"MAXIMUM AVAILABILITY","plevel":"MAXIMUM AVAILABILITY","inst":"proddb1","host":"stby-host.example","ver":"19.30.0.0.0","plat":"AIX-Based Systems (64-bit)","from":"2026-11-13 20:35:00","to":"2026-11-13 20:58:00","gen":"2026-11-14 09:10:03","tz":"+01:00"}
-{"t":"alert","side":"standby","ts":"20:39:09.112","msg":"\n***********************************************************************\n\nFatal NI connect error 12170.\n\n  VERSION INFORMATION:\n\tTNS for IBM/AIX RISC System/6000: Version 19.0.0.0.0 - Production\n  Time: 13-NOV-2026 20:39:09\n  Tracing not turned on.\n  Tns error struct:\n    ns main err code: 12535\n\nTNS-12535: TNS:operation timed out\n    ns secondary err code: 12560\n    nt main err code: 0\n    nt secondary err code: 0\n    nt OS err code: 0\n  Client address: (ADDRESS=(PROTOCOL=tcp)(HOST=198.51.100.11)(PORT=40112))"}
-{"t":"alert","side":"standby","ts":"20:39:09.140","msg":"rfs (PID:21299312): Standby redo log 11 for T-1.S-114494: 2048 blocks marked corrupt in the incomplete write"}
-{"t":"alert","side":"standby","ts":"20:39:09.141","msg":"rfs (PID:21299312): Possible network disconnect with primary database"}
-{"t":"alert","side":"standby","ts":"20:43:58.105","msg":"rfs (PID:22872070): Foreground-client RFS connected from primary database proddb"}
-{"t":"alert","side":"standby","ts":"20:43:59.402","msg":"rfs (PID:22872072): Primary database is in MAXIMUM AVAILABILITY mode, level RESYNCHRONIZATION"}
-{"t":"alert","side":"standby","ts":"20:53:22.963","msg":"rfs (PID:23200112): Foreground-client RFS connected from primary database proddb"}
-{"t":"alert","side":"standby","ts":"20:53:25.204","msg":"rfs (PID:23200112): Opened log for T-1.S-114495 dbid 2934781120 branch 1112345678, received by FAL"}
-{"t":"alert","side":"standby","ts":"20:53:27.950","msg":"rfs (PID:22872072): Primary database is in MAXIMUM AVAILABILITY mode, level SYNCHRONIZED"}
-{"t":"arch","side":"standby","dest":1,"thr":1,"seq":114493,"first":"20:31:02","next":"20:36:41","done":"20:36:41","creator":"ARCH","reg":"RFS","fal":"NO","mb":445.4}
-{"t":"arch","side":"standby","dest":1,"thr":1,"seq":114494,"first":"20:36:41","next":"20:52:10","done":"20:52:11","creator":"ARCH","reg":"RFS","fal":"NO","mb":425.3}
-{"t":"arch","side":"standby","dest":1,"thr":1,"seq":114495,"first":"20:52:10","next":"20:53:24","done":"20:53:25","creator":"ARCH","reg":"RFS","fal":"YES","mb":439.2}
+{"t":"bundle","side":"standby","host":"stby-host","from":"2026-11-13 20:35:00","to":"2026-11-13 20:58:00","collected":"2026-11-14 09:10:02","cidcheck":"no","v":2}
+{"t":"meta","side":"standby","db":"PRODDB","uniq":"proddb_s","role":"PHYSICAL STANDBY","open":"MOUNTED","pmode":"MAXIMUM AVAILABILITY","plevel":"MAXIMUM AVAILABILITY","inst":"proddb1","host":"stby-host.example","ver":"19.30.0.0.0","plat":"AIX-Based Systems (64-bit)","from":"2026-11-13 20:35:00","to":"2026-11-13 20:58:00","gen":"2026-11-14 09:10:03","tz":"+01:00","startup":"2026-09-02 03:12:40"}
+{"t":"alert","side":"standby","ts":"2026-11-13 20:39:09.112","msg":"\n***********************************************************************\n\nFatal NI connect error 12170.\n\n  VERSION INFORMATION:\n\tTNS for IBM/AIX RISC System/6000: Version 19.0.0.0.0 - Production\n  Time: 13-NOV-2026 20:39:09\n  Tracing not turned on.\n  Tns error struct:\n    ns main err code: 12535\n\nTNS-12535: TNS:operation timed out\n    ns secondary err code: 12560\n    nt main err code: 0\n    nt secondary err code: 0\n    nt OS err code: 0\n  Client address: (ADDRESS=(PROTOCOL=tcp)(HOST=198.51.100.11)(PORT=40112))"}
+{"t":"alert","side":"standby","ts":"2026-11-13 20:39:09.140","msg":"rfs (PID:21299312): Standby redo log 11 for T-1.S-114494: 2048 blocks marked corrupt in the incomplete write"}
+{"t":"alert","side":"standby","ts":"2026-11-13 20:39:09.141","msg":"rfs (PID:21299312): Possible network disconnect with primary database"}
+{"t":"alert","side":"standby","ts":"2026-11-13 20:43:58.105","msg":"rfs (PID:22872070): Foreground-client RFS connected from primary database proddb"}
+{"t":"alert","side":"standby","ts":"2026-11-13 20:43:59.402","msg":"rfs (PID:22872072): Primary database is in MAXIMUM AVAILABILITY mode, level RESYNCHRONIZATION"}
+{"t":"alert","side":"standby","ts":"2026-11-13 20:53:22.963","msg":"rfs (PID:23200112): Foreground-client RFS connected from primary database proddb"}
+{"t":"alert","side":"standby","ts":"2026-11-13 20:53:25.204","msg":"rfs (PID:23200112): Opened log for T-1.S-114495 dbid 2934781120 branch 1112345678, received by FAL"}
+{"t":"alert","side":"standby","ts":"2026-11-13 20:53:27.950","msg":"rfs (PID:22872072): Primary database is in MAXIMUM AVAILABILITY mode, level SYNCHRONIZED"}
+{"t":"arch","side":"standby","dest":1,"thr":1,"seq":114493,"first":"2026-11-13 20:31:02","next":"2026-11-13 20:36:41","done":"2026-11-13 20:36:41","creator":"ARCH","reg":"RFS","fal":"NO","mb":445.4}
+{"t":"arch","side":"standby","dest":1,"thr":1,"seq":114494,"first":"2026-11-13 20:36:41","next":"2026-11-13 20:52:10","done":"2026-11-13 20:52:11","creator":"ARCH","reg":"RFS","fal":"NO","mb":425.3}
+{"t":"arch","side":"standby","dest":1,"thr":1,"seq":114495,"first":"2026-11-13 20:52:10","next":"2026-11-13 20:53:24","done":"2026-11-13 20:53:25","creator":"ARCH","reg":"RFS","fal":"YES","mb":439.2}
 {"t":"srl","thr":1,"grp":10,"seq":0,"st":"UNASSIGNED","mb":1024}
 {"t":"srl","thr":1,"grp":11,"seq":114496,"st":"ACTIVE","mb":1024}
 {"t":"srl","thr":1,"grp":12,"seq":0,"st":"UNASSIGNED","mb":1024}
 {"t":"srl","thr":1,"grp":13,"seq":0,"st":"UNASSIGNED","mb":1024}
 {"t":"dgstat","name":"transport lag","value":"+00 00:00:00","unit":"day(2) to second(0) interval"}
 {"t":"dgstat","name":"apply lag","value":"+00 00:00:01","unit":"day(2) to second(0) interval"}
-{"t":"lsnr","side":"standby","m":"20:38","code":"12514","n":3}
-{"t":"lsnr","side":"standby","m":"20:39","code":"12514","n":6}
-{"t":"lsnr","side":"standby","m":"20:40","code":"12514","n":5}
-{"t":"lsnr","side":"standby","m":"20:41","code":"12514","n":5}
-{"t":"lsnr","side":"standby","m":"20:42","code":"12514","n":4}
-{"t":"lsnr","side":"standby","m":"20:43","code":"12514","n":5}
-{"t":"lsnr","side":"standby","m":"20:44","code":"12514","n":4}
-{"t":"lsnr","side":"standby","m":"20:45","code":"12514","n":4}
-{"t":"lsnr","side":"standby","m":"20:46","code":"12514","n":3}
-{"t":"lsnr","side":"standby","m":"20:47","code":"12514","n":4}
-{"t":"lsnr","side":"standby","m":"20:48","code":"12514","n":3}
-{"t":"lsnr","side":"standby","m":"20:49","code":"12514","n":2}
-{"t":"lsnr","side":"standby","m":"20:50","code":"12514","n":1}
-{"t":"lsnr","side":"standby","m":"20:43","code":"0","n":1}
-{"t":"lsnr","side":"standby","m":"20:53","code":"0","n":2}
+{"t":"lsnr","side":"standby","m":"2026-11-13 20:38","code":"12514","n":3}
+{"t":"lsnr","side":"standby","m":"2026-11-13 20:39","code":"12514","n":6}
+{"t":"lsnr","side":"standby","m":"2026-11-13 20:40","code":"12514","n":5}
+{"t":"lsnr","side":"standby","m":"2026-11-13 20:41","code":"12514","n":5}
+{"t":"lsnr","side":"standby","m":"2026-11-13 20:42","code":"12514","n":4}
+{"t":"lsnr","side":"standby","m":"2026-11-13 20:43","code":"12514","n":5}
+{"t":"lsnr","side":"standby","m":"2026-11-13 20:44","code":"12514","n":4}
+{"t":"lsnr","side":"standby","m":"2026-11-13 20:45","code":"12514","n":4}
+{"t":"lsnr","side":"standby","m":"2026-11-13 20:46","code":"12514","n":3}
+{"t":"lsnr","side":"standby","m":"2026-11-13 20:47","code":"12514","n":4}
+{"t":"lsnr","side":"standby","m":"2026-11-13 20:48","code":"12514","n":3}
+{"t":"lsnr","side":"standby","m":"2026-11-13 20:49","code":"12514","n":2}
+{"t":"lsnr","side":"standby","m":"2026-11-13 20:50","code":"12514","n":1}
+{"t":"lsnr","side":"standby","m":"2026-11-13 20:43","code":"0","n":1}
+{"t":"lsnr","side":"standby","m":"2026-11-13 20:53","code":"0","n":2}
 {"t":"lsnr_ip","side":"standby","ip":"192.0.2.21","code":"12514","n":21}
 {"t":"lsnr_ip","side":"standby","ip":"192.0.2.22","code":"12514","n":17}
 {"t":"lsnr_ip","side":"standby","ip":"192.0.2.23","code":"12514","n":11}
 {"t":"lsnr_ip","side":"standby","ip":"198.51.100.11","code":"0","n":3}
-{"t":"lsnr_ref","side":"standby","ts":"20:38:19","ip":"192.0.2.23","code":"12514","cid":"1VrT+1FJors/6ILi8IHn5k==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:38:41","ip":"192.0.2.22","code":"12514","cid":"xsC7tVO/HbkQfyy/KV5zjR==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:38:55","ip":"192.0.2.23","code":"12514","cid":"j1twdTKWTddB+XhkAS1voQ==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:39:32","ip":"192.0.2.22","code":"12514","cid":"G6yyzyN9zHYIa4UOrGNATM==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:39:39","ip":"192.0.2.23","code":"12514","cid":"DJawTgsu8PO+799nKSNrh9==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:39:41","ip":"192.0.2.23","code":"12514","cid":"UCauSDmLhuVtcqcYezdZ/t==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:39:43","ip":"192.0.2.23","code":"12514","cid":"DDj8hYs5suKcNd8Zra9A9s==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:39:47","ip":"192.0.2.21","code":"12514","cid":"KPxZ9W3qLy7zKUVQDT7S8s==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:39:54","ip":"192.0.2.23","code":"12514","cid":"QCBNR3YbDgbleph1QHt61Q==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:40:01","ip":"192.0.2.22","code":"12514","cid":"4XATWS8PHp9NHfYjFM5DI4==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:40:09","ip":"192.0.2.23","code":"12514","cid":"Zj59fhZ5R1Py4oJe2JbmPT==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:40:32","ip":"192.0.2.22","code":"12514","cid":"uSgR7cMy+UcU3zr1ZtoLuC==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:40:33","ip":"192.0.2.23","code":"12514","cid":"64CxqlIOdNKhiFXiQ2hzT/==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:40:55","ip":"192.0.2.21","code":"12514","cid":"pLjHX2JiCLhKcIhP6Br1iQ==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:41:07","ip":"192.0.2.23","code":"12514","cid":"hGXZnnal5WisCgEBCY8f5N==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:41:10","ip":"192.0.2.23","code":"12514","cid":"3/ynbdrZRzsGQBJg3UHKwk==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:41:15","ip":"192.0.2.21","code":"12514","cid":"flF6XUi5AhuqpfEnbtXAqw==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:41:33","ip":"192.0.2.22","code":"12514","cid":"8jZfALhLSzFyCmmdKTxp/T==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:41:45","ip":"192.0.2.23","code":"12514","cid":"SF2RCdKDFRuNw5GCf+hA6I==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:42:32","ip":"192.0.2.23","code":"12514","cid":"LI8gJhead6/wJ9kFZJSqgm==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:42:34","ip":"192.0.2.21","code":"12514","cid":"RB9H+iMb+lk777PZnK8Cl6==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:42:57","ip":"192.0.2.23","code":"12514","cid":"5ixaaJLShuQjOud/+yDUA+==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:42:59","ip":"192.0.2.22","code":"12514","cid":"5zmS1swoPqApryPZBlgvIy==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:43:04","ip":"192.0.2.23","code":"12514","cid":"2jGjNGkTfi3oYv2DzaKG05==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:43:23","ip":"192.0.2.21","code":"12514","cid":"Rk+GQV81rkmghzem9yPVUJ==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:43:37","ip":"192.0.2.23","code":"12514","cid":"/c5q52RYfLWrLoevhZC0x0==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:43:55","ip":"192.0.2.23","code":"12514","cid":"awirH/juQbLifxz53nCQE2==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:43:59","ip":"192.0.2.23","code":"12514","cid":"8+AJy75fNcTTN6KFAQdEmQ==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:44:16","ip":"192.0.2.21","code":"12514","cid":"OMJmYxhcABm6jof8efD0nH==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:44:27","ip":"192.0.2.22","code":"12514","cid":"Y/1Kgd2vd/Er1uyZAlIa/Z==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:44:33","ip":"192.0.2.21","code":"12514","cid":"Yd7chlN/Xc+1HSyGbDS1GH==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:44:40","ip":"192.0.2.22","code":"12514","cid":"y5oOKVqYX7Enwvq4VNAKjK==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:45:07","ip":"192.0.2.22","code":"12514","cid":"awtn3LG8Zv5Ypu8D0fzFwE==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:45:26","ip":"192.0.2.22","code":"12514","cid":"IHgYIruiqFhojmAIDdN87x==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:45:35","ip":"192.0.2.23","code":"12514","cid":"3/Q/XBmTepo6uKZyUf0IE9==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:45:56","ip":"192.0.2.23","code":"12514","cid":"pU2NJhKaM1/5WdR16ePllj==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:46:16","ip":"192.0.2.21","code":"12514","cid":"hZ4fXfeTkYpIygfdM7ENA8==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:46:17","ip":"192.0.2.21","code":"12514","cid":"5vFldPGYYJvW5hANsbEvrS==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:46:23","ip":"192.0.2.22","code":"12514","cid":"agEaBp0vXnJaE/9I0MyTLU==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:47:17","ip":"192.0.2.21","code":"12514","cid":"n1Gnt11CuZyzaA3U2OLzu6==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:47:18","ip":"192.0.2.22","code":"12514","cid":"QBGSyLvVSskUVINx+ZmQF9==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:47:26","ip":"192.0.2.21","code":"12514","cid":"GxLUczZ8XbFzUxtPTfYFEp==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:47:44","ip":"192.0.2.21","code":"12514","cid":"x6n1nf2xv54WCA+7e56W8z==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:48:04","ip":"192.0.2.21","code":"12514","cid":"3uL4FFQKoKGwRDIOYQ+kVc==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:48:08","ip":"192.0.2.21","code":"12514","cid":"sgUpj6Sg9aheovEZXzUjpw==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:48:22","ip":"192.0.2.22","code":"12514","cid":"hOGu5NgyvhwvSuqK4dWGlg==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:49:40","ip":"192.0.2.22","code":"12514","cid":"oAEcTl31uGQ+dFCGAtmNtc==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:49:55","ip":"192.0.2.21","code":"12514","cid":"mRau8URBfT5MISizhBHs4/==","svc":"APP_RW"}
-{"t":"lsnr_ref","side":"standby","ts":"20:50:10","ip":"192.0.2.23","code":"12514","cid":"AFHDzXeUHNBZS0Z1WnImG9==","svc":"APP_RW"}
-{"t":"trace","side":"standby","ts":"20:39:09.110","file":"proddb1_rfs_21299312.trc","msg":"TNS-12535: TNS:operation timed out"}
-{"t":"trace","side":"standby","ts":"20:39:09.110","file":"proddb1_rfs_21299312.trc","msg":"    nt secondary err code: 0"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:38:19","ip":"192.0.2.23","code":"12514","cid":"1VrT+1FJors/6ILi8IHn5k==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:38:41","ip":"192.0.2.22","code":"12514","cid":"xsC7tVO/HbkQfyy/KV5zjR==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:38:55","ip":"192.0.2.23","code":"12514","cid":"j1twdTKWTddB+XhkAS1voQ==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:39:32","ip":"192.0.2.22","code":"12514","cid":"G6yyzyN9zHYIa4UOrGNATM==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:39:39","ip":"192.0.2.23","code":"12514","cid":"DJawTgsu8PO+799nKSNrh9==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:39:41","ip":"192.0.2.23","code":"12514","cid":"UCauSDmLhuVtcqcYezdZ/t==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:39:43","ip":"192.0.2.23","code":"12514","cid":"DDj8hYs5suKcNd8Zra9A9s==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:39:47","ip":"192.0.2.21","code":"12514","cid":"KPxZ9W3qLy7zKUVQDT7S8s==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:39:54","ip":"192.0.2.23","code":"12514","cid":"QCBNR3YbDgbleph1QHt61Q==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:40:01","ip":"192.0.2.22","code":"12514","cid":"4XATWS8PHp9NHfYjFM5DI4==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:40:09","ip":"192.0.2.23","code":"12514","cid":"Zj59fhZ5R1Py4oJe2JbmPT==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:40:32","ip":"192.0.2.22","code":"12514","cid":"uSgR7cMy+UcU3zr1ZtoLuC==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:40:33","ip":"192.0.2.23","code":"12514","cid":"64CxqlIOdNKhiFXiQ2hzT/==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:40:55","ip":"192.0.2.21","code":"12514","cid":"pLjHX2JiCLhKcIhP6Br1iQ==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:41:07","ip":"192.0.2.23","code":"12514","cid":"hGXZnnal5WisCgEBCY8f5N==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:41:10","ip":"192.0.2.23","code":"12514","cid":"3/ynbdrZRzsGQBJg3UHKwk==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:41:15","ip":"192.0.2.21","code":"12514","cid":"flF6XUi5AhuqpfEnbtXAqw==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:41:33","ip":"192.0.2.22","code":"12514","cid":"8jZfALhLSzFyCmmdKTxp/T==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:41:45","ip":"192.0.2.23","code":"12514","cid":"SF2RCdKDFRuNw5GCf+hA6I==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:42:32","ip":"192.0.2.23","code":"12514","cid":"LI8gJhead6/wJ9kFZJSqgm==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:42:34","ip":"192.0.2.21","code":"12514","cid":"RB9H+iMb+lk777PZnK8Cl6==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:42:57","ip":"192.0.2.23","code":"12514","cid":"5ixaaJLShuQjOud/+yDUA+==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:42:59","ip":"192.0.2.22","code":"12514","cid":"5zmS1swoPqApryPZBlgvIy==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:43:04","ip":"192.0.2.23","code":"12514","cid":"2jGjNGkTfi3oYv2DzaKG05==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:43:23","ip":"192.0.2.21","code":"12514","cid":"Rk+GQV81rkmghzem9yPVUJ==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:43:37","ip":"192.0.2.23","code":"12514","cid":"/c5q52RYfLWrLoevhZC0x0==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:43:55","ip":"192.0.2.23","code":"12514","cid":"awirH/juQbLifxz53nCQE2==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:43:59","ip":"192.0.2.23","code":"12514","cid":"8+AJy75fNcTTN6KFAQdEmQ==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:44:16","ip":"192.0.2.21","code":"12514","cid":"OMJmYxhcABm6jof8efD0nH==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:44:27","ip":"192.0.2.22","code":"12514","cid":"Y/1Kgd2vd/Er1uyZAlIa/Z==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:44:33","ip":"192.0.2.21","code":"12514","cid":"Yd7chlN/Xc+1HSyGbDS1GH==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:44:40","ip":"192.0.2.22","code":"12514","cid":"y5oOKVqYX7Enwvq4VNAKjK==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:45:07","ip":"192.0.2.22","code":"12514","cid":"awtn3LG8Zv5Ypu8D0fzFwE==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:45:26","ip":"192.0.2.22","code":"12514","cid":"IHgYIruiqFhojmAIDdN87x==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:45:35","ip":"192.0.2.23","code":"12514","cid":"3/Q/XBmTepo6uKZyUf0IE9==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:45:56","ip":"192.0.2.23","code":"12514","cid":"pU2NJhKaM1/5WdR16ePllj==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:46:16","ip":"192.0.2.21","code":"12514","cid":"hZ4fXfeTkYpIygfdM7ENA8==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:46:17","ip":"192.0.2.21","code":"12514","cid":"5vFldPGYYJvW5hANsbEvrS==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:46:23","ip":"192.0.2.22","code":"12514","cid":"agEaBp0vXnJaE/9I0MyTLU==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:47:17","ip":"192.0.2.21","code":"12514","cid":"n1Gnt11CuZyzaA3U2OLzu6==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:47:18","ip":"192.0.2.22","code":"12514","cid":"QBGSyLvVSskUVINx+ZmQF9==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:47:26","ip":"192.0.2.21","code":"12514","cid":"GxLUczZ8XbFzUxtPTfYFEp==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:47:44","ip":"192.0.2.21","code":"12514","cid":"x6n1nf2xv54WCA+7e56W8z==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:48:04","ip":"192.0.2.21","code":"12514","cid":"3uL4FFQKoKGwRDIOYQ+kVc==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:48:08","ip":"192.0.2.21","code":"12514","cid":"sgUpj6Sg9aheovEZXzUjpw==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:48:22","ip":"192.0.2.22","code":"12514","cid":"hOGu5NgyvhwvSuqK4dWGlg==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:49:40","ip":"192.0.2.22","code":"12514","cid":"oAEcTl31uGQ+dFCGAtmNtc==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:49:55","ip":"192.0.2.21","code":"12514","cid":"mRau8URBfT5MISizhBHs4/==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 20:50:10","ip":"192.0.2.23","code":"12514","cid":"AFHDzXeUHNBZS0Z1WnImG9==","svc":"APP_RW"}
+{"t":"trace","side":"standby","ts":"2026-11-13 20:39:09.110","file":"proddb1_rfs_21299312.trc","msg":"TNS-12535: TNS:operation timed out"}
+{"t":"trace","side":"standby","ts":"2026-11-13 20:39:09.110","file":"proddb1_rfs_21299312.trc","msg":"    nt secondary err code: 0"}
 {"t":"alhist","side":"standby","ts":"2026-10-30 20:44:42","msg":"TNS-12535: TNS:operation timed out"}
-{"t":"net","side":"standby","peer":"198.51.100.11","port":"1526","os":"AIX","rtt":"0.43","loss":"0%","retr":1,"secs":10,"sendq":0,"at":"09:10:31"}
+{"t":"net","side":"standby","peer":"198.51.100.11","port":"1526","os":"AIX","rtt":"0.43","loss":"0%","retr":1,"secs":10,"sendq":0,"at":"2026-11-14 09:10:31","via":"option -p"}
+{"t":"clock","side":"standby","utc_off":"+01:00","src":"alert log"}
+{"t":"cov","side":"standby","src":"database","st":"ok","first":null,"last":null,"n":1,"cap":null,"capped":false,"note":"sqlplus connected, meta written"}
+{"t":"cov","side":"standby","src":"alert_text","st":"ok","first":"2026-09-02 03:14:07","last":"2026-11-14 09:09:58","n":8,"cap":null,"capped":false,"note":"alert_proddb1.log"}
+{"t":"cov","side":"standby","src":"alhist","kind":"text","st":"ok","first":"2026-10-15 09:41:07","last":"2026-11-14 09:09:58","n":1,"cap":300,"capped":false,"note":"text alert log, last 30 days (since 2026-10-15 09:10:02), newest 300 kept; routine RT_PMODE lines (PRIMARY, PHYSICAL, reason ASYNC configuration) excluded"}
+{"t":"cov","side":"standby","src":"trace","files":6,"st":"ok","first":"2026-10-02 00:00:41","last":"2026-11-14 08:57:12","n":2,"cap":400,"capped":false,"note":"files modified in the last 45 days"}
+{"t":"cov","side":"standby","src":"listener","st":"ok","first":"2026-09-20 00:00:01","last":"2026-11-14 09:09:51","n":78,"cap":null,"capped":false,"note":"listener.log"}
+{"t":"cov","side":"standby","src":"lsnr_ref","st":"ok","first":"2026-09-20 00:00:01","last":"2026-11-14 09:09:51","n":49,"cap":500,"capped":false,"note":"refused establish lines in the window"}
+{"t":"cov","side":"standby","src":"cid","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"option -c not given"}
+{"t":"cov","side":"standby","src":"net","st":"ok","first":"2026-11-14 09:10:31","last":"2026-11-14 09:10:31","n":1,"cap":null,"capped":false,"note":"ping and netstat towards 198.51.100.11"}
+{"t":"dgstatus","side":"standby","ts":"2026-11-13 20:39:09","facility":"Network Services","severity":"Error","dest":0,"err":12535,"msg":"TNS-12535: TNS:operation timed out"}
+{"t":"dgstatus","side":"standby","ts":"2026-11-13 20:39:09","facility":"Remote File Server","severity":"Warning","dest":0,"err":0,"msg":"RFS[7]: Possible network disconnect with primary database"}
+{"t":"dgstatus","side":"standby","ts":"2026-11-13 20:47:58","facility":"Remote File Server","severity":"Informational","dest":0,"err":0,"msg":"RFS[8]: Assigned to RFS process (PID:22872070)"}
+{"t":"dgstatus","side":"standby","ts":"2026-11-13 20:53:25","facility":"Fetch Archive Log","severity":"Informational","dest":0,"err":0,"msg":"Fetching gap sequence in thread 1, gap sequence 114495-114495"}
+{"t":"dgstatus","side":"standby","ts":"2026-11-13 20:53:27","facility":"Remote File Server","severity":"Informational","dest":0,"err":0,"msg":"Primary database is in MAXIMUM AVAILABILITY mode, level SYNCHRONIZED"}
+{"t":"param","side":"standby","name":"fal_server","value":"proddb_p_dgmgrl"}
+{"t":"rfs_ev","side":"standby","ev":"RFS write","n":412880311,"tmo":0,"us":14450810885,"avg_us":35.0}
+{"t":"rfs_ev","side":"standby","ev":"RFS random i/o","n":1903442,"tmo":0,"us":407336588,"avg_us":214.0}
+{"t":"rfs_ev","side":"standby","ev":"RFS sequential i/o","n":9213,"tmo":0,"us":1732044,"avg_us":188.0}
+{"t":"rfs_ev","side":"standby","ev":"RFS dispatch","n":3812004,"tmo":0,"us":45744048,"avg_us":12.0}
+{"t":"rfs_ev","side":"standby","ev":"RFS ping","n":91822,"tmo":0,"us":284648200,"avg_us":3100.0}
+{"t":"rfs_ev","side":"standby","ev":"RFS attach","n":2210,"tmo":0,"us":906100,"avg_us":410.0}
+{"t":"rfs_ev","side":"standby","ev":"RFS detach","n":2205,"tmo":0,"us":330750,"avg_us":150.0}
+{"t":"rfs_ev","side":"standby","ev":"RFS create","n":1180,"tmo":0,"us":3516400,"avg_us":2980.0}
+{"t":"rfs_ev","side":"standby","ev":"RFS close","n":1180,"tmo":0,"us":1439600,"avg_us":1220.0}
+{"t":"hist_su","side":"standby","ev":"RFS write","b":"8 microseconds","us":8,"n":1651521}
+{"t":"hist_su","side":"standby","ev":"RFS write","b":"16 microseconds","us":16,"n":127992896}
+{"t":"hist_su","side":"standby","ev":"RFS write","b":"32 microseconds","us":32,"n":214607968}
+{"t":"hist_su","side":"standby","ev":"RFS write","b":"64 microseconds","us":64,"n":49545637}
+{"t":"hist_su","side":"standby","ev":"RFS write","b":"128 microseconds","us":128,"n":12386409}
+{"t":"hist_su","side":"standby","ev":"RFS write","b":"256 microseconds","us":256,"n":4128803}
+{"t":"hist_su","side":"standby","ev":"RFS write","b":"512 microseconds","us":512,"n":1238640}
+{"t":"hist_su","side":"standby","ev":"RFS write","b":"1 millisecond","us":1000,"n":825760}
+{"t":"hist_su","side":"standby","ev":"RFS write","b":"2 milliseconds","us":2000,"n":330304}
+{"t":"hist_su","side":"standby","ev":"RFS write","b":"4 milliseconds","us":4000,"n":123864}
+{"t":"hist_su","side":"standby","ev":"RFS write","b":"8 milliseconds","us":8000,"n":33030}
+{"t":"hist_su","side":"standby","ev":"RFS write","b":"16 milliseconds","us":16000,"n":8257}
+{"t":"hist_su","side":"standby","ev":"RFS write","b":"32 milliseconds","us":32000,"n":4128}
+{"t":"hist_su","side":"standby","ev":"RFS write","b":"65 milliseconds","us":65000,"n":1651}
+{"t":"hist_su","side":"standby","ev":"RFS write","b":"131 milliseconds","us":131000,"n":825}
+{"t":"hist_su","side":"standby","ev":"RFS write","b":"262 milliseconds","us":262000,"n":330}
+{"t":"hist_su","side":"standby","ev":"RFS write","b":"524 milliseconds","us":524000,"n":165}
+{"t":"hist_su","side":"standby","ev":"RFS write","b":"1 second","us":1000000,"n":82}
+{"t":"hist_su","side":"standby","ev":"RFS write","b":"2 seconds","us":2000000,"n":41}
+{"t":"dgproc","side":"standby","name":"ARC0","pid":"22413314","role":"archive local","action":"IDLE","client_pid":null,"client_role":null,"thr":0,"seq":0,"block":0,"blocks":0,"dest":1,"since":"2026-09-04 03:12:48"}
+{"t":"dgproc","side":"standby","name":"ARC1","pid":"22872070","role":"archive redo","action":"IDLE","client_pid":null,"client_role":null,"thr":0,"seq":0,"block":0,"blocks":0,"dest":1,"since":"2026-09-04 03:12:48"}
+{"t":"dgproc","side":"standby","name":"RFS","pid":"23200112","role":"RFS sync","action":"IDLE","client_pid":10224042,"client_role":"log writer","thr":1,"seq":114712,"block":0,"blocks":0,"dest":2,"since":"2026-09-04 03:12:48"}
+{"t":"dgproc","side":"standby","name":"RFS","pid":"23200114","role":"RFS archive","action":"IDLE","client_pid":16974138,"client_role":"archive redo","thr":0,"seq":0,"block":0,"blocks":0,"dest":2,"since":"2026-09-04 03:12:48"}
+{"t":"dgproc","side":"standby","name":"MRP0","pid":"9437410","role":"managed recovery","action":"APPLYING_LOG","client_pid":null,"client_role":null,"thr":1,"seq":114711,"block":4210,"blocks":2048,"dest":0,"since":"2026-09-04 03:12:47"}
+{"t":"dgproc","side":"standby","name":"TMON","pid":"8782204","role":"redo transport monitor","action":"IDLE","client_pid":null,"client_role":null,"thr":0,"seq":0,"block":0,"blocks":0,"dest":0,"since":"2026-09-04 03:12:47"}
+{"t":"lsnr_srv","side":"standby","ts":"2026-11-13 20:47:58","host":"prim-host.example","ip":"198.51.100.11","port":41872,"svc":"SID:proddb_s","code":"0"}
+{"t":"lsnr_srv","side":"standby","ts":"2026-11-13 20:47:59","host":"prim-host.example","ip":"198.51.100.11","port":41874,"svc":"SID:proddb_s","code":"0"}
+{"t":"lsnr_srv","side":"standby","ts":"2026-11-13 20:48:24","host":"prim-host.example","ip":"198.51.100.11","port":42011,"svc":"SID:proddb_s","code":"12518"}
+{"t":"lsnr_srv","side":"standby","ts":"2026-11-13 20:53:22","host":"prim-host.example","ip":"198.51.100.11","port":42650,"svc":"SID:proddb_s","code":"0"}
+{"t":"ep","side":"standby","from":"fal_server","dest":null,"alias":"proddb_p_dgmgrl","file":"/u01/app/oracle/product/19.0.0/dbhome_1/network/admin/tnsnames.ora","host":"prim-host.example","port":1526,"addrs":1,"ip":null,"ip_how":null,"note":"alias proddb_p_dgmgrl in /u01/app/oracle/product/19.0.0/dbhome_1/network/admin/tnsnames.ora; getent not found: host name not resolved"}
+{"t":"conn","side":"standby","lip":"198.51.100.12","lport":1526,"pip":"198.51.100.11","pport":41622,"state":"ESTABLISHED","sendq":0,"recvq":0}
+{"t":"conn","side":"standby","lip":"198.51.100.12","lport":1526,"pip":"198.51.100.11","pport":41640,"state":"ESTABLISHED","sendq":0,"recvq":0}
+{"t":"sqlnet","side":"standby","name":"SQLNET.EXPIRE_TIME","set":true,"value":"10","file":"/u01/app/oracle/product/19.0.0/dbhome_1/network/admin/sqlnet.ora"}
+{"t":"sqlnet","side":"standby","name":"SQLNET.OUTBOUND_CONNECT_TIMEOUT","set":false,"value":null,"file":"/u01/app/oracle/product/19.0.0/dbhome_1/network/admin/sqlnet.ora"}
+{"t":"sqlnet","side":"standby","name":"SQLNET.INBOUND_CONNECT_TIMEOUT","set":false,"value":null,"file":"/u01/app/oracle/product/19.0.0/dbhome_1/network/admin/sqlnet.ora"}
+{"t":"sqlnet","side":"standby","name":"SQLNET.RECV_TIMEOUT","set":false,"value":null,"file":"/u01/app/oracle/product/19.0.0/dbhome_1/network/admin/sqlnet.ora"}
+{"t":"sqlnet","side":"standby","name":"SQLNET.SEND_TIMEOUT","set":false,"value":null,"file":"/u01/app/oracle/product/19.0.0/dbhome_1/network/admin/sqlnet.ora"}
+{"t":"sqlnet","side":"standby","name":"TCP.CONNECT_TIMEOUT","set":false,"value":null,"file":"/u01/app/oracle/product/19.0.0/dbhome_1/network/admin/sqlnet.ora"}
+{"t":"ostcp","side":"standby","name":"rfc1323","value":"1","tool":"no -a"}
+{"t":"ostcp","side":"standby","name":"sb_max","value":"4194304","tool":"no -a"}
+{"t":"ostcp","side":"standby","name":"tcp_keepcnt","value":"8","tool":"no -a"}
+{"t":"ostcp","side":"standby","name":"tcp_keepidle","value":"14400","tool":"no -a"}
+{"t":"ostcp","side":"standby","name":"tcp_keepinit","value":"150","tool":"no -a"}
+{"t":"ostcp","side":"standby","name":"tcp_keepintvl","value":"150","tool":"no -a"}
+{"t":"ostcp","side":"standby","name":"tcp_recvspace","value":"262144","tool":"no -a"}
+{"t":"ostcp","side":"standby","name":"tcp_sendspace","value":"262144","tool":"no -a"}
+{"t":"ntp","side":"standby","tool":"ntpq -p","ref":"ntp1.example.net","stratum":2,"off":-0.00311,"synced":"yes","at":"2026-11-14 09:10:02","note":"system peer = the line marked *; off = system clock minus the peer, seconds, positive = ahead (ntpq reports the opposite sign, in ms)"}
+{"t":"cov","side":"standby","src":"dgstatus","st":"ok","first":"2026-11-13 18:35:00","last":"2026-11-14 09:09:32","n":5,"cap":500,"capped":false,"note":"v$dataguard_status, in memory (lost at restart); first/last = oldest and newest row it holds, newest 500 of the window kept"}
+{"t":"cov","side":"standby","src":"rfs_ev","st":"ok","first":"2026-09-02 03:12:40","last":"2026-11-14 09:10:02","n":9,"cap":null,"capped":false,"note":"v$system_event, RFS events, cumulative since instance startup (first = startup, last = collection time), not limited to the window"}
+{"t":"cov","side":"standby","src":"rfs_hist","st":"ok","first":"2026-09-02 03:12:40","last":"2026-11-14 09:10:02","n":19,"cap":null,"capped":false,"note":"v$event_histogram_micro, RFS events, cumulative since instance startup (first = startup, last = collection time), not limited to the window"}
+{"t":"cov","side":"standby","src":"dgproc","st":"ok","first":"2026-11-14 09:10:02","last":"2026-11-14 09:10:02","n":6,"cap":null,"capped":false,"note":"v$dataguard_process as collected; first = last = collection time"}
+{"t":"cov","side":"standby","src":"archgap","st":"empty","first":"2026-11-14 09:10:02","last":"2026-11-14 09:10:02","n":0,"cap":null,"capped":false,"note":"v$archive_gap as collected (empty = no gap at collection time); first = last = collection time"}
+{"t":"cov","side":"standby","src":"ash","kind":"V","st":"empty","first":"2026-11-14 04:51:20","last":"2026-11-14 09:10:01","n":0,"cap":null,"capped":false,"note":"v$active_session_history on the standby, in memory only; first/last = what it holds"}
+{"t":"cov","side":"standby","src":"tx","st":"empty","first":"2026-11-14 04:51:20","last":"2026-11-14 09:10:01","n":0,"cap":5000,"capped":false,"note":"wait samples of PRnn, MRP0, ARCn, TTnn, TMON, LGWR, LGnn, NSSn, DBWn, CKPT and of programs \"oracle@<host> (TNS V1-V3)\" (the RFS processes; database links also look like that); transport processes kept first when capped"}
+{"t":"cov","side":"standby","src":"ashgap","samples":0,"st":"empty","first":"2026-11-13 20:34:00","last":"2026-11-13 20:59:00","n":0,"cap":50,"capped":false,"note":"gaps over 2 s between consecutive ASH samples (V), 1 s per sample_id; first/last = samples read, one minute around the window"}
+{"t":"cov","side":"standby","src":"dest_hist","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the standby"}
+{"t":"cov","side":"standby","src":"base_hist","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the standby"}
+{"t":"cov","side":"standby","src":"awr_snap","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the standby"}
+{"t":"cov","side":"standby","src":"sysmetric","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the standby"}
+{"t":"cov","side":"standby","src":"lfs","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the standby"}
+{"t":"cov","side":"standby","src":"alert_sql","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the standby"}
+{"t":"cov","side":"standby","src":"lsnr_srv","st":"ok","first":"2026-09-20 00:00:01","last":"2026-11-14 09:09:58","n":4,"cap":500,"capped":false,"note":"establish lines with PROGRAM=oracle (the other database host: redo transport, FAL, broker) in the window"}
+{"t":"cov","side":"standby","src":"ep","st":"ok","first":"2026-11-14 09:10:02","last":"2026-11-14 09:10:02","n":1,"cap":null,"capped":false,"note":"destination and fal_server aliases as configured, resolved through /u01/app/oracle/product/19.0.0/dbhome_1/network/admin/tnsnames.ora; as collected, first = last = collection time"}
+{"t":"cov","side":"standby","src":"conn","st":"ok","first":"2026-11-14 09:10:02","last":"2026-11-14 09:10:02","n":2,"cap":200,"capped":false,"note":"netstat -an: TCP connections between this host and 198.51.100.11 on port 1526, as collected (not during the window); first = last = collection time"}
+{"t":"cov","side":"standby","src":"sqlnet","st":"ok","first":"2026-11-14 09:10:02","last":"2026-11-14 09:10:02","n":6,"cap":null,"capped":false,"note":"/u01/app/oracle/product/19.0.0/dbhome_1/network/admin/sqlnet.ora"}
+{"t":"cov","side":"standby","src":"ostcp","st":"ok","first":"2026-11-14 09:10:02","last":"2026-11-14 09:10:02","n":8,"cap":null,"capped":false,"note":"AIX TCP tunables as collected; value null = not readable here"}
+{"t":"cov","side":"standby","src":"ntp","st":"ok","first":"2026-11-14 09:10:02","last":"2026-11-14 09:10:02","n":1,"cap":null,"capped":false,"note":"ntpq -p, as collected: the clock state now, not at the incident"}
+{"t":"cov","side":"standby","src":"sar","kind":"ETCP","st":"skipped","first":null,"last":null,"n":0,"cap":2000,"capped":false,"note":"AIX has no network history by default (sar on AIX does not keep these reports)"}
+{"t":"cov","side":"standby","src":"sar","kind":"TCP","st":"skipped","first":null,"last":null,"n":0,"cap":2000,"capped":false,"note":"AIX has no network history by default (sar on AIX does not keep these reports)"}
+{"t":"cov","side":"standby","src":"sar","kind":"DEV","st":"skipped","first":null,"last":null,"n":0,"cap":2000,"capped":false,"note":"AIX has no network history by default (sar on AIX does not keep these reports)"}
+{"t":"cov","side":"standby","src":"sar","kind":"EDEV","st":"skipped","first":null,"last":null,"n":0,"cap":2000,"capped":false,"note":"AIX has no network history by default (sar on AIX does not keep these reports)"}
+{"t":"cov","side":"standby","src":"netsamp","st":"skipped","first":null,"last":null,"n":0,"cap":5000,"capped":false,"note":"option -n not given"}
+{"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-10-16 03:15:02","z":"2026-10-16 03:21:14","st":"COMPLETED"}
+{"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-10-17 03:15:03","z":"2026-10-17 03:21:16","st":"COMPLETED"}
+{"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-10-18 03:15:04","z":"2026-10-18 03:21:09","st":"COMPLETED"}
+{"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-10-19 03:15:05","z":"2026-10-19 03:21:11","st":"COMPLETED"}
+{"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-10-20 03:15:01","z":"2026-10-20 03:21:08","st":"COMPLETED"}
+{"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-10-21 03:15:02","z":"2026-10-21 03:21:10","st":"COMPLETED"}
+{"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-10-22 03:15:03","z":"2026-10-22 03:21:12","st":"COMPLETED"}
+{"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-10-23 03:15:04","z":"2026-10-23 03:21:14","st":"COMPLETED"}
+{"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-10-24 03:15:05","z":"2026-10-24 03:21:16","st":"COMPLETED"}
+{"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-10-25 03:15:01","z":"2026-10-25 03:21:13","st":"COMPLETED"}
+{"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-10-26 03:15:02","z":"2026-10-26 03:21:15","st":"COMPLETED"}
+{"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-10-27 03:15:03","z":"2026-10-27 03:21:08","st":"COMPLETED"}
+{"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-10-28 03:15:04","z":"2026-10-28 03:21:10","st":"COMPLETED"}
+{"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-10-29 03:15:05","z":"2026-10-29 03:21:12","st":"COMPLETED"}
+{"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-10-30 03:15:01","z":"2026-10-30 03:21:09","st":"COMPLETED"}
+{"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-10-31 03:15:02","z":"2026-10-31 03:21:11","st":"COMPLETED"}
+{"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-11-01 03:15:02","z":"2026-11-01 03:21:08","st":"COMPLETED"}
+{"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-11-02 03:15:03","z":"2026-11-02 03:21:10","st":"COMPLETED"}
+{"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-11-03 03:15:04","z":"2026-11-03 03:21:12","st":"COMPLETED"}
+{"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-11-04 03:15:05","z":"2026-11-04 03:21:14","st":"COMPLETED"}
+{"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-11-05 03:15:01","z":"2026-11-05 03:21:11","st":"COMPLETED"}
+{"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-11-06 03:15:02","z":"2026-11-06 03:21:13","st":"COMPLETED"}
+{"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-11-07 03:15:03","z":"2026-11-07 03:21:15","st":"COMPLETED"}
+{"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-11-08 03:15:04","z":"2026-11-08 03:21:17","st":"COMPLETED"}
+{"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-11-09 03:15:05","z":"2026-11-09 03:21:10","st":"COMPLETED"}
+{"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-11-10 03:15:01","z":"2026-11-10 03:21:07","st":"COMPLETED"}
+{"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-11-11 03:15:02","z":"2026-11-11 03:21:09","st":"COMPLETED"}
+{"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-11-12 03:15:03","z":"2026-11-12 03:21:11","st":"COMPLETED"}
+{"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-11-13 03:15:04","z":"2026-11-13 03:21:13","st":"COMPLETED"}
+{"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-11-14 03:15:05","z":"2026-11-14 03:21:15","st":"COMPLETED"}
+{"t":"cov","side":"standby","src":"lfs_by","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the standby"}
+{"t":"cov","side":"standby","src":"wl_hist","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the standby"}
+{"t":"cov","side":"standby","src":"alsync","kind":"text","st":"empty","first":"2026-10-15 09:41:07","last":"2026-11-14 09:09:58","n":0,"cap":300,"capped":false,"note":"text alert log, last 30 days (since 2026-10-15 09:10:02), newest 300 kept; lines that end an UNSYNCHRONIZED period (LAD:n is SYNCHRONIZED, LAD:n level SYNCHRONIZED)"}
+{"t":"cov","side":"standby","src":"act","kind":"rman","st":"ok","first":"2026-10-02 03:15:01","last":"2026-11-14 03:15:05","n":30,"cap":500,"capped":false,"note":"v$rman_status, rows of type COMMAND, lookback 30 days, newest 500 kept; first/last = the oldest and newest start time the view holds"}
+{"t":"cov","side":"standby","src":"act","kind":"job","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the standby"}
+{"t":"cov","side":"standby","src":"act","kind":"logsw","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the standby"}

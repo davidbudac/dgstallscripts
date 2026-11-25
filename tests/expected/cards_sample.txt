@@ -1,0 +1,35 @@
+RECURBARS: 67 RMAN bars, 2 job bars; legend: Episode (darker: more starts in that hour) RMAN command, start to end (v$rman_status) job run overlapping the start of an episode (scheduler run details)
+  RECURBAR: Job APP_OWNER.EXPORT_REPORTS | start 2026-10-16 20:40:30 | end 2026-10-16 20:43:12 | status SUCCEEDED | overlaps the start of a listed occurrence
+  RECURBAR: Job APP_OWNER.EXPORT_REPORTS | start 2026-11-06 20:37:10 | end 2026-11-06 20:40:05 | status SUCCEEDED | overlaps the start of a listed occurrence
+  RECURBAR: RMAN BACKUP DB INCR (primary) | start 2026-10-16 20:32:10 | end 2026-10-16 21:13:30 | status COMPLETED
+  RECURBAR: RMAN BACKUP DB INCR (primary) | start 2026-10-23 20:33:00 | end 2026-10-23 21:14:20 | status COMPLETED
+  RECURBAR: RMAN BACKUP DB INCR (primary) | start 2026-10-30 20:29:50 | end 2026-10-30 21:11:10 | status COMPLETED WITH WARNINGS
+  RECURBAR: RMAN BACKUP DB INCR (primary) | start 2026-11-06 20:31:05 | end 2026-11-06 21:12:25 | status COMPLETED
+  RECURBAR: RMAN BACKUP DB INCR (primary) | start 2026-11-13 20:31:30 | end 2026-11-13 21:12:50 | status COMPLETED
+  RECURBAR: RMAN BACKUP ARCHIVELOG (primary) | start 2026-10-16 02:00:02 | end 2026-10-16 02:04:38 | status COMPLETED
+  RECURBAR: RMAN BACKUP ARCHIVELOG (primary) | start 2026-10-17 02:00:03 | end 2026-10-17 02:04:40 | status COMPLETED
+EPNOTE: none: the source holds the interval and has nothing there. not covered: it does not hold it, or was capped.
+EPHEAD: Starts (primary local time) | What was logged | First to last line | Back to SYNCHRONIZED first line that ends the UNSYNCHRONIZED period (alsync) | Redo rate at the start average over the AWR interval holding the start, and its largest 1 minute value | Activity at the start running at the start or started up to 10 minutes before it; log switch within 60 s
+  EPROW inc1 | 2026-11-13 Fri / 20:38:01 / this window, incident 1 | ORA-16198, standby: possible network disconnect, destination UNSYNCHRONIZED, LGWR SYNC wait ≥ 20.0 s / Primary Standby | 20:38:01 to 20:53:27 | 20:53:27 / 15 min 26 s after the first line | average 1.31 MB/s, largest 1 minute 2.4 MB/s / 20:00 to 21:00 | RMAN (primary): BACKUP DB INCR, 20:31:30 to 21:12:50, COMPLETED / RMAN (standby): none / job: none / log switch: none
+  EPROW h3 | 2026-11-06 Fri / 20:38:07 / before the window | ORA-16198; LAD:2 UNSYNCHRONIZED, no reason logged / Primary | 20:38:07 to 20:38:07 | 20:52:27 / 14 min 20 s after the first line | average 1.62 MB/s, largest 1 minute 2.7 MB/s / 20:00 to 21:00 | RMAN (primary): BACKUP DB INCR, 20:31:05 to 21:12:25, COMPLETED / RMAN (standby): none / job: APP_OWNER.EXPORT_REPORTS, 20:37:10 to 20:40:05, SUCCEEDED / log switch: thread 1 sequence 114379, +23 s
+  EPROW h2 | 2026-10-30 Fri / 20:44:31 / before the window | ORA-16198; LAD:2 UNSYNCHRONIZED, no reason logged; TNS-12535 / Primary Standby | 20:44:31 to 20:44:42 | 20:59:43 / 15 min 12 s after the first line | not covered | RMAN (primary): BACKUP DB INCR, 20:29:50 to 21:11:10, COMPLETED WITH WARNINGS / RMAN (standby): none / job: none / log switch: none
+  EPROW h1 | 2026-10-23 Fri / 20:39:55 / before the window | ORA-16198; LAD:2 UNSYNCHRONIZED, no reason logged / Primary | 20:39:55 to 20:39:55 | 20:53:44 / 13 min 49 s after the first line | not covered | RMAN (primary): BACKUP DB INCR, 20:33:00 to 21:14:20, COMPLETED / RMAN (standby): none / job: none / log switch: thread 1 sequence 114152, -14 s
+  EPROW h0 | 2026-10-16 Fri / 20:41:12 / before the window | ORA-16198; LAD:2 UNSYNCHRONIZED, no reason logged / Primary | 20:41:12 to 20:41:12 | 20:55:42 / 14 min 30 s after the first line | not covered | RMAN (primary): BACKUP DB INCR, 20:32:10 to 21:13:30, COMPLETED / RMAN (standby): none / job: APP_OWNER.EXPORT_REPORTS, 20:40:30 to 20:43:12, SUCCEEDED / log switch: not covered
+  EPCOUNT: A line that ends the UNSYNCHRONIZED period follows 4 of the 4 episodes of the history that alsync covers.
+  EPCOUNT: An RMAN command named BACKUP DB INCR started within 10 minutes before 4 of the 5 episodes that v$rman_status covers on the primary.
+  EPCOUNT: No RMAN command started within 10 minutes before any of the 5 episodes that v$rman_status covers on the standby.
+  EPCOUNT: A run of job named APP_OWNER.EXPORT_REPORTS started within 10 minutes before 2 of the 5 episodes that cdb_scheduler_job_run_details covers.
+  EPCOUNT: A log switch within 60 s of the start: 2 of 4 episodes that v$log_history covers.
+  EPCOUNT: Job APP_OWNER.REFRESH_MV_STOCK ran 2880 times in the lookback (more than 24 a day on average; first start 2026-10-15 09:15, last start 2026-11-14 09:00): not listed per episode.
+  EPCOUNT: Reading: if an activity starts at the same time as most of the episodes, it is a candidate to look at; coincidence in time does not show that it produced them, and work scheduled outside the database (cron, backups of the host, the network) is not in these views.
+WHONOTE: Sessions sampled on log file sync, by service, module and machine.
+WHOTABS: Incident 1
+WHO: Incident 1 · 20:38:01 to 20:53:27 · ORA-16198, standby: possible network disconnect, destination UNSYNCHRONIZED, LGWR SYNC wait ≥ 20.0 s
+  WHOLIST service: ordersvc.example 60 samples · 60 behind LGWR · 42 sessions ; reportsvc.example 22 samples · 22 behind LGWR · 14 sessions ; hash 3427055676 21 samples · 21 behind LGWR · 14 sessions
+  WHOLIST module: JDBC Thin Client 27 samples · 27 behind LGWR · 18 sessions ; batch_loader 26 samples · 26 behind LGWR · 18 sessions ; no value 25 samples · 25 behind LGWR · 17 sessions ; ordersrv 25 samples · 25 behind LGWR · 17 sessions
+  WHOLIST machine: app01.example 35 samples · 35 behind LGWR · 23 sessions ; app02.example 34 samples · 34 behind LGWR · 23 sessions ; batch01.example 34 samples · 34 behind LGWR · 24 sessions
+  WHOCAP: AWR ASH (dba_hist_active_sess_history, 10 s samples): samples, not durations or commits. Lists for the whole window. 10 groups found, none cut.
+  WHOPEAK: Peak in one sample: 18 at 20:38:50.118; behind LGWR 18 at 20:38:50.118 (lfs_sum, whole window).
+  WHOWL txn | User transactions per second | 44.1 average of 3 minutes, 20:35 to 20:37 | 0.2 lowest of 16 minutes (20:38 to 20:53), at 20:40
+  WHOWL redo | Redo, MB per second | 2.1 average of 3 minutes, 20:35 to 20:37 | 0.01 lowest of 16 minutes (20:38 to 20:53), at 20:40
+  WHOWL logons | Logons per second | 0.9 average of 3 minutes, 20:35 to 20:37 | 0.2 lowest of 16 minutes (20:38 to 20:53), at 20:38

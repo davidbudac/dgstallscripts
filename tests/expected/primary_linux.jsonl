@@ -1,0 +1,86 @@
+{"t":"bundle","side":"primary","host":"HOST","from":"2026-11-13 23:50:00","to":"2026-11-14 00:10:00","collected":"NOW","cidcheck":"yes","v":2}
+{"t":"meta","side":"primary","db":"CDB1","uniq":"cdb1","role":"PRIMARY","tz":"+01:00","from":"x","to":"y"}
+{"t":"cov","side":"primary","src":"ash","kind":"V","st":"ok","first":null,"last":null,"n":5,"cap":null,"capped":false,"note":"stub"}
+{"t":"dest","side":"primary","id":2,"dest":"proddb_s_dgmgrl","uniq":"proddb_s","status":"VALID","mode":"PARALLELSYNC","affirm":"YES","net_timeout":30,"reopen":300,"max_failure":0,"failures":0,"error":null,"sync":"OK","synced":"YES","gap":"NO GAP"}
+{"t":"param","side":"primary","name":"fal_server","value":"proddb_p, lost_alias"}
+ORA-00942: table or view does not exist
+{"t":"cov","side":"primary","src":"database","st":"ok","first":null,"last":null,"n":1,"cap":null,"capped":false,"note":"sqlplus connected, meta written"}
+{"t":"cov","side":"primary","src":"awr_snap","st":"error","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"primary","src":"sysmetric","st":"error","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"primary","src":"lfs","st":"error","first":null,"last":null,"n":0,"cap":200,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"primary","src":"lfs_by","st":"error","first":null,"last":null,"n":0,"cap":15,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"primary","src":"ashgap","st":"error","first":null,"last":null,"n":0,"cap":50,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"primary","src":"wl_hist","st":"error","first":null,"last":null,"n":0,"cap":1500,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"primary","src":"tx","st":"error","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"primary","src":"alert_sql","st":"error","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"primary","src":"alhist","kind":"sql","st":"error","first":null,"last":null,"n":0,"cap":300,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"primary","src":"alsync","kind":"sql","st":"error","first":null,"last":null,"n":0,"cap":300,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"primary","src":"dgstatus","st":"error","first":null,"last":null,"n":0,"cap":500,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"primary","src":"dest_hist","st":"error","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"primary","src":"base_hist","st":"error","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"primary","src":"act","kind":"rman","st":"error","first":null,"last":null,"n":0,"cap":500,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"primary","src":"act","kind":"job","st":"error","first":null,"last":null,"n":0,"cap":2000,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"primary","src":"act","kind":"logsw","st":"error","first":null,"last":null,"n":0,"cap":5000,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"primary","src":"rfs_ev","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the primary"}
+{"t":"cov","side":"primary","src":"rfs_hist","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the primary"}
+{"t":"cov","side":"primary","src":"dgproc","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the primary"}
+{"t":"cov","side":"primary","src":"archgap","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the primary"}
+{"t":"cov","side":"primary","src":"alert_text","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not requested; pass -a to read the text alert log"}
+{"t":"trace","side":"primary","ts":"2026-11-13 23:58:19.452","file":"cdb1_lgwr_4242.trc","msg":"Error 16198 for LNO:2 to 'cdb1_s'"}
+{"t":"trace","side":"primary","ts":"2026-11-13 23:58:19.452","file":"cdb1_lgwr_4242.trc","msg":"krsw_ksr_receive: Current time <11/13/2026 23:58:19> exceeds begin time <11/13/2026 23:57:49> by  <30> seconds, return timed out error"}
+{"t":"trace","side":"primary","ts":"2026-11-14 00:01:00.000","file":"cdb1_lgwr_4242.trc","msg":"krsu_upi_status: Error 16198 detaching RFS from standby instance at host 'cdb1_s'"}
+{"t":"trace","side":"primary","ts":"2026-11-14 00:02:03.500","file":"cdb1_arc1_4300.trc","msg":"krsi_verify_network: Error 3113 verifying archive destination LAD:2"}
+{"t":"trace","side":"primary","ts":"2026-11-14 00:02:03.700","file":"cdb1_arc1_4300.trc","msg":"nt OS err code: 0"}
+{"t":"cov","side":"primary","src":"trace","files":2,"st":"ok","first":"2026-11-13 23:49:00","last":"2026-11-14 00:30:00","n":5,"cap":400,"capped":false,"note":"files modified in the last 45 days"}
+{"t":"lsnr","side":"primary","m":"2026-11-14 00:04","code":"0","n":1}
+{"t":"lsnr","side":"primary","m":"2026-11-14 00:05","code":"0","n":1}
+{"t":"lsnr","side":"primary","m":"2026-11-14 00:05","code":"12514","n":1}
+{"t":"lsnr","side":"primary","m":"2026-11-14 00:06","code":"0","n":1}
+{"t":"lsnr_ip","side":"primary","ip":"192.0.2.23","code":"0","n":1}
+{"t":"lsnr_ip","side":"primary","ip":"192.0.2.23","code":"12514","n":1}
+{"t":"lsnr_ip","side":"primary","ip":"192.0.2.25","code":"0","n":1}
+{"t":"lsnr_ip","side":"primary","ip":"198.51.100.12","code":"0","n":1}
+{"t":"lsnr_ref","side":"primary","ts":"2026-11-14 00:05:30","ip":"192.0.2.23","code":"12514","cid":"Q1w2E3r4T5y6U7i8O9p0Aa==","svc":"APP_RW"}
+{"t":"cov","side":"primary","src":"listener","st":"ok","first":"2026-11-13 20:00:00","last":"2026-11-14 00:06:00","n":5,"cap":null,"capped":false,"note":"listener_primary.log"}
+{"t":"cov","side":"primary","src":"lsnr_ref","st":"ok","first":"2026-11-13 20:00:00","last":"2026-11-14 00:06:00","n":1,"cap":500,"capped":false,"note":"refused establish lines in the window"}
+{"t":"lsnr_srv","side":"primary","ts":"2026-11-14 00:05:55","host":"HOST","ip":"198.51.100.12","port":50123,"svc":"proddb","code":"0"}
+{"t":"cov","side":"primary","src":"lsnr_srv","st":"ok","first":"2026-11-13 20:00:00","last":"2026-11-14 00:06:00","n":1,"cap":500,"capped":false,"note":"establish lines with PROGRAM=oracle (an Oracle server process as the client: normally the other database host for redo transport, FAL or the broker, but database links match too) in the window"}
+{"t":"cid_hit","side":"primary","ts":"2026-11-14 00:04:12","ip":"192.0.2.23","code":"0","cid":"Q1w2E3r4T5y6U7i8O9p0Aa=="}
+{"t":"cid_hit","side":"primary","ts":"2026-11-14 00:05:30","ip":"192.0.2.23","code":"12514","cid":"Q1w2E3r4T5y6U7i8O9p0Aa=="}
+{"t":"cov","side":"primary","src":"cid","st":"ok","first":"2026-11-13 20:00:00","last":"2026-11-14 00:06:00","n":2,"cap":2000,"capped":false,"note":"3 CONNECTION_IDs looked up in the whole log"}
+{"t":"ep","side":"primary","from":"v$archive_dest","dest":2,"alias":"proddb_s_dgmgrl","file":"DIR/netadmin/tnsnames.ora","host":"HOST","port":1526,"addrs":1,"ip":"198.51.100.12","ip_how":"getent hosts stby-host.example","note":"alias proddb_s_dgmgrl in DIR/netadmin/tnsnames.ora"}
+{"t":"ep","side":"primary","from":"fal_server","dest":null,"alias":"proddb_p","file":"DIR/netadmin/tnsnames.ora","host":"HOST","port":1526,"addrs":2,"ip":"198.51.100.11","ip_how":"getent hosts prim-host.example","note":"alias proddb_p in DIR/netadmin/tnsnames.ora"}
+{"t":"ep","side":"primary","from":"fal_server","dest":null,"alias":"lost_alias","file":"DIR/netadmin/tnsnames.ora","host":"HOST","port":1599,"addrs":1,"ip":null,"ip_how":null,"note":"alias lost_alias in DIR/netadmin/tnsnames.ora; getent hosts did not resolve nosuch.example"}
+{"t":"cov","side":"primary","src":"ep","st":"ok","first":"2026-11-20 12:00:00","last":"2026-11-20 12:00:00","n":3,"cap":null,"capped":false,"note":"destination and fal_server aliases as configured, resolved through DIR/netadmin/tnsnames.ora; as collected, first = last = collection time"}
+{"t":"sqlnet","side":"primary","name":"SQLNET.EXPIRE_TIME","set":true,"value":"10","file":"DIR/netadmin/sqlnet.ora"}
+{"t":"sqlnet","side":"primary","name":"SQLNET.OUTBOUND_CONNECT_TIMEOUT","set":true,"value":"5","file":"DIR/netadmin/sqlnet.ora"}
+{"t":"sqlnet","side":"primary","name":"SQLNET.INBOUND_CONNECT_TIMEOUT","set":false,"value":null,"file":"DIR/netadmin/sqlnet.ora"}
+{"t":"sqlnet","side":"primary","name":"SQLNET.RECV_TIMEOUT","set":false,"value":null,"file":"DIR/netadmin/sqlnet.ora"}
+{"t":"sqlnet","side":"primary","name":"SQLNET.SEND_TIMEOUT","set":false,"value":null,"file":"DIR/netadmin/sqlnet.ora"}
+{"t":"sqlnet","side":"primary","name":"TCP.CONNECT_TIMEOUT","set":true,"value":"8","file":"DIR/netadmin/sqlnet.ora"}
+{"t":"cov","side":"primary","src":"sqlnet","st":"ok","first":"2026-11-20 12:00:00","last":"2026-11-20 12:00:00","n":6,"cap":null,"capped":false,"note":"DIR/netadmin/sqlnet.ora; DIR/netadmin/sqlnet.ora"}
+{"t":"ostcp","side":"primary","name":"net.ipv4.tcp_keepalive_time","value":"7200","tool":"sysctl -n"}
+{"t":"ostcp","side":"primary","name":"net.ipv4.tcp_keepalive_intvl","value":"75","tool":"sysctl -n"}
+{"t":"ostcp","side":"primary","name":"net.ipv4.tcp_keepalive_probes","value":"9","tool":"sysctl -n"}
+{"t":"ostcp","side":"primary","name":"net.ipv4.tcp_retries2","value":"15","tool":"sysctl -n"}
+{"t":"cov","side":"primary","src":"ostcp","st":"ok","first":"2026-11-20 12:00:00","last":"2026-11-20 12:00:00","n":4,"cap":null,"capped":false,"note":"Linux TCP tunables as collected; value null = not readable here"}
+{"t":"ntp","side":"primary","tool":"chronyc tracking","ref":"server1a.example.net","stratum":3,"off":0.000041695,"synced":"yes","note":"leap status: Normal; off = system clock minus NTP time, seconds, positive = ahead; null when not synchronised","at":"2026-11-20 12:00:00"}
+{"t":"cov","side":"primary","src":"ntp","st":"ok","first":"2026-11-20 12:00:00","last":"2026-11-20 12:00:00","n":1,"cap":null,"capped":false,"note":"chronyc tracking, as collected: the clock state now, not at the incident"}
+{"t":"sar","side":"primary","rpt":"ETCP","ts":"2026-11-13 23:50:01","if":null,"m":{"atmptf/s":0.01,"estres/s":0.03,"retrans/s":12.50,"isegerr/s":0.02,"orsts/s":0.05}}
+{"t":"sar","side":"primary","rpt":"ETCP","ts":"2026-11-14 00:00:01","if":null,"m":{"atmptf/s":0.02,"estres/s":0.04,"retrans/s":48.30,"isegerr/s":0.10,"orsts/s":0.08}}
+{"t":"sar","side":"primary","rpt":"ETCP","ts":"2026-11-14 00:10:01","if":null,"m":{"atmptf/s":0.00,"estres/s":0.01,"retrans/s":0.02,"isegerr/s":0.00,"orsts/s":0.01}}
+{"t":"cov","side":"primary","src":"sar","kind":"ETCP","st":"ok","first":"2026-11-13 00:00:01","last":"2026-11-14 00:30:01","n":3,"cap":2000,"capped":false,"note":"sar -n ETCP, each row is the average over the interval that ends at its time"}
+{"t":"sar","side":"primary","rpt":"TCP","ts":"2026-11-13 23:50:01","if":null,"m":{"active/s":0.12,"passive/s":0.06,"iseg/s":230.10,"oseg/s":221.70}}
+{"t":"sar","side":"primary","rpt":"TCP","ts":"2026-11-14 00:10:01","if":null,"m":{"active/s":0.09,"passive/s":0.04,"iseg/s":190.00,"oseg/s":180.10}}
+{"t":"cov","side":"primary","src":"sar","kind":"TCP","st":"ok","first":"2026-11-13 00:00:01","last":"2026-11-14 00:20:01","n":2,"cap":2000,"capped":false,"note":"sar -n TCP, each row is the average over the interval that ends at its time; 2026-11-14: 1 LINUX RESTART line(s) in the window: the host was restarted"}
+{"t":"sar","side":"primary","rpt":"DEV","ts":"2026-11-13 23:50:01","if":"lo","m":{"rxpck/s":1.30,"txpck/s":1.30,"rxkB/s":0.11,"txkB/s":0.11,"rxcmp/s":0.00,"txcmp/s":0.00,"rxmcst/s":0.00,"%ifutil":0.00}}
+{"t":"sar","side":"primary","rpt":"DEV","ts":"2026-11-13 23:50:01","if":"eth0","m":{"rxpck/s":230.10,"txpck/s":221.70,"rxkB/s":33.00,"txkB/s":31.00,"rxcmp/s":0.00,"txcmp/s":0.00,"rxmcst/s":0.00,"%ifutil":0.03}}
+{"t":"cov","side":"primary","src":"sar","kind":"DEV","st":"ok","first":"2026-11-13 00:00:01","last":"2026-11-13 23:50:01","n":2,"cap":2000,"capped":false,"note":"sar -n DEV, each row is the average over the interval that ends at its time; 2026-11-14: DIR/sadir/sa14 is dated 2026-10-14, not 2026-11-14"}
+{"t":"cov","side":"primary","src":"sar","kind":"EDEV","st":"error","first":null,"last":null,"n":0,"cap":2000,"capped":false,"note":"sar -n EDEV, each row is the average over the interval that ends at its time; 2026-11-13: Requested activities not available in file /var/log/sa/sa13 (DIR/sadir/sa13); 2026-11-14: Requested activities not available in file /var/log/sa/sa14 (DIR/sadir/sa14)"}
+{"t":"cov","side":"primary","src":"netsamp","st":"skipped","first":null,"last":null,"n":0,"cap":5000,"capped":false,"note":"option -n not given"}
+{"t":"conn","side":"primary","lip":"198.51.100.11","lport":41000,"pip":"198.51.100.12","pport":1526,"state":"ESTABLISHED","sendq":4320,"recvq":0}
+{"t":"conn","side":"primary","lip":"198.51.100.11","lport":41002,"pip":"198.51.100.12","pport":1526,"state":"ESTABLISHED","sendq":0,"recvq":0}
+{"t":"cov","side":"primary","src":"conn","st":"ok","first":"2026-11-20 12:00:00","last":"2026-11-20 12:00:00","n":2,"cap":200,"capped":false,"note":"netstat -an: TCP connections between this host and 198.51.100.12 on port 1526, as collected (not during the window); first = last = collection time"}
+{"t":"net","side":"primary","peer":"198.51.100.12","port":"1526","os":"Linux","rtt":"0.412","loss":"0%","retr":5,"secs":10,"sendq":4320,"at":"2026-11-20 12:00:00","via":"destination proddb_s_dgmgrl of v$archive_dest = stby-host.example:1526 in tnsnames.ora or the descriptor; address from getent hosts stby-host.example"}
+{"t":"cov","side":"primary","src":"net","st":"ok","first":"2026-11-20 12:00:00","last":"2026-11-20 12:00:00","n":1,"cap":null,"capped":false,"note":"ping and netstat towards 198.51.100.12:1526, measured at collection time, not during the window; peer from: destination proddb_s_dgmgrl of v$archive_dest = stby-host.example:1526 in tnsnames.ora or the descriptor; address from getent hosts stby-host.example"}
+{"t":"clock","side":"primary","utc_off":"+01:00","src":"listener log"}

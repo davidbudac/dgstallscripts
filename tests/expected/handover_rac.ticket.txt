@@ -1,0 +1,8 @@
+#### incident 0
+Databases: proddb (primary, host prim-host.example, instance proddb1, 19.27.0.0.0 Linux) and proddb_s
+(standby, host stby-host.example, instance proddb1, 19.27.0.0.0 Linux).
+Transport as collected: SYNC AFFIRM, destination LAD:2, NET_TIMEOUT 30 s, REOPEN 300 s; protection mode
+MAXIMUM AVAILABILITY.
+Data window: 2026-11-20 09:20:00Z to 09:45:00Z (primary local 09:20:00 to 09:45:00 +00:00); collected primary
+2026-11-20 13:45:00Z, standby 2026-11-20 13:45:00Z.
+Incident: none found in the data (the primary alert log covers the window).

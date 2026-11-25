@@ -1,0 +1,7 @@
+Linux 5.14.0-427.el9.x86_64 (stby-host.example) 	2026-11-14 	_x86_64_	(2 CPU)
+
+00:00:01       LINUX RESTART      (2 CPU)
+
+00:10:01    active/s passive/s    iseg/s    oseg/s
+00:10:01        0.09      0.04    190.00    180.10
+00:20:01        0.09      0.04    190.00    180.10

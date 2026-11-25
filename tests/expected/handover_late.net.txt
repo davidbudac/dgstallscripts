@@ -1,0 +1,60 @@
+#### incident 1
+Oracle Data Guard redo transport (TCP) from primary prim-host.example 198.51.100.11 to standby
+stby-host.example 198.51.100.12, port 1526.
+Incident 1 of 1: 2026-11-20 10:05:00Z to 10:10:20Z (primary local 10:05:00 to 10:10:20 +00:00).
+Collected: primary 2026-11-20 14:00:00Z, standby 2026-11-20 14:00:00Z. Columns: UTC (Z), then host local time
+(primary +00:00, standby +00:00). Tags: [ms] [1 s] resolution of the logged time, [ASH] [sampler] sampled,
+[avg] average over the interval ending at that time.
+ENDPOINTS (as collected, not the state at the incident)
+primary ep: LAD:2 alias proddb_s_dgmgrl -> stby-host.example:1526, address 198.51.100.12 by "getent hosts
+  stby-host.example"
+standby ep: fal_server proddb_p_dgmgrl -> prim-host.example:1526, address 198.51.100.11 by "getent hosts
+  prim-host.example"
+TCP connections on that port, as collected at 2026-11-20 14:00:00Z (primary), 14:00:00Z (standby), not at the
+incident; the other host lists the same ones:
+  primary 198.51.100.11:41622 -> 198.51.100.12:1526 ESTABLISHED Send-Q 0 Recv-Q 0
+  primary 198.51.100.11:41640 -> 198.51.100.12:1526 ESTABLISHED Send-Q 0 Recv-Q 0
+TIMELINE (listener return code 0 = the listener handed the connection off; other values are TNS error numbers)
+10:04:35Z     10:04:35     primary last SYNC Remote Write that ASH sampled as completed, time_waited 3 ms [ASH
+                                   1 s]
+10:04:51Z     10:04:51     standby listener: from 198.51.100.11:41872, service SID:proddb_s, return code 0 [1
+                                   s]
+10:04:52Z     10:04:52     standby listener: from 198.51.100.11:41874, service SID:proddb_s, return code 0 [1
+                                   s]
+10:05:00Z     10:05:00     primary SYNC wait that timed out began (LGWR trace: begin time <11/20/2026
+                                   10:05:00>, <30> seconds) [1 s]
+10:05:30.200Z 10:05:30.200 primary ORA-16198 (4 lines until 10:05:30.216): "LGWR (PID:2201): ORA-16198:
+                                   Received timed out error from KSR" [ms]
+10:05:30.400Z 10:05:30.400 primary LAD:2 UNSYNCHRONIZED, reason as logged "no connection" [ms]
+10:05:47Z     10:05:47     primary listener: from 198.51.100.12:51234, service SID:proddb, return code 0 [1 s]
+10:10:20.500Z 10:10:20.500 primary LAD:2 SYNCHRONIZED [ms]
+2 more listener connections of the peer: see the report
+HOST-SIDE OBSERVATIONS
+VKTM time-drift lines: none in the primary and standby alert logs from 2026-11-20 10:03:30Z to 10:11:20Z
+ASH sampler gaps over 2 s, primary: none from 2026-11-20 10:03:30Z to 10:11:20Z (the incident interval)
+ASH sampler gaps over 2 s, standby: not checked from 2026-11-20 10:04:58Z to 10:05:32Z (the SYNC wait +-2 s):
+  gap check inconclusive
+NETWORK MEASUREMENTS DURING THE WINDOW (the length of a sar interval is not in the bundle)
+10:31:00Z 10:31:00 primary sar eth0: rxkB/s 61; no EDEV row [avg]
+10:31:00Z 10:31:00 primary sar ETCP: retrans/s 0.04 [avg]
+10:31:00Z 10:31:00 standby sar eth0: rxkB/s 61; no EDEV row [avg]
+10:31:00Z 10:31:00 standby sar ETCP: retrans/s 0.04 [avg]
+not available, primary and standby: sar EDEV: not recorded by this host's sysstat file
+not available, primary and standby: sampler log: no sampler log was given to collect.sh (-n)
+NETWORK MEASUREMENTS AT COLLECTION TIME (not during the window; times UTC; retransmits are host-wide)
+network check (ping, retransmit counter, Send-Q): not run (primary and standby: "option -p not given").
+TIMEOUTS AND SETTINGS (as collected, not the state at the incident)
+NET_TIMEOUT 30 s, REOPEN 300 s, MAX_FAILURE 0 (v$archive_dest LAD:2, PARALLELSYNC AFFIRM=YES)
+sqlnet.ora (primary and standby identical): SQLNET.EXPIRE_TIME 10; not set: SQLNET.OUTBOUND_CONNECT_TIMEOUT,
+  SQLNET.INBOUND_CONNECT_TIMEOUT, SQLNET.RECV_TIMEOUT, SQLNET.SEND_TIMEOUT, TCP.CONNECT_TIMEOUT
+OS TCP (primary and standby identical): net.ipv4.tcp_keepalive_time 7200, net.ipv4.tcp_keepalive_intvl 75,
+  net.ipv4.tcp_keepalive_probes 9, net.ipv4.tcp_retries2 15 (sysctl -n)
+CLOCKS (NTP state as collected, times UTC; offset = system clock minus source)
+UTC offset in the window: primary +00:00 (alert log), standby +00:00 (alert log)
+primary ntpq -p 14:00:00Z: source ntp1.example.net, stratum 2, offset +0.412 ms, synced yes
+standby ntpq -p 14:00:00Z: source ntp1.example.net, stratum 2, offset -3.11 ms, synced yes
+OTHER EPISODES IN THE ALERT-LOG HISTORY (UTC, window offset)
+before the window: none found; after it: none found.
+History read: primary and standby alert logs 2026-10-21 to 2026-11-20, newest 300 lines kept, capped: no.
+NOT AVAILABLE FOR THE INCIDENT INTERVAL 2026-11-20 10:03:30Z to 10:11:20Z
+standby ASH: holds nothing before 2026-11-20 12:00:30Z; the interval starts 2026-11-20 10:03:30Z

@@ -1,0 +1,9 @@
+Ip:
+    Forwarding: 2
+Tcp:
+    120 active connection openings
+    @RETR@ segments retransmitted
+    7 bad segments received
+TcpExt:
+    TCPSynRetrans: 5
+    TCPLostRetransmit: 2

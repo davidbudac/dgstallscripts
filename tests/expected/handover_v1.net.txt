@@ -1,0 +1,60 @@
+#### incident 1
+Oracle Data Guard redo transport (TCP) from primary prim-host.example 198.51.100.11 to standby
+stby-host.example 198.51.100.12, port 1526.
+Incident 1 of 1: 2026-11-13 19:38:01Z to 19:53:27Z (primary local 20:38:01 to 20:53:27 +01:00).
+Collected: primary 2026-11-14 08:12:40Z, standby 2026-11-14 08:10:02Z. Columns: UTC (Z), then host local time
+(primary +01:00, standby +01:00). Tags: [ms] [1 s] resolution of the logged time, [ASH] [sampler] sampled,
+[avg] average over the interval ending at that time.
+ENDPOINTS (as collected, not the state at the incident)
+address source: both addresses are the network check target of the other host (no source recorded).
+endpoint aliases (ep): not collected.
+TCP connections between the hosts (conn): not collected.
+TIMELINE
+19:38:22Z     20:38:22     primary last SYNC Remote Write that ASH sampled as completed, time_waited 640 ms
+                                   [ASH 10 s]
+19:38:28Z     20:38:28     primary SYNC wait that timed out began (LGWR trace: begin time <11/13/2026
+                                   20:38:28>, <30> seconds) [1 s]
+19:38:58.734Z 20:38:58.734 primary ORA-16198 (3 lines until 20:38:58.736): "LGWR (PID:10224042): ORA-16198:
+                                   Received timed out error from KSR" [ms]
+19:38:58.740Z 20:38:58.740 primary LAD:2 UNSYNCHRONIZED [ms]
+19:39:09.110Z 20:39:09.110 standby trace line "TNS-12535: TNS:operation timed out" [ms]
+19:39:09.112Z 20:39:09.112 standby Fatal NI connect error 12170: "TNS-12535: TNS:operation timed out"; ns main
+                                   12535, ns secondary 12560, nt main 0, nt secondary 0, nt OS 0; Client
+                                   address: (ADDRESS=(PROTOCOL=tcp)(HOST=198.51.100.11)(PORT=40112)) [ms]
+19:39:09.141Z 20:39:09.141 standby "rfs (PID:21299312): Possible network disconnect with primary database"
+                                   [ms]
+19:53:27.905Z 20:53:27.905 primary LAD:2 SYNCHRONIZED [ms]
+HOST-SIDE OBSERVATIONS
+VKTM time-drift lines: not checked, primary: coverage unknown: the bundle has no cov records (format v1);
+standby: coverage unknown: the bundle has no cov records (format v1)
+ASH sampler gaps over 2 s, primary: not checked from 2026-11-13 19:38:28Z to 19:38:58Z (the SYNC wait): no gap
+  check in the bundle
+ASH sampler gaps over 2 s, standby: not checked from 2026-11-13 19:38:26Z to 19:39:00Z (the SYNC wait +-2 s):
+  no gap check in the bundle
+NETWORK MEASUREMENTS DURING THE WINDOW (the length of a sar interval is not in the bundle)
+no sar row overlapping the incident interval and no sampler line in it
+not available, primary and standby: sar ETCP, TCP, DEV, EDEV: coverage unknown: the bundle has no cov records
+  (format v1)
+not available, primary and standby: sampler log: coverage unknown: the bundle has no cov records (format v1)
+NETWORK MEASUREMENTS AT COLLECTION TIME (not during the window; times UTC; retransmits are host-wide)
+primary -> 198.51.100.12:1526 08:12:58Z: rtt avg 0.41 ms, loss 0%, retransmits +3 in 10 s, Send-Q max 0 B
+standby -> 198.51.100.11:1526 08:10:31Z: rtt avg 0.43 ms, loss 0%, retransmits +1 in 10 s, Send-Q max 0 B
+TIMEOUTS AND SETTINGS (as collected, not the state at the incident)
+NET_TIMEOUT 30 s, REOPEN 300 s, MAX_FAILURE 0 (v$archive_dest LAD:2, PARALLELSYNC AFFIRM=NO)
+sqlnet.ora: not collected
+OS TCP: not collected
+CLOCKS (NTP state as collected, times UTC; offset = system clock minus source)
+UTC offset in the window: primary +01:00 (systimestamp at collection time (format v1)), standby +01:00
+(systimestamp at collection time (format v1))
+NTP state: not collected.
+OTHER EPISODES IN THE ALERT-LOG HISTORY (UTC, window offset)
+before the window: 4 found, newest first: 2026-11-06 19:38Z, 2026-10-30 19:44Z (both), 2026-10-23 19:39Z; 1
+more in the report; after it: none found.
+History read: no history record in the bundles.
+NOT AVAILABLE FOR THE INCIDENT INTERVAL 2026-11-13 19:36:31Z to 19:54:27Z
+primary alert log: coverage unknown: the bundle has no cov records (format v1)
+standby alert log: coverage unknown: the bundle has no cov records (format v1)
+primary listener log: coverage unknown: the bundle has no cov records (format v1)
+standby listener log: coverage unknown: the bundle has no cov records (format v1)
+primary ASH: coverage unknown: the bundle has no cov records (format v1)
+standby ASH: coverage unknown: the bundle has no cov records (format v1)

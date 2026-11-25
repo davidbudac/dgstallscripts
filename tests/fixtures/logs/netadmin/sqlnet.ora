@@ -1,0 +1,5 @@
+# fictional settings
+NAMES.DIRECTORY_PATH = (TNSNAMES)
+SQLNET.EXPIRE_TIME = 10
+sqlnet.outbound_connect_timeout=5
+TCP.CONNECT_TIMEOUT = 8   # seconds

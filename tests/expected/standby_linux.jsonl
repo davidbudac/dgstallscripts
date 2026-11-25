@@ -1,0 +1,114 @@
+{"t":"bundle","side":"standby","host":"HOST","from":"2026-11-13 23:50:00","to":"2026-11-14 00:10:00","collected":"NOW","cidcheck":"no","v":2}
+{"t":"meta","side":"standby","db":"CDB1","uniq":"cdb1","role":"PRIMARY","tz":"+01:00","from":"x","to":"y"}
+{"t":"param","side":"standby","name":"fal_server","value":"proddb_p, lost_alias"}
+ORA-00942: table or view does not exist
+{"t":"cov","side":"standby","src":"database","st":"ok","first":null,"last":null,"n":1,"cap":null,"capped":false,"note":"sqlplus connected, meta written"}
+{"t":"cov","side":"standby","src":"ash","kind":"V","st":"error","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"standby","src":"ashgap","st":"error","first":null,"last":null,"n":0,"cap":50,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"standby","src":"tx","st":"error","first":null,"last":null,"n":0,"cap":5000,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"standby","src":"rfs_ev","st":"error","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"standby","src":"rfs_hist","st":"error","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"standby","src":"dgstatus","st":"error","first":null,"last":null,"n":0,"cap":500,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"standby","src":"dgproc","st":"error","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"standby","src":"archgap","st":"error","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"standby","src":"act","kind":"rman","st":"error","first":null,"last":null,"n":0,"cap":500,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"standby","src":"awr_snap","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the standby"}
+{"t":"cov","side":"standby","src":"sysmetric","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the standby"}
+{"t":"cov","side":"standby","src":"lfs","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the standby"}
+{"t":"cov","side":"standby","src":"lfs_by","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the standby"}
+{"t":"cov","side":"standby","src":"wl_hist","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the standby"}
+{"t":"cov","side":"standby","src":"alert_sql","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the standby"}
+{"t":"cov","side":"standby","src":"dest_hist","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the standby"}
+{"t":"cov","side":"standby","src":"base_hist","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the standby"}
+{"t":"cov","side":"standby","src":"act","kind":"job","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the standby"}
+{"t":"cov","side":"standby","src":"act","kind":"logsw","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the standby"}
+{"t":"alert","side":"standby","ts":"2026-11-13 23:50:00.000","msg":"ARC1 (PID:4300): Archived Log entry 114489 added for T-1.S-114489 ID 0x1a2b3c4d LAD:1"}
+{"t":"alert","side":"standby","ts":"2026-11-13 23:58:19.452","msg":"LGWR (PID:4242): ORA-16198: Received timed out error from KSR\nLGWR (PID:4242): Attempting LAD:2 network reconnect (16198)"}
+{"t":"alert","side":"standby","ts":"2026-11-13 23:58:19.452","msg":"LGWR (PID:4242): LAD:2 is UNSYNCHRONIZED"}
+{"t":"alert","side":"standby","ts":"2026-11-13 23:59:58.000","msg":"Errors in file /u01/app/oracle/diag/rdbms/cdb1/cdb1/trace/cdb1_lgwr_4242.trc:\nORA-16198: Timeout incurred on internal channel during remote archival"}
+{"t":"alert","side":"standby","ts":"2026-11-14 00:00:01.250","msg":"TMON (PID:4301): ARC1 (PID:4300) hung for 260 s, killed"}
+{"t":"alert","side":"standby","ts":"2026-11-14 00:09:59.999","msg":"LGWR (PID:4242): LAD:2 is SYNCHRONIZED"}
+{"t":"alert","side":"standby","ts":"2026-11-14 00:10:00.000","msg":"Thread 1 advanced to log sequence 114491 (LGWR switch)"}
+{"t":"alhist","side":"standby","ts":"2026-11-06 20:38:07","msg":"LGWR (PID:4242): ORA-16198: Received timed out error from KSR"}
+{"t":"alhist","side":"standby","ts":"2026-11-10 03:04:05","msg":"rfs (PID:4400): Possible network disconnect with primary database"}
+{"t":"alhist","side":"standby","ts":"2026-11-12 10:00:00","msg":"TNS-12535: TNS:operation timed out"}
+{"t":"alhist","side":"standby","ts":"2026-11-13 23:58:19","msg":"LGWR (PID:4242): ORA-16198: Received timed out error from KSR"}
+{"t":"alhist","side":"standby","ts":"2026-11-13 23:59:58","msg":"ORA-16198: Timeout incurred on internal channel during remote archival"}
+{"t":"alhist","side":"standby","ts":"2026-11-14 00:10:01","msg":"a message after the window with ORA-16198 in it"}
+{"t":"alsync","side":"standby","ts":"2026-11-14 00:09:59","msg":"LGWR (PID:4242): LAD:2 is SYNCHRONIZED"}
+{"t":"cov","side":"standby","src":"alert_text","st":"ok","first":"2026-11-06 20:38:07","last":"2026-11-14 00:10:01","n":7,"cap":null,"capped":false,"note":"alert_cdb1.log"}
+{"t":"cov","side":"standby","src":"alhist","kind":"text","st":"ok","first":"2026-11-06 20:38:07","last":"2026-11-14 00:10:01","n":6,"cap":300,"capped":false,"note":"text alert log, last 30 days (since 2026-10-21 12:00:00), newest 300 kept; routine RT_PMODE lines (PRIMARY, PHYSICAL, reason ASYNC configuration) excluded"}
+{"t":"cov","side":"standby","src":"alsync","kind":"text","st":"ok","first":"2026-11-06 20:38:07","last":"2026-11-14 00:10:01","n":1,"cap":300,"capped":false,"note":"text alert log, last 30 days (since 2026-10-21 12:00:00), newest 300 kept; lines that end an UNSYNCHRONIZED period (LAD:n is SYNCHRONIZED, LAD:n level SYNCHRONIZED)"}
+{"t":"trace","side":"standby","ts":"2026-11-13 23:58:19.452","file":"cdb1_lgwr_4242.trc","msg":"Error 16198 for LNO:2 to 'cdb1_s'"}
+{"t":"trace","side":"standby","ts":"2026-11-13 23:58:19.452","file":"cdb1_lgwr_4242.trc","msg":"krsw_ksr_receive: Current time <11/13/2026 23:58:19> exceeds begin time <11/13/2026 23:57:49> by  <30> seconds, return timed out error"}
+{"t":"trace","side":"standby","ts":"2026-11-14 00:01:00.000","file":"cdb1_lgwr_4242.trc","msg":"krsu_upi_status: Error 16198 detaching RFS from standby instance at host 'cdb1_s'"}
+{"t":"trace","side":"standby","ts":"2026-11-14 00:02:03.500","file":"cdb1_arc1_4300.trc","msg":"krsi_verify_network: Error 3113 verifying archive destination LAD:2"}
+{"t":"trace","side":"standby","ts":"2026-11-14 00:02:03.700","file":"cdb1_arc1_4300.trc","msg":"nt OS err code: 0"}
+{"t":"cov","side":"standby","src":"trace","files":2,"st":"ok","first":"2026-11-13 23:49:00","last":"2026-11-14 00:30:00","n":5,"cap":400,"capped":false,"note":"files modified in the last 45 days"}
+{"t":"lsnr","side":"standby","m":"2026-11-13 23:50","code":"0","n":1}
+{"t":"lsnr","side":"standby","m":"2026-11-13 23:58","code":"0","n":1}
+{"t":"lsnr","side":"standby","m":"2026-11-13 23:58","code":"12514","n":2}
+{"t":"lsnr","side":"standby","m":"2026-11-13 23:58","code":"12518","n":1}
+{"t":"lsnr","side":"standby","m":"2026-11-13 23:59","code":"0","n":1}
+{"t":"lsnr","side":"standby","m":"2026-11-14 00:01","code":"0","n":1}
+{"t":"lsnr","side":"standby","m":"2026-11-14 00:02","code":"0","n":1}
+{"t":"lsnr","side":"standby","m":"2026-11-14 00:03","code":"12514","n":1}
+{"t":"lsnr_ip","side":"standby","ip":"192.0.2.21","code":"0","n":2}
+{"t":"lsnr_ip","side":"standby","ip":"192.0.2.22","code":"12514","n":1}
+{"t":"lsnr_ip","side":"standby","ip":"192.0.2.23","code":"12514","n":1}
+{"t":"lsnr_ip","side":"standby","ip":"192.0.2.24","code":"12514","n":1}
+{"t":"lsnr_ip","side":"standby","ip":"198.51.100.11","code":"0","n":2}
+{"t":"lsnr_ip","side":"standby","ip":"198.51.100.11","code":"12518","n":1}
+{"t":"lsnr_ip","side":"standby","ip":"198.51.100.13","code":"0","n":1}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 23:58:19","ip":"192.0.2.23","code":"12514","cid":"Q1w2E3r4T5y6U7i8O9p0Aa==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 23:58:44","ip":"192.0.2.22","code":"12514","cid":"Zx9c8V7b6N5m4L3k2J1h0Gg==","svc":"APP_RW"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-13 23:58:40","ip":"198.51.100.11","code":"12518","cid":"","svc":"SID:cdb1"}
+{"t":"lsnr_ref","side":"standby","ts":"2026-11-14 00:03:10","ip":"192.0.2.24","code":"12514","cid":"Mn8b7V6c5X4z3L2k1J0hGg==","svc":"APP_RW"}
+{"t":"cov","side":"standby","src":"listener","st":"ok","first":"2026-08-09 20:31:24","last":"2026-11-21 09:01:46","n":11,"cap":null,"capped":false,"note":"DIR/lsnrdiag/trace/listener.log"}
+{"t":"cov","side":"standby","src":"lsnr_ref","st":"ok","first":"2026-08-09 20:31:24","last":"2026-11-21 09:01:46","n":4,"cap":500,"capped":false,"note":"refused establish lines in the window"}
+{"t":"lsnr_srv","side":"standby","ts":"2026-11-13 23:58:12","host":"HOST","ip":"198.51.100.11","port":33001,"svc":"SID:cdb1","code":"0"}
+{"t":"lsnr_srv","side":"standby","ts":"2026-11-13 23:58:40","host":"HOST","ip":"198.51.100.11","port":33002,"svc":"SID:cdb1","code":"12518"}
+{"t":"lsnr_srv","side":"standby","ts":"2026-11-13 23:59:01","host":"HOST","ip":"198.51.100.13","port":33010,"svc":"proddb_s_dgmgrl","code":"0"}
+{"t":"lsnr_srv","side":"standby","ts":"2026-11-14 00:01:30","host":"HOST","ip":"198.51.100.11","port":33007,"svc":"SID:cdb1","code":"0"}
+{"t":"cov","side":"standby","src":"lsnr_srv","st":"ok","first":"2026-08-09 20:31:24","last":"2026-11-21 09:01:46","n":4,"cap":500,"capped":false,"note":"establish lines with PROGRAM=oracle (an Oracle server process as the client: normally the other database host for redo transport, FAL or the broker, but database links match too) in the window"}
+{"t":"cov","side":"standby","src":"cid","st":"skipped","first":null,"last":null,"n":0,"cap":2000,"capped":false,"note":"option -c not given"}
+{"t":"ep","side":"standby","from":"fal_server","dest":null,"alias":"proddb_p","file":"DIR/netadmin/tnsnames.ora","host":"HOST","port":1526,"addrs":2,"ip":"198.51.100.11","ip_how":"getent hosts prim-host.example","note":"alias proddb_p in DIR/netadmin/tnsnames.ora"}
+{"t":"ep","side":"standby","from":"fal_server","dest":null,"alias":"lost_alias","file":"DIR/netadmin/tnsnames.ora","host":"HOST","port":1599,"addrs":1,"ip":null,"ip_how":null,"note":"alias lost_alias in DIR/netadmin/tnsnames.ora; getent hosts did not resolve nosuch.example"}
+{"t":"cov","side":"standby","src":"ep","st":"ok","first":"2026-11-20 12:00:00","last":"2026-11-20 12:00:00","n":2,"cap":null,"capped":false,"note":"destination and fal_server aliases as configured, resolved through DIR/netadmin/tnsnames.ora; as collected, first = last = collection time"}
+{"t":"sqlnet","side":"standby","name":"SQLNET.EXPIRE_TIME","set":true,"value":"10","file":"DIR/netadmin/sqlnet.ora"}
+{"t":"sqlnet","side":"standby","name":"SQLNET.OUTBOUND_CONNECT_TIMEOUT","set":true,"value":"5","file":"DIR/netadmin/sqlnet.ora"}
+{"t":"sqlnet","side":"standby","name":"SQLNET.INBOUND_CONNECT_TIMEOUT","set":false,"value":null,"file":"DIR/netadmin/sqlnet.ora"}
+{"t":"sqlnet","side":"standby","name":"SQLNET.RECV_TIMEOUT","set":false,"value":null,"file":"DIR/netadmin/sqlnet.ora"}
+{"t":"sqlnet","side":"standby","name":"SQLNET.SEND_TIMEOUT","set":false,"value":null,"file":"DIR/netadmin/sqlnet.ora"}
+{"t":"sqlnet","side":"standby","name":"TCP.CONNECT_TIMEOUT","set":true,"value":"8","file":"DIR/netadmin/sqlnet.ora"}
+{"t":"cov","side":"standby","src":"sqlnet","st":"ok","first":"2026-11-20 12:00:00","last":"2026-11-20 12:00:00","n":6,"cap":null,"capped":false,"note":"DIR/netadmin/sqlnet.ora; DIR/netadmin/sqlnet.ora"}
+{"t":"ostcp","side":"standby","name":"net.ipv4.tcp_keepalive_time","value":"7200","tool":"sysctl -n"}
+{"t":"ostcp","side":"standby","name":"net.ipv4.tcp_keepalive_intvl","value":"75","tool":"sysctl -n"}
+{"t":"ostcp","side":"standby","name":"net.ipv4.tcp_keepalive_probes","value":"9","tool":"sysctl -n"}
+{"t":"ostcp","side":"standby","name":"net.ipv4.tcp_retries2","value":"15","tool":"sysctl -n"}
+{"t":"cov","side":"standby","src":"ostcp","st":"ok","first":"2026-11-20 12:00:00","last":"2026-11-20 12:00:00","n":4,"cap":null,"capped":false,"note":"Linux TCP tunables as collected; value null = not readable here"}
+{"t":"ntp","side":"standby","tool":"chronyc tracking","ref":"server1a.example.net","stratum":3,"off":0.000041695,"synced":"yes","note":"leap status: Normal; off = system clock minus NTP time, seconds, positive = ahead; null when not synchronised","at":"2026-11-20 12:00:00"}
+{"t":"cov","side":"standby","src":"ntp","st":"ok","first":"2026-11-20 12:00:00","last":"2026-11-20 12:00:00","n":1,"cap":null,"capped":false,"note":"chronyc tracking, as collected: the clock state now, not at the incident"}
+{"t":"sar","side":"standby","rpt":"ETCP","ts":"2026-11-13 23:50:01","if":null,"m":{"atmptf/s":0.01,"estres/s":0.03,"retrans/s":12.50,"isegerr/s":0.02,"orsts/s":0.05}}
+{"t":"sar","side":"standby","rpt":"ETCP","ts":"2026-11-14 00:00:01","if":null,"m":{"atmptf/s":0.02,"estres/s":0.04,"retrans/s":48.30,"isegerr/s":0.10,"orsts/s":0.08}}
+{"t":"sar","side":"standby","rpt":"ETCP","ts":"2026-11-14 00:10:01","if":null,"m":{"atmptf/s":0.00,"estres/s":0.01,"retrans/s":0.02,"isegerr/s":0.00,"orsts/s":0.01}}
+{"t":"cov","side":"standby","src":"sar","kind":"ETCP","st":"ok","first":"2026-11-13 00:00:01","last":"2026-11-14 00:30:01","n":3,"cap":2000,"capped":false,"note":"sar -n ETCP, each row is the average over the interval that ends at its time"}
+{"t":"sar","side":"standby","rpt":"TCP","ts":"2026-11-13 23:50:01","if":null,"m":{"active/s":0.12,"passive/s":0.06,"iseg/s":230.10,"oseg/s":221.70}}
+{"t":"sar","side":"standby","rpt":"TCP","ts":"2026-11-14 00:10:01","if":null,"m":{"active/s":0.09,"passive/s":0.04,"iseg/s":190.00,"oseg/s":180.10}}
+{"t":"cov","side":"standby","src":"sar","kind":"TCP","st":"ok","first":"2026-11-13 00:00:01","last":"2026-11-14 00:20:01","n":2,"cap":2000,"capped":false,"note":"sar -n TCP, each row is the average over the interval that ends at its time; 2026-11-14: 1 LINUX RESTART line(s) in the window: the host was restarted"}
+{"t":"sar","side":"standby","rpt":"DEV","ts":"2026-11-13 23:50:01","if":"lo","m":{"rxpck/s":1.30,"txpck/s":1.30,"rxkB/s":0.11,"txkB/s":0.11,"rxcmp/s":0.00,"txcmp/s":0.00,"rxmcst/s":0.00,"%ifutil":0.00}}
+{"t":"sar","side":"standby","rpt":"DEV","ts":"2026-11-13 23:50:01","if":"eth0","m":{"rxpck/s":230.10,"txpck/s":221.70,"rxkB/s":33.00,"txkB/s":31.00,"rxcmp/s":0.00,"txcmp/s":0.00,"rxmcst/s":0.00,"%ifutil":0.03}}
+{"t":"cov","side":"standby","src":"sar","kind":"DEV","st":"ok","first":"2026-11-13 00:00:01","last":"2026-11-13 23:50:01","n":2,"cap":2000,"capped":false,"note":"sar -n DEV, each row is the average over the interval that ends at its time; 2026-11-14: DIR/sadir/sa14 is dated 2026-10-14, not 2026-11-14"}
+{"t":"cov","side":"standby","src":"sar","kind":"EDEV","st":"error","first":null,"last":null,"n":0,"cap":2000,"capped":false,"note":"sar -n EDEV, each row is the average over the interval that ends at its time; 2026-11-13: Requested activities not available in file /var/log/sa/sa13 (DIR/sadir/sa13); 2026-11-14: Requested activities not available in file /var/log/sa/sa14 (DIR/sadir/sa14)"}
+{"t":"netsamp","side":"standby","ts":"2026-11-13 23:50:00","off":"+01:00","rtt":0.401,"loss":false,"retr":1000,"sendq":0}
+{"t":"netsamp","side":"standby","ts":"2026-11-13 23:58:20","off":"+01:00","rtt":null,"loss":true,"retr":1004,"sendq":4320}
+{"t":"netsamp","side":"standby","ts":"2026-11-13 23:58:25","off":"+01:00","rtt":0.451,"loss":false,"retr":1009,"sendq":2160}
+{"t":"netsamp","side":"standby","ts":"2026-11-14 00:09:55","off":"+01:00","rtt":0.400,"loss":false,"retr":1009,"sendq":0}
+{"t":"cov","side":"standby","src":"netsamp","st":"ok","first":"2026-11-13 23:49:50","last":"2026-11-14 00:10:05","n":4,"cap":5000,"capped":false,"note":"samples of net_sampler.sh from sampler.log (peer=198.51.100.12 port=1526 interval=5 started=2026-11-13T23:50:00+0100)"}
+{"t":"conn","side":"standby","lip":"198.51.100.12","lport":1526,"pip":"198.51.100.11","pport":33001,"state":"ESTABLISHED","sendq":0,"recvq":0}
+{"t":"conn","side":"standby","lip":"198.51.100.12","lport":1526,"pip":"198.51.100.11","pport":33002,"state":"ESTABLISHED","sendq":2160,"recvq":0}
+{"t":"conn","side":"standby","lip":"198.51.100.12","lport":1526,"pip":"198.51.100.11","pport":33003,"state":"TIME_WAIT","sendq":0,"recvq":0}
+{"t":"cov","side":"standby","src":"conn","st":"ok","first":"2026-11-20 12:00:00","last":"2026-11-20 12:00:00","n":3,"cap":200,"capped":false,"note":"netstat -an: TCP connections between this host and 198.51.100.11 on port 1526, as collected (not during the window); first = last = collection time"}
+{"t":"net","side":"standby","peer":"198.51.100.11","port":"1526","os":"Linux","rtt":"0.412","loss":"0%","retr":5,"secs":10,"sendq":2160,"at":"2026-11-20 12:00:00","via":"listener log DIR/lsnrdiag/trace/listener.log: the address of the PROGRAM=oracle connections in the window (3 of 4)"}
+{"t":"cov","side":"standby","src":"net","st":"ok","first":"2026-11-20 12:00:00","last":"2026-11-20 12:00:00","n":1,"cap":null,"capped":false,"note":"ping and netstat towards 198.51.100.11:1526, measured at collection time, not during the window; peer from: listener log DIR/lsnrdiag/trace/listener.log: the address of the PROGRAM=oracle connections in the window (3 of 4)"}
+{"t":"clock","side":"standby","utc_off":"+01:00","src":"alert log"}
