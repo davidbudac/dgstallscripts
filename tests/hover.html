@@ -61,6 +61,28 @@ window.addEventListener('load', () => setTimeout(() => {
   tab('report').click();
   log.push('after the Report tab: ' + state());
   const tlv = document.querySelector('#tl svg'); log.push('timeline chart width after the Report tab: ' + (tlv ? tlv.getAttribute('viewBox').split(' ')[2] : 'none'));   // drawn again for the page that is shown: not the 320 of a hidden page
+  // zoom: a drag across the timeline zooms the four charts on the window's clock to that stretch, the click that ends the drag goes nowhere, Ctrl + wheel zooms and a plain wheel
+  // does not, the Whole window button and the timeline tabs set the range again; it ends on the whole window, as a fresh load draws it
+  const zr = () => ['tl', 'fg', 'ls', 'ns'].map(id => { const h = document.getElementById(id); if (!h || !h.querySelector('svg')) return id + ' none'; const z = h.previousElementSibling;
+    return id + ' ' + (z && z.classList.contains('zm') ? z.querySelector('span').textContent : 'whole'); }).join(' | ');
+  if (tlv) { const r = tlv.getBoundingClientRect(), y = r.top + r.height / 2, mouse = (t, el, f) => el.dispatchEvent(new MouseEvent(t, { clientX: r.left + r.width * f, clientY: y, button: 0, bubbles: true, cancelable: true }));
+    mouse('mousedown', tlv, .4); mouse('mousemove', window, .5); mouse('mousemove', window, .6); mouse('mouseup', window, .6);
+    log.push('zoom after a drag across the timeline: ' + zr());
+    const nsv = document.querySelector('#ns svg');
+    if (nsv) { const nr = nsv.getBoundingClientRect(), [za, zb] = document.querySelector('#ns').previousElementSibling.querySelector('span').textContent.match(/\d\d:\d\d:\d\d/g);
+      nsv.dispatchEvent(new MouseEvent('mousemove', { clientX: nr.left + nr.width / 2, clientY: nr.top + nr.height / 3, bubbles: true }));
+      const th = (document.querySelector('#ns .tip .h') || {}).textContent || 'none'; document.querySelector('#ns .tip').removeAttribute('style');
+      log.push('sampler tooltip in the middle of the zoomed chart: ' + (th >= za && th <= zb ? 'inside the range' : 'OUTSIDE the range ' + za + ' – ' + zb + ': ' + th)); }
+    log.push('click that ends the drag: ' + (mouse('click', document.querySelector('#tl svg'), .6) ? 'delivered' : 'swallowed') + '; timeline tab selected: ' + (document.querySelector('[data-z][aria-selected="true"]') ? 'yes' : 'none'));
+    const zb = document.querySelector('[data-zr]'); if (zb) zb.click();
+    log.push('zoom after the Whole window button: ' + zr());
+    const wheel = (ctrl) => document.querySelector('#tl svg').dispatchEvent(new WheelEvent('wheel', { clientX: r.left + r.width * .6, clientY: y, deltaY: -100, ctrlKey: ctrl, bubbles: true, cancelable: true }));
+    const span = () => { const z = document.querySelector('#tl').previousElementSibling; return z && z.classList.contains('zm') ? z.querySelector('span').textContent : 'whole'; };
+    log.push('plain wheel: ' + (wheel(false) ? 'page scrolls' : 'taken') + ', ' + span() + '; Ctrl + wheel: ' + (wheel(true) ? 'page scrolls' : 'taken') + ', ' + span());
+    const it = document.querySelector('[data-z="1"]');
+    if (it) { it.click(); log.push('zoom after the Incident 1 tab: ' + zr() + '; tab selected: ' + ((document.querySelector('[data-z][aria-selected="true"]') || {}).textContent || 'none')); }
+    const wt = document.querySelector('[data-z="0"]'); if (wt) wt.click(); else if (VIEW) setView(d0, d1);
+    log.push('zoom at the end: ' + zr()); }
   // the destination tab of the SYNC histogram, then the tab that was selected
   const dt = document.querySelector('[data-h="dest"]'), was = document.querySelector('[data-h][aria-selected="true"]');
   if (dt) { dt.click(); log.push('destination tab: ' + document.getElementById('histCapt').textContent.length + ' characters: ' + document.getElementById('histCapt').textContent.slice(0, 120) + ' | bars ' + document.querySelectorAll('#hist svg [data-i]').length); if (was) was.click(); }

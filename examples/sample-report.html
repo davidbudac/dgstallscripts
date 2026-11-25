@@ -134,6 +134,10 @@ code { font-family: var(--mono); font-size: 12.5px; background: var(--muted-bg);
 /* charts */
 .viz { position: relative; }
 .viz svg { display: block; width: 100%; overflow: visible; font-family: var(--sans); }
+#tl svg, #fg svg, #ls svg, #ns svg { cursor: crosshair; -webkit-user-select: none; user-select: none; }
+.zm { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin: 0 0 8px; font-size: 12px; color: var(--muted-fg); font-variant-numeric: tabular-nums; }
+.zm .btn { height: 26px; padding: 0 10px; font-size: 12px; }
+@media print { .zm .btn { display: none; } }
 .legend { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 12px; color: var(--muted-fg); margin-bottom: 10px; }
 .legend i { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 6px; vertical-align: 0; }
 .tip { position: absolute; pointer-events: none; z-index: 5; display: none; min-width: 168px; max-width: 320px; background: var(--card-bg); border: 1px solid var(--bd); border-radius: 8px; padding: 6px 10px; font-size: 12px; box-shadow: 0 10px 30px -10px rgb(0 0 0 / .25), 0 2px 6px rgb(0 0 0 / .06); }
@@ -3530,15 +3534,69 @@ function hover(svg, host, fn) {
 }
 const roundTop = (x, y, w, h, r, fill) => { r = Math.min(r, w / 2, h); return r > 0.5 ? `<path d="M${x} ${y + h}V${y + r}q0 -${r} ${r} -${r}h${w - 2 * r}q${r} 0 ${r} ${r}V${y + h}z" fill="${fill}"/>` : `<rect x="${x}" y="${y}" width="${w}" height="${Math.max(0, h)}" fill="${fill}"/>`; };
 
-/* ================= timeline ================= */
-const EVC = { 'SYNC Remote Write': '--s2', 'log file parallel write': '--s3' };
+/* ================= zoom ================= */
+// The charts on the clock of the window (timeline, commit waits, listener logins, sampler) share one time range: VIEW, null for the whole window.
+// On any of them: drag across the plot to zoom to that stretch, Ctrl/⌘ + wheel (or a trackpad pinch) zooms around the pointer, Shift + wheel (or a sideways swipe) pans,
+// a double click or the "Whole window" button shows the whole window again. A plain wheel still scrolls the page.
+const ZMIN = 10;   // seconds: the narrowest range
+let VIEW = null;
 const ZOOMS = [['Whole window', d0, d1]];
 INC.slice(0, 4).forEach(c => ZOOMS.push([`Incident ${c.n}`, Math.max(d0, c.s - 60), Math.min(d1, c.e + 60)]));
-let zoom = 0;
+function setView(a, b) {
+  const full = d1 - d0, sp = Math.min(full, Math.max(ZMIN, b - a));
+  if (!(full > 0) || sp >= full) VIEW = null;
+  else if (b - a >= ZMIN && a >= d0 && b <= d1) VIEW = [a, b];   // as asked: a preset keeps its exact ends, so its tab shows selected
+  else { const lo = b - a >= ZMIN ? a : (a + b - sp) / 2, c = Math.max(d0, Math.min(d1 - sp, lo)); VIEW = [c, c + sp]; }
+  drawZoomed();
+}
+function drawZoomed() {
+  const k = ZOOMS.findIndex(z => VIEW ? z[1] === VIEW[0] && z[2] === VIEW[1] : z[1] === d0 && z[2] === d1);
+  document.querySelectorAll('[data-z]').forEach(x => x.setAttribute('aria-selected', +x.dataset.z === k));
+  drawTimeline(); drawFg(); drawLs(); drawNs();
+}
+// the line above a zoomed chart: the range shown and the way back (also printed, without the button)
+function zoomBar(host, none) {
+  let z = host.previousElementSibling; if (z && !z.classList.contains('zm')) z = null;
+  if (!VIEW || none) { if (z) z.remove(); return; }
+  if (!z) { z = document.createElement('div'); z.className = 'zm'; host.parentElement.insertBefore(z, host); }
+  z.innerHTML = `<span>Zoomed to ${esc(clock(VIEW[0]))} – ${esc(clock(VIEW[1]))} (${esc(dur(VIEW[1] - VIEW[0]))} of the ${esc(dur(d1 - d0))} window)</span><button class="btn" type="button" data-zr>Whole window</button>`;
+}
+document.addEventListener('click', e => { if (e.target.closest('[data-zr]')) setView(d0, d1); });
+// drag, wheel and double click on one chart. o: W (viewBox width), x0..x1 (the plot in viewBox units), a..b (the times at x0 and x1), y0 and h (the height of the selection band).
+// The listeners sit on the svg itself, so the marks keep their tooltips and clicks; moves and the release are followed on the window, as a redraw may replace the svg during a drag.
+function zoomable(svg, o) {
+  const at = (e, r) => (e.clientX - r.left) * o.W / r.width, cur = () => VIEW || [o.a, o.b];
+  const tOf = (px, [a, b]) => a + (Math.max(o.x0, Math.min(o.x1, px)) - o.x0) / (o.x1 - o.x0) * (b - a);
+  svg.addEventListener('mousedown', e => {
+    if (e.button !== 0) return; const r = svg.getBoundingClientRect(), p0 = at(e, r); if (p0 < o.x0 || p0 > o.x1) return;
+    e.preventDefault();
+    const sel = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    [['y', o.y0], ['height', o.h], ['fill', 'var(--fg)'], ['fill-opacity', '.08'], ['stroke', 'var(--fg)'], ['stroke-opacity', '.4'], ['pointer-events', 'none'], ['visibility', 'hidden']].forEach(([k, v]) => sel.setAttribute(k, v));
+    svg.appendChild(sel);
+    let moved = false;
+    const clamp = (ev) => Math.max(o.x0, Math.min(o.x1, at(ev, r)));
+    const mv = (ev) => { const p = clamp(ev); if (Math.abs(p - p0) > 4) moved = true; if (!moved) return;
+      sel.setAttribute('x', Math.min(p, p0)); sel.setAttribute('width', Math.abs(p - p0)); sel.setAttribute('visibility', 'visible'); };
+    const up = (ev) => { window.removeEventListener('mousemove', mv); window.removeEventListener('mouseup', up); sel.remove(); if (!moved) return;
+      const swallow = (ce) => { ce.stopPropagation(); ce.preventDefault(); off(); }, off = () => window.removeEventListener('click', swallow, true);   // the click that ends a drag is not a click on the mark under the pointer
+      window.addEventListener('click', swallow, true); setTimeout(off, 0);
+      const p = clamp(ev), v = cur(); setView(tOf(Math.min(p, p0), v), tOf(Math.max(p, p0), v)); };
+    window.addEventListener('mousemove', mv); window.addEventListener('mouseup', up);
+  });
+  svg.addEventListener('dblclick', e => { const p = at(e, svg.getBoundingClientRect()); if (VIEW && p >= o.x0 && p <= o.x1) setView(d0, d1); });
+  svg.addEventListener('wheel', e => {
+    const r = svg.getBoundingClientRect(), p = at(e, r); if (p < o.x0 || p > o.x1) return;
+    const [a, b] = cur(), px = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 400 : 1;
+    if (e.ctrlKey || e.metaKey) { e.preventDefault(); const t = tOf(p, [a, b]), f = Math.exp(Math.max(-1, Math.min(1, e.deltaY * px * .004))); setView(t - (t - a) * f, t + (b - t) * f); }
+    else if (VIEW && (e.shiftKey || Math.abs(e.deltaX) > Math.abs(e.deltaY))) { e.preventDefault(); const d = (e.deltaX || e.deltaY) * px * o.W / r.width / (o.x1 - o.x0) * (b - a); setView(a + d, b + d); }
+  }, { passive: false });
+}
+
+/* ================= timeline ================= */
+const EVC = { 'SYNC Remote Write': '--s2', 'log file parallel write': '--s3' };
 $('#tlZoom').innerHTML = ZOOMS.map((z, i) => `<button class="tab" role="tab" data-z="${i}" aria-selected="${i === 0}">${z[0]}</button>`).join('');
 if (ZOOMS.length < 2) $('#tlZoom').style.display = 'none';
-$('#tlZoom').addEventListener('click', e => { const b = e.target.closest('[data-z]'); if (!b) return; zoom = +b.dataset.z;
-  document.querySelectorAll('[data-z]').forEach(x => x.setAttribute('aria-selected', x === b)); drawTimeline(); });
+$('#tlZoom').addEventListener('click', e => { const b = e.target.closest('[data-z]'); if (!b) return; const z = ZOOMS[+b.dataset.z]; setView(z[1], z[2]); });
 $('#tlLegend').innerHTML = legend([['--s1', 'Commits waiting on LGWR'], ['--s2', 'SYNC Remote Write'], ['--s3', 'log file parallel write'], ['--s7', 'Redo Transport *, other, standby waits'], ['--crit', 'Stall of 1 s or more, long archiver wait, error, unsynchronized'], ['--good', 'Synchronized, delivered, accepted']]);
 const ARCPROCS = [...new Set(SPANS.filter(s => s.lane === 'arch').map(s => s.p))].sort().slice(0, 4);
 const SRFS = [...new Set(SSPANS.filter(s => s.lane === 'rfs').map(s => s.sid))].slice(0, 4), SAPP = [...new Set(SSPANS.filter(s => s.lane !== 'rfs').map(s => s.p))].sort().slice(0, 4);
@@ -3548,7 +3606,7 @@ function drawTimeline() {
   if (!bundles.length) { host.innerHTML = empty('No data.'); return; }
   const W = Math.max(320, host.clientWidth), narrow = W < 560;
   const LW = narrow ? 92 : 128, R = 4, PW = W - LW - R;
-  const [, z0, z1] = ZOOMS[zoom];
+  const [z0, z1] = VIEW || [d0, d1];
   const X = t => LW + (t - z0) / Math.max(1, z1 - z0) * PW;
   const lanes = [];
   if (AL.length) lanes.push(['alerts', 'Alert log', 34]);
@@ -3621,6 +3679,7 @@ function drawTimeline() {
   s += `<line id="tlx" x1="0" x2="0" y1="52" y2="${H}" stroke="var(--fg)" stroke-opacity=".5" stroke-width="1" visibility="hidden" pointer-events="none"/>`;
   host.innerHTML = `<svg viewBox="0 0 ${W} ${H}" height="${H}" role="img" aria-label="Incident timeline">${s}</svg>`;
   const svg = host.querySelector('svg'), cx = svg.querySelector('#tlx');
+  zoomBar(host); zoomable(svg, { W, x0: LW, x1: W - R, a: z0, b: z1, y0: 52, h: H - 52 });
   hover(svg, host, (e, r) => {
     if (!e) { cx.setAttribute('visibility', 'hidden'); return ''; }
     const px = (e.clientX - r.left) * W / r.width;
@@ -3731,23 +3790,28 @@ $('#fgLegend').innerHTML = legend(FGS);
 if (MP) $('#fgNote').textContent = `Average foreground sessions per minute, ${MP.ash === 'V' ? 'ASH (1 s samples)' : 'AWR ASH (10 s samples)'}.`;
 function drawFg() {
   const host = $('#fg');
-  if (!FG.length) { host.innerHTML = empty(HAS.primary ? 'No foreground ASH samples in the window (or no Diagnostics Pack data).' : 'No primary bundle.'); return; }
+  if (!FG.length) { zoomBar(host, true); host.innerHTML = empty(HAS.primary ? 'No foreground ASH samples in the window (or no Diagnostics Pack data).' : 'No primary bundle.'); return; }
   const W = Math.max(320, host.clientWidth), H = 220, L = 34, B = 22, T = 16, PW = W - L, PH = H - B - T;
-  const m0 = Math.floor(d0 / 60) * 60, n = Math.max(1, Math.round((d1 - m0) / 60)), bw = PW / n;
+  const m0 = Math.floor(d0 / 60) * 60, n = Math.max(1, Math.round((d1 - m0) / 60));
+  const [a, b] = VIEW || [m0, m0 + n * 60], bw = VIEW ? PW * 60 / (b - a) : PW / n, xi = i => L + (VIEW ? (m0 + i * 60 - a) / 60 : i) * bw;   // unzoomed: the minutes of the window
+  const i0 = Math.max(0, Math.floor((a - m0) / 60)), i1 = Math.min(n, Math.ceil((b - m0) / 60)), vis = VIEW ? FG.filter(f => f.s + 60 > a && f.s < b) : FG;
   const byS = {}; FG.forEach(f => byS[f.s] = f);
-  const max = nice(Math.max(...FG.map(f => f.lgwr + f.other + f.cpu))), Y = v => T + PH - v / max * PH;
+  const max = nice(Math.max(0, ...vis.map(f => f.lgwr + f.other + f.cpu))), Y = v => T + PH - v / max * PH;
   let s = '';
   for (let k = 0; k <= 4; k++) { const v = max * k / 4; s += `<line x1="${L}" x2="${W}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--bd)" ${k ? 'stroke-dasharray="3 3"' : ''}/><text x="${L - 8}" y="${Y(v) + 4}" text-anchor="end" font-size="11" fill="var(--muted-fg)">${fmtN(v)}</text>`; }
-  const every = Math.max(1, Math.ceil(n * (MULTI ? 84 : 44) / PW));
-  for (let i = 0; i < n; i++) { const t = m0 + i * 60, d = byS[t], x = L + i * bw + Math.min(3, bw * .15), w = Math.max(Math.min(1, bw), bw - 2 * Math.min(3, bw * .15));
+  const every = Math.max(1, Math.ceil((i1 - i0) * (MULTI ? 84 : 44) / PW));
+  if (VIEW) s += `<defs><clipPath id="fgc"><rect x="${L}" y="0" width="${PW}" height="${H}"/></clipPath></defs><g clip-path="url(#fgc)">`;
+  for (let i = i0; i < i1; i++) { const t = m0 + i * 60, d = byS[t], x = xi(i) + Math.min(3, bw * .15), w = Math.max(Math.min(1, bw), bw - 2 * Math.min(3, bw * .15)), lx = xi(i) + bw / 2;
     if (d) { let acc = 0; const segs = FGS.map(g => d[g[2]]); const top = segs.reduce((a, v, k) => v > 0 ? k : a, -1);
       segs.forEach((v, k) => { if (!(v > 0)) return; const y0 = Y(acc + v), h = Math.max(0, Y(acc) - Y(acc + v) - (acc ? 2 : 0)); acc += v; if (h <= 0) return;
         s += k === top ? roundTop(x, y0, w, h, 4, `var(${FGS[k][0]})`) : `<rect x="${x}" y="${y0}" width="${w}" height="${h}" fill="var(${FGS[k][0]})"/>`; }); }
-    s += `<rect x="${L + i * bw}" y="${T}" width="${bw}" height="${PH}" fill="transparent" data-t="${t}"/>`;
-    if (i % every === 0) s += `<text x="${L + i * bw + bw / 2}" y="${H - 4}" text-anchor="middle" font-size="11" fill="var(--muted-fg)">${clock(t, 5)}</text>`; }
-  const pk = FG.reduce((a, f) => f.lgwr > a.lgwr ? f : a, FG[0]);
-  if (pk.lgwr > 0) { const i = (pk.s - m0) / 60; s += `<text x="${L + i * bw + bw / 2}" y="${Y(pk.lgwr + pk.other + pk.cpu) - 6}" text-anchor="middle" font-size="12" font-weight="600" fill="var(--fg)">${fmtN(pk.lgwr)}</text>`; }
+    s += `<rect x="${xi(i)}" y="${T}" width="${bw}" height="${PH}" fill="transparent" data-t="${t}"/>`;
+    if (i % every === 0 && lx >= L && lx <= W) s += `<text x="${lx}" y="${H - 4}" text-anchor="middle" font-size="11" fill="var(--muted-fg)">${clock(t, 5)}</text>`; }
+  const pk = vis.reduce((a, f) => f.lgwr > a.lgwr ? f : a, vis[0]);
+  if (pk && pk.lgwr > 0) { const i = (pk.s - m0) / 60; s += `<text x="${xi(i) + bw / 2}" y="${Y(pk.lgwr + pk.other + pk.cpu) - 6}" text-anchor="middle" font-size="12" font-weight="600" fill="var(--fg)">${fmtN(pk.lgwr)}</text>`; }
+  if (VIEW) s += '</g>';
   host.innerHTML = `<svg viewBox="0 0 ${W} ${H}" height="${H}" role="img" aria-label="Foreground sessions per minute">${s}</svg>`;
+  zoomBar(host); zoomable(host.querySelector('svg'), { W, x0: L, x1: W, a, b, y0: T, h: PH });
   hover(host.querySelector('svg'), host, (e) => { if (!e) return ''; const b = e.target.closest('[data-t]'); if (!b) return ''; const t = +b.dataset.t, d = byS[t];
     return `<div class="h">${clock(t, 5)}</div>` + (d ? FGS.map(([c, l, k]) => row(l, fmtN(d[k]), c)).join('') : row('No samples', '', '')); });
 }
@@ -4032,19 +4096,25 @@ $('#lsTabs').addEventListener('click', e => { const b = e.target.closest('[data-
 $('#lsLegend').innerHTML = legend([['--s2', 'Refused'], ['--good', 'Accepted']]);
 function drawLs() {
   const host = $('#ls'), data = LSN[lsSide];
-  if (!Object.keys(data).length) { host.innerHTML = empty(bundles.length ? 'No listener log in the bundles (use -l with collect.sh).' : 'No data.'); return; }
+  if (!Object.keys(data).length) { zoomBar(host, true); host.innerHTML = empty(bundles.length ? 'No listener log in the bundles (use -l with collect.sh).' : 'No data.'); return; }
   const W = Math.max(300, host.clientWidth), H = 210, L = 30, B = 22, T = 8, PW = W - L, PH = H - B - T;
-  const m0 = Math.floor(d0 / 60) * 60, n = Math.max(1, Math.round((d1 - m0) / 60)), bw = PW / n;
-  const max = nice(Math.max(...Object.values(data).map(v => v.ok + v.ref))), Y = v => T + PH - v / max * PH;
+  const m0 = Math.floor(d0 / 60) * 60, n = Math.max(1, Math.round((d1 - m0) / 60));
+  const [a, b] = VIEW || [m0, m0 + n * 60], bw = VIEW ? PW * 60 / (b - a) : PW / n, xi = i => L + (VIEW ? (m0 + i * 60 - a) / 60 : i) * bw;   // unzoomed: the minutes of the window
+  const i0 = Math.max(0, Math.floor((a - m0) / 60)), i1 = Math.min(n, Math.ceil((b - m0) / 60));
+  const vis = VIEW ? Object.entries(data).filter(([m]) => +m + 60 > a && +m < b).map(([, v]) => v) : Object.values(data);
+  const max = nice(Math.max(0, ...vis.map(v => v.ok + v.ref))), Y = v => T + PH - v / max * PH;
   let s = '';
   for (let k = 0; k <= 3; k++) { const v = max * k / 3; s += `<line x1="${L}" x2="${W}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--bd)" ${k ? 'stroke-dasharray="3 3"' : ''}/><text x="${L - 8}" y="${Y(v) + 4}" text-anchor="end" font-size="11" fill="var(--muted-fg)">${fmtN(v)}</text>`; }
-  const every = Math.max(1, Math.ceil(n * (MULTI ? 84 : 44) / PW));
-  for (let i = 0; i < n; i++) { const t = m0 + i * 60, d = data[t] || { ok: 0, ref: 0 }, x = L + i * bw + Math.min(2, bw * .15), w = Math.max(Math.min(1, bw), bw - 2 * Math.min(2, bw * .15));
+  const every = Math.max(1, Math.ceil((i1 - i0) * (MULTI ? 84 : 44) / PW));
+  if (VIEW) s += `<defs><clipPath id="lsc"><rect x="${L}" y="0" width="${PW}" height="${H}"/></clipPath></defs><g clip-path="url(#lsc)">`;
+  for (let i = i0; i < i1; i++) { const t = m0 + i * 60, d = data[t] || { ok: 0, ref: 0 }, x = xi(i) + Math.min(2, bw * .15), w = Math.max(Math.min(1, bw), bw - 2 * Math.min(2, bw * .15)), lx = xi(i) + bw / 2;
     if (d.ref) s += roundTop(x, Y(d.ref), w, Y(0) - Y(d.ref), 3, 'var(--s2)');
     if (d.ok) s += roundTop(x, Y(d.ref + d.ok), w, Y(d.ref) - Y(d.ref + d.ok) - (d.ref ? 2 : 0), 3, 'var(--good)');
-    s += `<rect x="${L + i * bw}" y="${T}" width="${bw}" height="${PH}" fill="transparent" data-m="${t}"/>`;
-    if (i % every === 0) s += `<text x="${L + i * bw + bw / 2}" y="${H - 4}" text-anchor="middle" font-size="11" fill="var(--muted-fg)">${clock(t, 5)}</text>`; }
+    s += `<rect x="${xi(i)}" y="${T}" width="${bw}" height="${PH}" fill="transparent" data-m="${t}"/>`;
+    if (i % every === 0 && lx >= L && lx <= W) s += `<text x="${lx}" y="${H - 4}" text-anchor="middle" font-size="11" fill="var(--muted-fg)">${clock(t, 5)}</text>`; }
+  if (VIEW) s += '</g>';
   host.innerHTML = `<svg viewBox="0 0 ${W} ${H}" height="${H}" role="img" aria-label="Listener logins per minute">${s}</svg>`;
+  zoomBar(host); zoomable(host.querySelector('svg'), { W, x0: L, x1: W, a, b, y0: T, h: PH });
   hover(host.querySelector('svg'), host, (e) => { if (!e) return ''; const b = e.target.closest('[data-m]'); if (!b) return ''; const d = data[b.dataset.m] || { ok: 0, ref: 0 };
     return `<div class="h">${SIDE[lsSide]} · ${clock(+b.dataset.m, 5)}</div>` + row('Refused', d.ref, '--s2') + row('Accepted', d.ok, '--good'); });
 }
@@ -4162,26 +4232,28 @@ let nsSide = NSIDES[0];
 function drawNs() {
   const host = $('#ns'); if (!host) return;
   const rows = NSAMP.filter(r => r.side === nsSide);
-  if (!rows.length) { host.innerHTML = empty('No sampler lines for this host in the window.'); return; }
+  if (!rows.length) { zoomBar(host, true); host.innerHTML = empty('No sampler lines for this host in the window.'); return; }
   const W = Math.max(320, host.clientWidth), L = 46, R = 6, PW = W - L - R, hR = 92, hQ = 56, gap = 18, T = 20, H = T + hR + gap + hQ + 24;
-  const X = (t) => L + (t - d0) / Math.max(1, d1 - d0) * PW;
+  const [a, b] = VIEW || [d0, d1], X = (t) => L + (t - a) / Math.max(1, b - a) * PW;
   const rmax = nice(Math.max(0.1, ...rows.filter(r => r.rtt != null).map(r => r.rtt))), qmax = nice(Math.max(1, ...rows.map(r => r.sendq || 0)));
   const YR = (v) => T + hR - v / rmax * hR, YQ = (v) => T + hR + gap + hQ - v / qmax * hQ;
-  const step = [1, 2, 5, 10, 30, 60, 120, 300, 600, 900, 1800, 3600, 7200, 21600, 43200, 86400].find(s => PW / ((d1 - d0) / s) >= 80 + (MULTI ? 40 : 0)) || 86400;
-  let s = '';
+  const step = [1, 2, 5, 10, 30, 60, 120, 300, 600, 900, 1800, 3600, 7200, 21600, 43200, 86400].find(s => PW / ((b - a) / s) >= 80 + (MULTI ? 40 : 0)) || 86400;
+  let s = `<defs><clipPath id="nsc"><rect x="${L}" y="0" width="${PW}" height="${H}"/></clipPath></defs>`;
   s += `<text x="${L + 4}" y="${T + 10}" font-size="10.5" fill="var(--muted-fg)">round trip, ms</text><text x="${L + 4}" y="${T + hR + gap + 11}" font-size="10.5" fill="var(--muted-fg)">largest Send-Q, bytes</text>`;
   [0, .5, 1].forEach(k => { s += `<line x1="${L}" x2="${W - R}" y1="${YR(rmax * k)}" y2="${YR(rmax * k)}" stroke="var(--bd)" ${k ? 'stroke-dasharray="3 3"' : ''}/><text x="${L - 6}" y="${YR(rmax * k) + 4}" text-anchor="end" font-size="10.5" fill="var(--muted-fg)">${fmtN(rmax * k)}</text>`;
     s += `<text x="${L - 6}" y="${YQ(qmax * k) + 4}" text-anchor="end" font-size="10.5" fill="var(--muted-fg)">${fmtN(qmax * k)}</text>`; });
-  for (let t = Math.ceil(d0 / step) * step; t <= d1; t += step) s += `<line x1="${X(t)}" x2="${X(t)}" y1="${T}" y2="${H - 24}" stroke="var(--bd)" stroke-opacity=".6"/><text x="${X(t)}" y="${H - 8}" text-anchor="middle" font-size="11" fill="var(--muted-fg)">${clock(t, step < 60 ? 8 : 5)}</text>`;
-  INC.slice(0, 4).forEach(c => { s += `<rect x="${X(Math.max(d0, c.s))}" y="${T}" width="${Math.max(1, X(Math.min(d1, c.e)) - X(Math.max(d0, c.s)))}" height="${hR + gap + hQ}" fill="var(--crit)" fill-opacity=".07"/>`; });
-  const bw = Math.max(1, Math.min(6, PW / Math.max(1, (d1 - d0) / ((rows[1] ? rows[1].t - rows[0].t : 5) || 5)) - 1));
+  for (let t = Math.ceil(a / step) * step; t <= b; t += step) s += `<line x1="${X(t)}" x2="${X(t)}" y1="${T}" y2="${H - 24}" stroke="var(--bd)" stroke-opacity=".6"/><text x="${X(t)}" y="${H - 8}" text-anchor="middle" font-size="11" fill="var(--muted-fg)">${clock(t, step < 60 ? 8 : 5)}</text>`;
+  s += `<g clip-path="url(#nsc)">`;
+  INC.slice(0, 4).forEach(c => { const ca = Math.max(a, c.s), ce = Math.min(b, c.e); if (ce > ca) s += `<rect x="${X(ca)}" y="${T}" width="${Math.max(1, X(ce) - X(ca))}" height="${hR + gap + hQ}" fill="var(--crit)" fill-opacity=".07"/>`; });
+  const bw = Math.max(1, Math.min(6, PW / Math.max(1, (b - a) / ((rows[1] ? rows[1].t - rows[0].t : 5) || 5)) - 1));
   rows.forEach(r => { if (r.sendq > 0) s += `<rect x="${X(r.t) - bw / 2}" y="${YQ(r.sendq)}" width="${bw}" height="${YQ(0) - YQ(r.sendq)}" fill="var(--s2)"/>`; });
   let seg = '', prev = null; rows.forEach(r => { if (r.rtt == null) { prev = null; return; } seg += (prev ? 'L' : 'M') + X(r.t).toFixed(1) + ' ' + YR(r.rtt).toFixed(1); prev = r; });
   s += `<path d="${seg}" fill="none" stroke="var(--s1)" stroke-width="1.6" stroke-linejoin="round"/>`;
   rows.forEach(r => { if (r.loss) s += `<path d="M${X(r.t)} ${T + hR - 6}l4 6h-8z" fill="var(--crit)"/>`; });
-  s += `<rect x="${L}" y="${T}" width="${PW}" height="${hR + gap + hQ}" fill="transparent" data-ns="1"/>`;
+  s += `</g><rect x="${L}" y="${T}" width="${PW}" height="${hR + gap + hQ}" fill="transparent" data-ns="1"/>`;
   host.innerHTML = `<svg viewBox="0 0 ${W} ${H}" height="${H}" role="img" aria-label="Sampler of the window">${s}</svg>`;
-  hover(host.querySelector('svg'), host, (e, rc) => { if (!e) return ''; const px = (e.clientX - rc.left) * W / rc.width; if (px < L || px > W - R) return ''; const t = d0 + (px - L) / PW * (d1 - d0);
+  zoomBar(host); zoomable(host.querySelector('svg'), { W, x0: L, x1: W - R, a, b, y0: T, h: hR + gap + hQ });
+  hover(host.querySelector('svg'), host, (e, rc) => { if (!e) return ''; const px = (e.clientX - rc.left) * W / rc.width; if (px < L || px > W - R) return ''; const t = a + (px - L) / PW * (b - a);
     let best = rows[0]; rows.forEach(r => { if (Math.abs(r.t - t) < Math.abs(best.t - t)) best = r; });
     return `<div class="h">${clock(best.t, 8)}</div>` + row('Ping', best.loss ? 'no reply' : best.rtt == null ? 'n/a' : best.rtt + ' ms', best.loss ? '--crit' : '--s1') + row('Retransmit counter', best.retr == null ? 'n/a' : String(best.retr), '') + row('Largest Send-Q', best.sendq == null ? 'n/a' : best.sendq + ' bytes', '--s2'); });
 }

@@ -15,6 +15,8 @@
 #   panes          the report pane and the hand-over pane (tab, sidebar, a link of the report, the address #handover, Back and Forward; charts drawn again for the page shown), the section order
 #                  (every chart before Signals), no card caption over 120 characters, the Reading disclosures (closed; open for printing, closed again), Copy and Download .txt from the
 #                  hand-over pane against the golden hand-over texts (extract.py --captions, --order, --readings, --delivered; gate.sh with GATE_HASH)
+#   zoom           the timeline, commit waits, listener logins and sampler share one range: a drag zooms all four, the click ending it goes nowhere, Ctrl + wheel zooms and a plain
+#                  wheel does not, the Incident tabs and the Whole window button and tab set the range (hover.html, extract.py --ui)
 #   collect.sh     raw-log fixtures with a window across midnight, a failing and a partial sqlplus (stub), the caps; hosts with stubbed tools
 #                  (Linux with sar, chronyc, ntpq, getent, netstat, ping, sysctl, lsnrctl; AIX with no, lssrc, ntpq; a bare host with none of them):
 #                  listener server-to-server connections, endpoints from tnsnames.ora, sqlnet.ora timeouts, sar parsing from canned output, clock state,
@@ -389,6 +391,18 @@ if [ $HAVE_PY = 1 ] && sh "$T/gate.sh" --have-chrome; then
   has_l "$W/g_two.ui" '^after the Hand-over tab: report:hidden handover:shown; tab handover; address #handover; Copy and Download buttons shown$' "panes: the Hand-over tab shows the hand-over pane (and its buttons), hides the report, and sets the address"
   has_l "$W/g_two.ui" '^after the Report tab: report:shown handover:hidden; tab report; address #report$' "panes: the Report tab brings the report back"
   has_l "$W/g_two.ui" '^timeline chart width after the Report tab: ([4-9][0-9]{2}|[0-9]{4,})$' "panes: the charts are drawn again for the page that is shown (not at the 320 of a hidden page)"
+  # ---- zoom: one range for the timeline, commit waits, listener logins and the sampler
+  Z='Zoomed to [0-9:]{8} – [0-9:]{8} \([^)]* of the 23 min 0 s window\)'
+  has_l "$W/v2.ui" "^zoom after a drag across the timeline: tl $Z \| fg $Z \| ls $Z \| ns $Z$" "zoom: a drag across the timeline zooms the four charts on the window's clock to the same range"
+  has_l "$W/v2.ui" '^click that ends the drag: swallowed; timeline tab selected: none$' "zoom: the click that ends a drag reaches no mark, and no preset tab stays selected"
+  has_l "$W/v2.ui" '^zoom after the Whole window button: tl whole \| fg whole \| ls whole \| ns whole$' "zoom: the Whole window button shows the whole window on every chart"
+  has_l "$W/v2.ui" "^plain wheel: page scrolls, whole; Ctrl \+ wheel: taken, $Z$" "zoom: a plain wheel scrolls the page, Ctrl + wheel zooms"
+  has_l "$W/v2.ui" '^zoom after the Incident 1 tab: tl Zoomed to 20:37:01 – 20:54:27 ' "zoom: the Incident tab of the timeline sets the shared range"
+  has_l "$W/v2.ui" '^zoom at the end: tl whole \| fg whole \| ls whole \| ns whole$' "zoom: the Whole window tab puts every chart back"
+  has_l "$W/v2.ui" '^sampler tooltip in the middle of the zoomed chart: inside the range$' "zoom: the sampler's tooltip reads its time from the zoomed range"
+  has_l "$W/v2.ui" '^zoom after the Incident 1 tab: .*; tab selected: Incident 1$' "zoom: the Incident 1 tab shows selected after its click"
+  has_l "$W/g_two.ui" '^zoom after the Incident 1 tab: .*; tab selected: Incident 1$' "zoom: two incidents, the Incident 1 tab shows selected after its click"
+  has_l "$W/g_two.ui" '^zoom at the end: tl whole ' "zoom: two incidents, back to the whole window"
   has_l "$W/g_two.ui" '^link in Signals to the hand-over pane: report:hidden handover:shown; tab handover; address #handover$' "panes: a link of the report that targets the hand-over pane switches the pane"
   has_l "$W/g_two.ui" '^sidebar Report entry: report:shown handover:hidden; tab report; address #report$' "panes: the sidebar entry Report shows the report"
   has_l "$W/g_two.ui" '^sidebar Hand-over entry: report:hidden handover:shown; tab handover; address #handover; report sections in the sidebar not listed$' "panes: the sidebar entry Hand-over shows the hand-over pane, and the report sections leave the sidebar"
