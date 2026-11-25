@@ -3,7 +3,9 @@
 # Called through tiny wrappers made by tests/run.sh:  stub.sh <tool> args...   Canned output lives next to this file. Variants via environment:
 #   STUB_OS (uname, default Linux)   STUB_CHRONY ok|unsync|down   STUB_NTPQ ok|none   STUB_PING ok|loss   STUB_STATE (a directory: counters)
 #   STUB_SIDE primary|standby (which host's netstat -an to show)   STUB_LSNR_LOG (path printed as the listener log file)   STUB_SAR_ENV_CHECK=1 (default): without LC_ALL=C and S_TIME_FORMAT=ISO sar answers in 12-hour locale format
+#   STUB_CALLS (a file: each call is appended as "<tool> args")
 H=$(cd "$(dirname "$0")" && pwd); T=$1; shift
+[ -n "$STUB_CALLS" ] && echo "$T $*" >> "$STUB_CALLS"   # optional log of the tools called
 case $T in
   uname) echo "${STUB_OS:-Linux}" ;;
   sleep) ;;

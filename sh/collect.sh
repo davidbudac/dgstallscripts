@@ -14,6 +14,7 @@
 #   -c file    standby bundle: look up its refused CONNECTION_IDs in this listener log
 #   -p ip      peer redo IP for the 10 s network check (default: derived, see README); -P port (default: derived, else 1521)
 #   -n file    log of sh/net_sampler.sh: add its samples inside the window
+#   -N         passive: no live network check (no ping, no netstat sampling): only logs, files and the database are read
 #   -d days    how far back "earlier occurrences" and `list` look (default 30)
 #   -b days    baseline: the same clock interval on each of the previous days, primary (default 7, 0 = none, at most 31)
 #
@@ -29,15 +30,15 @@ DIR=$(cd "$(dirname "$0")/.." && pwd)
 [ -r "$DIR/sh/dglib.sh" ] || { echo "collect.sh: $DIR/sh/dglib.sh is missing: copy the whole directory to the host" >&2; exit 1; }
 . "$DIR/sh/dglib.sh"
 SQLPLUS=${SQLPLUS:-sqlplus}
-OUT= CONN="/ as sysdba" TRACE= ALERT= LSNR= CIDS= PEER= PORT= PORTSET=0 DAYS=30 BASE=7 SAMPLES=
+OUT= CONN="/ as sysdba" TRACE= ALERT= LSNR= CIDS= PEER= PORT= PORTSET=0 DAYS=30 BASE=7 SAMPLES= NONET=0
 # options may come before, between or after the positional arguments
 N=0 A1= A2= A3=
 while [ $# -gt 0 ]; do
   OPTIND=1
-  while getopts o:u:t:a:l:c:p:P:n:d:b:h opt; do
+  while getopts o:u:t:a:l:c:p:P:n:Nd:b:h opt; do
     case $opt in
       o) OUT=$OPTARG ;; u) CONN=$OPTARG ;; t) TRACE=$OPTARG ;; a) ALERT=$OPTARG ;; l) LSNR=$OPTARG ;;
-      c) CIDS=$OPTARG ;; p) PEER=$OPTARG ;; P) PORT=$OPTARG PORTSET=1 ;; n) SAMPLES=$OPTARG ;; d) DAYS=$OPTARG ;; b) BASE=$OPTARG ;; *) usage ;;
+      c) CIDS=$OPTARG ;; p) PEER=$OPTARG ;; P) PORT=$OPTARG PORTSET=1 ;; n) SAMPLES=$OPTARG ;; N) NONET=1 ;; d) DAYS=$OPTARG ;; b) BASE=$OPTARG ;; *) usage ;;
     esac
   done
   shift $((OPTIND - 1))
@@ -471,9 +472,9 @@ if [ -s "$TMP.alias" ]; then
       w = tolower(want); hit = 0; txt = ""
       while ((getline line < file) > 0) {
         sub(/#.*/, "", line)
-        if (line ~ /^[A-Za-z0-9_.$-]/ && line ~ /=/) {
+        if (line ~ /^[A-Za-z0-9_.$-]/ && line ~ /[=]/) {
           if (hit) break
-          nm = line; sub(/=.*/, "", nm); k = split(nm, al, ","); for (i = 1; i <= k; i++) { a = tolower(trim(al[i])); if (a == w || base(a) == base(w)) hit = 1 }
+          nm = line; sub(/[=].*/, "", nm); k = split(nm, al, ","); for (i = 1; i <= k; i++) { a = tolower(trim(al[i])); if (a == w || base(a) == base(w)) hit = 1 }
           if (hit) { txt = line; sub(/^[^=]*=/, "", txt) }
         } else if (hit) txt = txt " " line }
       close(file)
@@ -692,7 +693,10 @@ fi
 PORT=${PORT:-1521}
 
 # ---- TCP connections to the peer on that port, and the short network check (as collected: it runs now, not during the window)
-if [ -n "$PEER" ]; then
+if [ "$NONET" = 1 ]; then
+  cov conn skipped "" "" 0 200 0 "not requested: -N (passive collection, no live network check)"
+  cov net skipped "" "" 0 "" 0 "not requested: -N (passive collection: no ping or netstat towards ${PEER:-the peer}${PEER:+:$PORT})"
+elif [ -n "$PEER" ]; then
   if have netstat; then
     netstat -an 2>/dev/null | awk -v side="$SIDE" -v peer="$PEER" -v p="$PORT" -v st="$TMP.connn" "$JFN"'
       function ipof(a) { if (match(a, /[.:][0-9*]+$/)) a = substr(a, 1, RSTART - 1); sub(/^::ffff:/, "", a); return a }

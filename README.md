@@ -126,6 +126,7 @@ sh/collect.sh list [-d days] [-a alert log] [-u conn]
 | `-p ip` | derived | Peer redo IP for the 10 s network check; wins over the derivation |
 | `-P port` | derived, else 1521 | Peer listener port (primary: from the destination descriptor; standby: its own listener port from `lsnrctl status`) |
 | `-n file` | none | Log of `sh/net_sampler.sh`: add the samples inside the window (the rotated `<file>.1` is read too) |
+| `-N` | off | Passive collection: skip the live network check (no `ping`, no `netstat` towards the peer). Logs, sysstat files and the database are still read |
 | `-d days` | 30 | How far back "earlier occurrences" (SQL and text alert log alike) and `list` look |
 | `-b days` | 7 | Baseline: the same clock interval on each of the previous days, primary only, from AWR (0 = none, at most 31) |
 

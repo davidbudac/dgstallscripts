@@ -857,6 +857,17 @@ collect_tests() {   # SHELL LABEL
   STUB_MODE=peer STUB_SIDE=primary SQLPLUS=$W/sqlplus $CL "$SH" "$R/sh/collect.sh" primary "$WIN1" "$WIN2" -t trace -l listener_primary.log -p 192.0.2.99 -o lprim3.jsonl 2> /dev/null
   hasf lprim3.jsonl '"t":"net","side":"primary","peer":"192.0.2.99","port":"1526"' "collect.sh ($L): -p alone keeps the port of the destination descriptor"
 
+  # -N: passive, no live network check: neither ping nor netstat runs, both cov records say why; sar is still read
+  newstate; : > "$W/calls.N"
+  STUB_CALLS=$W/calls.N STUB_MODE=peer STUB_SIDE=primary SQLPLUS=$W/sqlplus $CL "$SH" "$R/sh/collect.sh" primary "$WIN1" "$WIN2" -N -t trace -l listener_primary.log -p 192.0.2.99 -o lprimN.jsonl 2> /dev/null
+  nof lprimN.jsonl '"t":"net"' "collect.sh ($L): -N writes no net record"
+  nof lprimN.jsonl '"t":"conn"' "collect.sh ($L): -N writes no conn records"
+  covis lprimN.jsonl net "" skipped "collect.sh ($L): -N: the net cov record is skipped"
+  covis lprimN.jsonl conn "" skipped "collect.sh ($L): -N: the conn cov record is skipped"
+  hasf lprimN.jsonl 'not requested: -N' "collect.sh ($L): -N: the cov records give the reason"
+  if grep -qE '^(ping|netstat) ' "$W/calls.N"; then fail "collect.sh ($L): -N runs no ping or netstat" "$(grep -E '^(ping|netstat) ' "$W/calls.N" | head -3)"; else pass "collect.sh ($L): -N runs no ping or netstat"; fi
+  hasf "$W/calls.N" 'sar -n' "collect.sh ($L): -N still reads the sysstat history"
+
   # AIX: no sar history, no getent; ntpq -p and `no -a` instead; the AIX netstat format
   newstate
   STUB_OS=AIX STUB_MODE=peer STUB_SIDE=standby SQLPLUS=$W/sqlplus env PATH=$W/host.aix/bin DGR_NOW=$NOWT STUB_STATE=$W/state TNS_ADMIN=$D/netadmin STUB_LSNR_LOG=$D/lsnrdiag/alert/log.xml "$SH" "$R/sh/collect.sh" standby "$WIN1" "$WIN2" -t trace -a alert_cdb1.log -o astby.jsonl 2> errA1
@@ -1420,6 +1431,9 @@ done
 # gawk and bash extensions that AIX or a minimal system lacks (comment lines are skipped)
 hits=$(grep -nE 'gensub|strftime|mktime|systime\(|asorti?\(|PROCINFO|IGNORECASE|BEGINFILE|nextfile|\[\[ |<<<|date -d|readarray|mapfile|local |\$\{[A-Za-z_]+(,,|\^\^|//)' "$R"/sh/*.sh | grep -vE '^[^:]+:[0-9]+:[[:space:]]*#')
 if [ -z "$hits" ]; then pass "lint: sh/*.sh use no gawk or bash extensions"; else fail "lint: gawk or bash extensions in sh/*.sh" "$hits"; fi
+# an awk regex literal that starts with = (/=/, /=.*/) lexes as the /= operator on AIX awk: write [=] instead
+hits=$(grep -nE '(^|[(,~!&|[:space:]])/=' "$R"/sh/*.sh | grep -vE '^[^:]+:[0-9]+:[[:space:]]*#')
+if [ -z "$hits" ]; then pass "lint: no awk regex starts with = (AIX awk reads /= as an operator)"; else fail "lint: awk regex starting with = in sh/*.sh (use [=])" "$hits"; fi
 
 echo
 echo "$PASS passed, $NFAIL failed, $NSKIP skipped"
