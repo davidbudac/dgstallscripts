@@ -7,6 +7,7 @@ ORA-00942: table or view does not exist
 {"t":"cov","side":"primary","src":"sysmetric","st":"error","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
 {"t":"cov","side":"primary","src":"lfs","st":"error","first":null,"last":null,"n":0,"cap":200,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
 {"t":"cov","side":"primary","src":"lfs_by","st":"error","first":null,"last":null,"n":0,"cap":15,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
+{"t":"cov","side":"primary","src":"aas","st":"error","first":null,"last":null,"n":0,"cap":12,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
 {"t":"cov","side":"primary","src":"ashgap","st":"error","first":null,"last":null,"n":0,"cap":50,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
 {"t":"cov","side":"primary","src":"wl_hist","st":"error","first":null,"last":null,"n":0,"cap":1500,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}
 {"t":"cov","side":"primary","src":"tx","st":"error","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"}

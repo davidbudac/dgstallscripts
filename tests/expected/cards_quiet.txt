@@ -7,3 +7,4 @@ WHO: Whole window · 09:20:00 to 09:45:00
   WHOLISTS: Not collected: no lfs_by records in this bundle.
   WHOPEAK: Peak in one sample: 1 at 09:37:40.412; behind LGWR 1 at 09:37:40.412 (lfs_sum, whole window).
   WHOWL: Per-minute workload (wl): no records in these bundles.
+AAS: Not collected: no aas records in this bundle.

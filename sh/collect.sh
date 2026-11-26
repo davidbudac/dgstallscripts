@@ -317,13 +317,13 @@ fi
 # Sources the SQL writes: a source without a record after sqlplus ran means its statement failed. Sources of the other side are skipped.
 # src act is one source with a coverage record per kind (rman, job, logsw): ACTSQL = the kinds the SQL of this side writes, ACTOTHER = the kinds it does not
 if [ "$SIDE" = primary ]; then
-  SQLSRC="ash awr_snap sysmetric lfs lfs_by ashgap wl_hist tx alert_sql alhist alsync dgstatus dest_hist base_hist"; OTHERSRC="rfs_ev rfs_hist dgproc archgap"
+  SQLSRC="ash awr_snap sysmetric lfs lfs_by aas ashgap wl_hist tx alert_sql alhist alsync dgstatus dest_hist base_hist"; OTHERSRC="rfs_ev rfs_hist dgproc archgap"
   ACTSQL="rman job logsw"; ACTOTHER=
 else
-  SQLSRC="ash ashgap tx rfs_ev rfs_hist dgstatus dgproc archgap"; OTHERSRC="awr_snap sysmetric lfs lfs_by wl_hist alert_sql dest_hist base_hist"
+  SQLSRC="ash ashgap tx rfs_ev rfs_hist dgstatus dgproc archgap"; OTHERSRC="awr_snap sysmetric lfs lfs_by aas wl_hist alert_sql dest_hist base_hist"
   ACTSQL="rman"; ACTOTHER="job logsw"
 fi
-srccap() { case $SIDE:$1 in *:alhist|*:alsync) echo 300 ;; *:lfs) echo 200 ;; *:lfs_by) echo 15 ;; *:wl_hist) echo 1500 ;; *:ashgap) echo 50 ;; *:dgstatus) echo 500 ;; standby:tx) echo 5000 ;; esac; }
+srccap() { case $SIDE:$1 in *:alhist|*:alsync) echo 300 ;; *:lfs) echo 200 ;; *:lfs_by) echo 15 ;; *:aas) echo 12 ;; *:wl_hist) echo 1500 ;; *:ashgap) echo 50 ;; *:dgstatus) echo 500 ;; standby:tx) echo 5000 ;; esac; }
 srckind() { case $SIDE:$1 in primary:alhist|primary:alsync) echo ',"kind":"sql"' ;; standby:ash) echo ',"kind":"V"' ;; esac; }
 actcap() { case $1 in rman) echo 500 ;; job) echo 2000 ;; logsw) echo 5000 ;; esac; }
 ERR1=$(grep -v '^{' "$OUT" | errline | cut -c1-200)

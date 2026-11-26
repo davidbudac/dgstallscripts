@@ -782,6 +782,140 @@
 {"t":"lfs_by","side":"primary","dim":"machine","name":"app01.example","n":35,"lg":35,"sess":23,"a":"2026-11-13 20:37:40","z":"2026-11-13 20:38:50"}
 {"t":"lfs_by","side":"primary","dim":"machine","name":"app02.example","n":34,"lg":34,"sess":23,"a":"2026-11-13 20:37:40","z":"2026-11-13 20:38:50"}
 {"t":"lfs_by","side":"primary","dim":"machine","name":"batch01.example","n":34,"lg":34,"sess":24,"a":"2026-11-13 20:37:40","z":"2026-11-13 20:38:50"}
+{"t":"aas","m":"2026-11-13 20:35","ev":"ON CPU","wc":"CPU","fg":30,"bg":1}
+{"t":"aas","m":"2026-11-13 20:35","ev":"SQL*Net more data from client","wc":"Network","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:35","ev":"buffer busy waits","wc":"Concurrency","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:35","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":1}
+{"t":"aas","m":"2026-11-13 20:35","ev":"db file scattered read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:35","ev":"db file sequential read","wc":"User I/O","fg":5,"bg":0}
+{"t":"aas","m":"2026-11-13 20:35","ev":"enq: TX - row lock contention","wc":"Application","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:35","ev":"log buffer space","wc":"Configuration","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:35","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":2}
+{"t":"aas","m":"2026-11-13 20:36","ev":"ON CPU","wc":"CPU","fg":36,"bg":2}
+{"t":"aas","m":"2026-11-13 20:36","ev":"SQL*Net more data from client","wc":"Network","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:36","ev":"buffer busy waits","wc":"Concurrency","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:36","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":2}
+{"t":"aas","m":"2026-11-13 20:36","ev":"db file scattered read","wc":"User I/O","fg":4,"bg":0}
+{"t":"aas","m":"2026-11-13 20:36","ev":"db file sequential read","wc":"User I/O","fg":7,"bg":0}
+{"t":"aas","m":"2026-11-13 20:36","ev":"enq: TX - row lock contention","wc":"Application","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:36","ev":"log buffer space","wc":"Configuration","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:36","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":3}
+{"t":"aas","m":"2026-11-13 20:37","ev":"ON CPU","wc":"CPU","fg":30,"bg":1}
+{"t":"aas","m":"2026-11-13 20:37","ev":"SQL*Net more data from client","wc":"Network","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:37","ev":"SYNC Remote Write","wc":"Other","fg":0,"bg":5}
+{"t":"aas","m":"2026-11-13 20:37","ev":"buffer busy waits","wc":"Concurrency","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:37","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":1}
+{"t":"aas","m":"2026-11-13 20:37","ev":"db file scattered read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:37","ev":"db file sequential read","wc":"User I/O","fg":5,"bg":0}
+{"t":"aas","m":"2026-11-13 20:37","ev":"enq: TX - row lock contention","wc":"Application","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:37","ev":"log buffer space","wc":"Configuration","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:37","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":1}
+{"t":"aas","m":"2026-11-13 20:37","ev":"log file sync","wc":"Commit","fg":16,"bg":0}
+{"t":"aas","m":"2026-11-13 20:38","ev":"ON CPU","wc":"CPU","fg":12,"bg":2}
+{"t":"aas","m":"2026-11-13 20:38","ev":"SQL*Net more data from client","wc":"Network","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:38","ev":"SYNC Remote Write","wc":"Other","fg":0,"bg":6}
+{"t":"aas","m":"2026-11-13 20:38","ev":"buffer busy waits","wc":"Concurrency","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:38","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":2}
+{"t":"aas","m":"2026-11-13 20:38","ev":"db file scattered read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:38","ev":"db file sequential read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:38","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":1}
+{"t":"aas","m":"2026-11-13 20:38","ev":"log file sync","wc":"Commit","fg":87,"bg":0}
+{"t":"aas","m":"2026-11-13 20:44","ev":"ON CPU","wc":"CPU","fg":6,"bg":1}
+{"t":"aas","m":"2026-11-13 20:44","ev":"SQL*Net more data from client","wc":"Network","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:44","ev":"buffer busy waits","wc":"Concurrency","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:44","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":1}
+{"t":"aas","m":"2026-11-13 20:44","ev":"db file scattered read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:44","ev":"db file sequential read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:44","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":3}
+{"t":"aas","m":"2026-11-13 20:45","ev":"ON CPU","wc":"CPU","fg":12,"bg":2}
+{"t":"aas","m":"2026-11-13 20:45","ev":"SQL*Net more data from client","wc":"Network","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:45","ev":"buffer busy waits","wc":"Concurrency","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:45","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":2}
+{"t":"aas","m":"2026-11-13 20:45","ev":"db file scattered read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:45","ev":"db file sequential read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:45","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":4}
+{"t":"aas","m":"2026-11-13 20:46","ev":"ON CPU","wc":"CPU","fg":6,"bg":1}
+{"t":"aas","m":"2026-11-13 20:46","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":1}
+{"t":"aas","m":"2026-11-13 20:46","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":2}
+{"t":"aas","m":"2026-11-13 20:47","ev":"ON CPU","wc":"CPU","fg":6,"bg":2}
+{"t":"aas","m":"2026-11-13 20:47","ev":"SQL*Net more data from client","wc":"Network","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:47","ev":"buffer busy waits","wc":"Concurrency","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:47","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":2}
+{"t":"aas","m":"2026-11-13 20:47","ev":"db file scattered read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:47","ev":"db file sequential read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:47","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":3}
+{"t":"aas","m":"2026-11-13 20:48","ev":"ON CPU","wc":"CPU","fg":12,"bg":1}
+{"t":"aas","m":"2026-11-13 20:48","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":1}
+{"t":"aas","m":"2026-11-13 20:48","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":4}
+{"t":"aas","m":"2026-11-13 20:49","ev":"ON CPU","wc":"CPU","fg":6,"bg":2}
+{"t":"aas","m":"2026-11-13 20:49","ev":"SQL*Net more data from client","wc":"Network","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:49","ev":"buffer busy waits","wc":"Concurrency","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:49","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":2}
+{"t":"aas","m":"2026-11-13 20:49","ev":"db file scattered read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:49","ev":"db file sequential read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:49","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":2}
+{"t":"aas","m":"2026-11-13 20:50","ev":"ON CPU","wc":"CPU","fg":12,"bg":1}
+{"t":"aas","m":"2026-11-13 20:50","ev":"SQL*Net more data from client","wc":"Network","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:50","ev":"buffer busy waits","wc":"Concurrency","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:50","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":1}
+{"t":"aas","m":"2026-11-13 20:50","ev":"db file scattered read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:50","ev":"db file sequential read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:50","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":3}
+{"t":"aas","m":"2026-11-13 20:51","ev":"ON CPU","wc":"CPU","fg":6,"bg":2}
+{"t":"aas","m":"2026-11-13 20:51","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":2}
+{"t":"aas","m":"2026-11-13 20:51","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":4}
+{"t":"aas","m":"2026-11-13 20:52","ev":"ON CPU","wc":"CPU","fg":6,"bg":1}
+{"t":"aas","m":"2026-11-13 20:52","ev":"SQL*Net more data from client","wc":"Network","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:52","ev":"buffer busy waits","wc":"Concurrency","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:52","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":1}
+{"t":"aas","m":"2026-11-13 20:52","ev":"db file scattered read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:52","ev":"db file sequential read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:52","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":2}
+{"t":"aas","m":"2026-11-13 20:53","ev":"ON CPU","wc":"CPU","fg":24,"bg":2}
+{"t":"aas","m":"2026-11-13 20:53","ev":"SQL*Net more data from client","wc":"Network","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:53","ev":"buffer busy waits","wc":"Concurrency","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:53","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":2}
+{"t":"aas","m":"2026-11-13 20:53","ev":"db file scattered read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:53","ev":"db file sequential read","wc":"User I/O","fg":5,"bg":0}
+{"t":"aas","m":"2026-11-13 20:53","ev":"enq: TX - row lock contention","wc":"Application","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:53","ev":"log buffer space","wc":"Configuration","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:53","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":3}
+{"t":"aas","m":"2026-11-13 20:54","ev":"ON CPU","wc":"CPU","fg":36,"bg":1}
+{"t":"aas","m":"2026-11-13 20:54","ev":"SQL*Net more data from client","wc":"Network","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:54","ev":"buffer busy waits","wc":"Concurrency","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:54","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":1}
+{"t":"aas","m":"2026-11-13 20:54","ev":"db file scattered read","wc":"User I/O","fg":4,"bg":0}
+{"t":"aas","m":"2026-11-13 20:54","ev":"db file sequential read","wc":"User I/O","fg":7,"bg":0}
+{"t":"aas","m":"2026-11-13 20:54","ev":"enq: TX - row lock contention","wc":"Application","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:54","ev":"log buffer space","wc":"Configuration","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:54","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":4}
+{"t":"aas","m":"2026-11-13 20:55","ev":"ON CPU","wc":"CPU","fg":30,"bg":2}
+{"t":"aas","m":"2026-11-13 20:55","ev":"SQL*Net more data from client","wc":"Network","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:55","ev":"buffer busy waits","wc":"Concurrency","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:55","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":2}
+{"t":"aas","m":"2026-11-13 20:55","ev":"db file scattered read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:55","ev":"db file sequential read","wc":"User I/O","fg":5,"bg":0}
+{"t":"aas","m":"2026-11-13 20:55","ev":"enq: TX - row lock contention","wc":"Application","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:55","ev":"log buffer space","wc":"Configuration","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:55","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":2}
+{"t":"aas","m":"2026-11-13 20:56","ev":"ON CPU","wc":"CPU","fg":36,"bg":1}
+{"t":"aas","m":"2026-11-13 20:56","ev":"SQL*Net more data from client","wc":"Network","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:56","ev":"buffer busy waits","wc":"Concurrency","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:56","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":1}
+{"t":"aas","m":"2026-11-13 20:56","ev":"db file scattered read","wc":"User I/O","fg":4,"bg":0}
+{"t":"aas","m":"2026-11-13 20:56","ev":"db file sequential read","wc":"User I/O","fg":7,"bg":0}
+{"t":"aas","m":"2026-11-13 20:56","ev":"enq: TX - row lock contention","wc":"Application","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:56","ev":"log buffer space","wc":"Configuration","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:56","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":3}
+{"t":"aas","m":"2026-11-13 20:57","ev":"ON CPU","wc":"CPU","fg":30,"bg":2}
+{"t":"aas","m":"2026-11-13 20:57","ev":"SQL*Net more data from client","wc":"Network","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:57","ev":"buffer busy waits","wc":"Concurrency","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:57","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":2}
+{"t":"aas","m":"2026-11-13 20:57","ev":"db file scattered read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:57","ev":"db file sequential read","wc":"User I/O","fg":5,"bg":0}
+{"t":"aas","m":"2026-11-13 20:57","ev":"enq: TX - row lock contention","wc":"Application","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:57","ev":"log buffer space","wc":"Configuration","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:57","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":4}
 {"t":"wl_hist","side":"primary","b":"2026-11-06 09:00","e":"2026-11-06 10:00","redo":2.3,"redo_max":4.11,"txn":49.4}
 {"t":"wl_hist","side":"primary","b":"2026-11-06 10:00","e":"2026-11-06 11:00","redo":2.0,"redo_max":3.6,"txn":43.0}
 {"t":"wl_hist","side":"primary","b":"2026-11-06 11:00","e":"2026-11-06 12:00","redo":1.7,"redo_max":3.09,"txn":36.5}
@@ -1527,6 +1661,7 @@
 {"t":"act","side":"primary","kind":"logsw","a":"2026-11-14 06:28:09","thr":1,"seq":114502}
 {"t":"act","side":"primary","kind":"logsw","a":"2026-11-14 07:52:09","thr":1,"seq":114503}
 {"t":"cov","side":"primary","src":"lfs_by","st":"ok","first":"2026-11-06 09:00:03","last":"2026-11-14 08:59:53","n":10,"cap":15,"capped":false,"note":"log file sync samples in ASH (H) by service, module and machine, the 15 groups with the most samples kept per list; n = groups found over the three lists; first/last = what ASH holds"}
+{"t":"cov","side":"primary","src":"aas","st":"ok","first":"2026-11-06 09:00:03","last":"2026-11-14 08:59:53","n":11,"cap":12,"capped":false,"note":"ASH samples per minute by wait event (H), foreground and other sessions; the 12 events with the most samples kept by name, the rest in one record per minute without a name; n = events found before the fold; first/last = what ASH holds"}
 {"t":"cov","side":"primary","src":"wl_hist","st":"ok","first":"2026-11-06 09:00:00","last":"2026-11-14 09:00:00","n":192,"cap":1500,"capped":false,"note":"dba_hist_sysmetric_summary, group 2, lookback 30 days, one record per AWR snapshot interval, newest 1500 kept; first/last = the span the view holds, n = intervals in the lookback"}
 {"t":"cov","side":"primary","src":"alsync","kind":"sql","st":"ok","first":"2026-10-15 09:12:41","last":"2026-11-14 09:12:39","n":5,"cap":300,"capped":false,"note":"v$diag_alert_ext, lookback 30 days, newest 300 kept; lines that end an UNSYNCHRONIZED period of a destination (LAD:n is SYNCHRONIZED, LAD:n level SYNCHRONIZED)"}
 {"t":"cov","side":"primary","src":"act","kind":"rman","st":"ok","first":"2026-09-18 02:00:04","last":"2026-11-14 02:00:05","n":39,"cap":500,"capped":false,"note":"v$rman_status, rows of type COMMAND, lookback 30 days, newest 500 kept; first/last = the oldest and newest start time the view holds"}

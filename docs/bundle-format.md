@@ -6,7 +6,7 @@
 
 A line that does not start with `{` is sqlplus error text (`ORA-`, `SP2-`) that landed in the spool. The report
 lists such lines as failed queries. Unknown record types are ignored, so new ones can be added: the records of collector
-phase 3 ([below](#records-added-by-the-collector-in-phase-3)) and the four of the step after it (`lfs_by`, `wl_hist`, `alsync`, `act`, [below](#who-waited-workload-history-ended-unsynchronized-periods-and-scheduled-activity)) are all optional, an older bundle without them is still a valid v2 bundle.
+phase 3 ([below](#records-added-by-the-collector-in-phase-3)) and the five of the step after it (`lfs_by`, `aas`, `wl_hist`, `alsync`, `act`, [below](#who-waited-active-sessions-workload-history-ended-unsynchronized-periods-and-scheduled-activity)) are all optional, an older bundle without them is still a valid v2 bundle.
 
 ## Times
 
@@ -38,6 +38,7 @@ fall outside the window by design: `alhist` (history), `arch.first/next` (a log 
 | `lfs_sum`* | `waits lgwr_waits pk_n pk_at pk_lg pk_lg_at` | totals over all those waits and the most sessions waiting in one sample, see below |
 | `ashgap`* | `ia a iz z` | a gap in the ASH sampler: two consecutive samples, see below |
 | `lfs_by`* | `dim name n lg sess a z` | foreground samples on `log file sync` grouped by service, module and machine, in the window, see below |
+| `aas`* | `m ev wc fg bg` | ASH samples per minute and wait event, foreground (`fg`) and other session types (`bg`) counted apart; no `side`, as in `fg`; the events beyond the 12 with the most samples are one record per minute with `ev` and `wc` null, see below |
 | `tx` | `ts p ev seq tw` (`sid`**) | LGWR/LGnn/NSSn/TTnn/ARCn/TMON wait samples; `p` process, `ev` event, `tw` microseconds. The standby has them too, see below |
 | `hist_su` | `ev b us n` | `v$event_histogram_micro` since startup (primary: SYNC Remote Write, log file sync; standby: the RFS events) |
 | `hist_awr`* | `ev ms n b e` | AWR histogram summed over the snapshots overlapping the window; `b`, `e` = first begin, last end (minute) |
@@ -149,21 +150,27 @@ with the standby's own listener port from `lsnrctl status` (`Listening Endpoints
 | `ep`, `conn`, `sqlnet`, `ostcp` | Configuration, "Network and OS", "Facts to hand over" (all as collected) |
 | `ntp`, `net` (incl. `via`) | notice about the clocks (as collected), "Network and OS" (as collected), "Facts to hand over" |
 | `lfs_by`, `lfs_sum` | "Who waited" (per incident tab, but `lfs_by` is for the whole window) |
+| `aas` | "Active sessions by wait event" (a stacked area over the window, zoomable with the other charts). Supporting evidence: Signals, Explanations and the hand-over texts do not use it |
 | `wl` (per minute) | "Who waited": the minutes before the first event against the minutes of the incident |
 | `alsync` | "Episodes side by side": the first line after the start of an episode that ends the UNSYNCHRONIZED period |
 | `wl_hist` | "Episodes side by side": the redo rate of the AWR interval that contains the start |
 | `act` | "Episodes side by side": what was running at the start or began within 10 minutes before it, log switches within 60 s; "Other episodes by day and hour": RMAN commands as bars, the job runs that overlap a start |
 | all `cov` records | the coverage table (a skipped source of the other side is not listed) |
 
-## Who waited, workload history, ended UNSYNCHRONIZED periods and scheduled activity
+## Who waited, active sessions, workload history, ended UNSYNCHRONIZED periods and scheduled activity
 
-Four record types, all optional, each with its own `cov` record (also when its statement failed, `st` `error`, or does not apply to that side, `skipped`). The statements are in `sql/json_primary.sql` and `sql/json_standby.sql`; each stands alone, so a failure costs that record
-type and its `cov`, never the `meta` line or another record. On 2026-11-25 their statements were run against Oracle 19.27.0.0.0 (a CDB root, primary READ WRITE, physical standby MOUNTED) and returned rows; the count statement of the job source failed with ORA-00937 and was corrected. Not exercised there: a host whose UTC offset is not zero, a PDB-level connection, the in-memory path of `lfs_by` with rows, RAC.
+Five record types, all optional, each with its own `cov` record (also when its statement failed, `st` `error`, or does not apply to that side, `skipped`). The statements are in `sql/json_primary.sql` and `sql/json_standby.sql`; each stands alone, so a failure costs that record
+type and its `cov`, never the `meta` line or another record. On 2026-11-25 the statements of the other four were run against Oracle 19.27.0.0.0 (a CDB root, primary READ WRITE, physical standby MOUNTED) and returned rows; the count statement of the job source failed with ORA-00937 and was corrected. Not exercised there: a host whose UTC offset is not zero, a PDB-level connection, the in-memory path of `lfs_by` with rows, RAC. On 2026-11-26 `collect.sh primary` was run against Oracle 19.27.0.0.0 (a CDB root, primary READ WRITE) over two windows, one served by `v$active_session_history` (`meta.ash` V) and one by the AWR copy (`meta.ash` H). In both, the `aas` statements returned rows (15 records and 21 events found, and 101 records and 26 events found, both capped at 12, with the folded record written with `ev` and `wc` null) and the cov record was written; `check_bundle.py <bundle> collector` passed, and for every minute the sum of `aas.fg` equalled `fg.lgwr + fg.other + fg.cpu`. No statement needed a correction. The standby side was not run.
 
 - `lfs_by`* (in the window, the ASH source in use, `meta.ash`): the `FOREGROUND` samples on `log file sync`, counted three ways. `dim` is `service`, `module` or `machine`; `name` is the value (at most 64 characters, `null` when the column is null; for `service` the name from
   `v$active_services` found by `service_hash` = `name_hash`, else `hash <number>`); `n` samples; `lg` of those, the samples whose blocking session was LGWR (the test of `lfs`); `sess` distinct `session_id, session_serial#`; `a`, `z` first and last sample time. **They are sample counts**: one per session per
   sampling interval (1 s in memory, 10 s in the AWR copy), not durations and not numbers of commits. The 15 groups with the most samples are kept per `dim`. `cov lfs_by`: `first`/`last` = what the ASH source holds (as `lfs`), `n` = groups found over the three dims before the cut, `cap` 15, `capped` true when a dim had more than 15.
   The record cannot be split by incident: it is for the whole window.
+- `aas`* (in the window, the ASH source in use, `meta.ash`): ASH samples per minute and wait event, one record for each minute and event that has a sample. `m` (the minute, `YYYY-MM-DD HH:MI`, as `fg.m`), `ev` (`event`, or `ON CPU` when `session_state` is `ON CPU`),
+  `wc` (`wait_class`; `CPU` for `ON CPU`, `Other` when the class is null; a sample that is waiting with no event name is written as the event `unknown`), `fg` (samples of `FOREGROUND` sessions), `bg` (samples of every other session type). **Raw sample counts, as in `fg`** (one per session per sampling interval: 1 s in memory, 10 s in the AWR copy): the report divides them by
+  the samples per minute of the source (60 or 6) for average active sessions. The ASH source and the window predicate are those of `fg`, and no session type is left out (the background sessions are the `bg` samples), so for every minute the `fg` values of its records add up to `fg.lgwr + fg.other + fg.cpu`.
+  The 12 events with the most samples (`fg + bg`) over the whole window are kept by name (`ON CPU` counts as one event); all the others are added up into one record per minute with `ev` and `wc` null, so that the sums per minute still hold. No record has `fg` and `bg` both 0. Like `fg`, the record carries no `side`:
+  it belongs to the side of the bundle. `cov aas`: `first`/`last` = what the ASH source holds (as `lfs`), `n` = distinct events found in the window before the fold, `cap` 12, `capped` true when more than 12 were found.
 - `wl_hist`* (the last `-d` days, AWR): one record per AWR snapshot interval from `dba_hist_sysmetric_summary` (`group_id` 2, this database and instance): `b`, `e` (`begin_time`, `end_time`, `YYYY-MM-DD HH:MI`), `redo` (average of `Redo Generated Per Sec` over the interval, MB/s, rounded as `wl.redo`), `redo_max` (its `maxval`, the largest 1 minute value in the interval, MB/s),
   `txn` (average of `User Transaction Per Sec`). An average over an interval of the snapshot length, not a rate at one instant. Newest 1500 kept. `cov wl_hist`: `first`/`last` = the oldest begin and newest end the view holds, `n` = intervals (snapshots) in the lookback, `cap` 1500.
 - `alsync` (both sides, the same lookback and the same pass over the alert log as `alhist`): the lines that end an UNSYNCHRONIZED period of a destination: `LAD:n is SYNCHRONIZED` and `LAD:n ... level SYNCHRONIZED` (`dgsync()` in `sh/dglib.sh`; the same condition between `sync-pattern` markers in the SQL), never a line that is also in the history list. `ts` (to the second), `msg` (at most 200). Newest 300 kept.
@@ -174,7 +181,7 @@ type and its `cov`, never the `meta` line or another record. On 2026-11-25 their
     is written as one summary record instead of its runs**: `freq` true, `n` its runs, `a` its first start, `z` its last start, `st` null. Newest 2000 run records kept (the summaries are not cut); `cap` 2000, `capped` true when more run records than that were found, `n` = all rows in the lookback (the runs of the summarised jobs included).
     The offset is the one at collection time: a run from before a daylight-saving change inside the lookback is off by that change.
   - `kind` `logsw` (primary): `v$log_history` rows: `a` (`first_time`: the time the log sequence was opened, i.e. the switch into it), `thr` (`thread#`), `seq` (`sequence#`). Newest 5000; `cap` 5000.
-  - On the standby `job` and `logsw` are `skipped` ("not collected on the standby"). `lfs_by` and `wl_hist` are `skipped` there as well.
+  - On the standby `job` and `logsw` are `skipped` ("not collected on the standby"). `lfs_by`, `aas` and `wl_hist` are `skipped` there as well.
   A list of events is not a sample: the newest row of a view says nothing about where the view ends, so the report treats a bundle collected after an interval as holding its end (as for a text log) and uses only `first` (and, when `capped`, the oldest record that was kept) for how far back the view reaches.
 
 ## `clock`
@@ -234,6 +241,7 @@ One record per source and side, so a reader can tell "nothing happened" from "no
 | `sysmetric` | 1 min metrics (`wl`) | min / max `begin_time` held | minutes in the window | |
 | `lfs` | the `lfs` and `lfs_sum` records | min / max `sample_time` the ASH source holds | waits found | 200 |
 | `lfs_by`* | the `lfs_by` records | as `lfs` | groups found over the three lists | 15 per list |
+| `aas`* | the `aas` records | as `lfs` | distinct events found in the window, before the fold | 12 |
 | `ashgap` | the `ashgap` records | first / last sample read (a minute around the window) | gaps found (`samples` = samples read) | 50 |
 | `alert_sql` | `v$diag_alert_ext` (the `alert` records) | min / max row inside the `-d` lookback | rows in the window | |
 | `alert_text` | text alert log (`alert` records) | first / last timestamp in the file | messages in the window | |
@@ -271,13 +279,13 @@ skipped. `alert_sql` is read through the `-d` lookback (default 30 days); when t
 says so, and with no row seen `st` is `error`, not `empty`.
 
 `collect.sh` writes a `cov` record for every source, also when the statement failed (`st:"error"`), so a side's bundle always has the same set: `database ash awr_snap sysmetric lfs ashgap tx alert_sql alert_text alhist dgstatus dest_hist
-base_hist rfs_ev rfs_hist dgproc archgap trace listener lsnr_ref lsnr_srv cid ep conn sqlnet ostcp ntp sar` (four records, `kind` ETCP TCP DEV EDEV) `netsamp net` and, from the collector that writes the records of the last section, `lfs_by wl_hist alsync` (`kind` sql on the primary, text where a text alert log is read) and `act` (three records: `kind` rman job logsw). A source that belongs to the other side is `skipped` ("not collected on the standby" / "on the primary"):
-on the standby `awr_snap sysmetric lfs lfs_by wl_hist alert_sql dest_hist base_hist` and `act` of `kind` job and logsw, on the primary `rfs_ev rfs_hist dgproc archgap`. `ash` and `ashgap` are collected on the standby now (they were `skipped` there in bundles from before phase 3).
+base_hist rfs_ev rfs_hist dgproc archgap trace listener lsnr_ref lsnr_srv cid ep conn sqlnet ostcp ntp sar` (four records, `kind` ETCP TCP DEV EDEV) `netsamp net` and, from the collector that writes the records of the last section, `lfs_by aas wl_hist alsync` (`kind` sql on the primary, text where a text alert log is read) and `act` (three records: `kind` rman job logsw). A source that belongs to the other side is `skipped` ("not collected on the standby" / "on the primary"):
+on the standby `awr_snap sysmetric lfs lfs_by aas wl_hist alert_sql dest_hist base_hist` and `act` of `kind` job and logsw, on the primary `rfs_ev rfs_hist dgproc archgap`. `ash` and `ashgap` are collected on the standby now (they were `skipped` there in bundles from before phase 3).
 
 **How the report uses `cov`.** A source supports "none" or "ruled out" for an interval only when its record exists, `st` is `ok` or `empty`, `first` is at or
 before the start of the interval, `last` is at or after its end (a text log may end earlier when the bundle was collected after the interval: nothing was logged since),
 and `capped` is false. Anything else is shown as "Not checked" with the reason. Bundles with no `cov` records (v1) give coverage unknown, so nothing is ruled out on absence.
-For the lookback sources `lfs_by`, `wl_hist`, `alsync` and `act` an `error` record means the statement failed: the report reads it as "not checked" with the note of the record, never as "none" or "not covered", also when records of that source arrived (the row statement of the job source can run when its count statement fails; the records are still drawn, nothing is said about what they cover).
+For `lfs_by`, `aas` and the lookback sources `wl_hist`, `alsync` and `act` an `error` record means the statement failed: the report reads it as "not checked" with the note of the record, never as "none" or "not covered", also when records of that source arrived (the row statement of the job source can run when its count statement fails; the records are still drawn, nothing is said about what they cover).
 A capped lookback source (`capped` true; the newest records are kept) holds from its oldest kept record on, which the report takes from the records themselves, not from `first`; the Coverage table shows it as "kept from" beside `first`/`last`.
 Exit status of `collect.sh` is 1 when sqlplus connected nowhere (no meta line); the log scans still run.
 

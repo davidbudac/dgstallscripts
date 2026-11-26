@@ -11,3 +11,4 @@ WHO: Incident 2 · 10:30:00 to 10:31:40 · ORA-03135, standby: possible network 
   WHOLISTS: Not collected: no lfs_by records in this bundle.
   WHOPEAK: Peak in one sample: 12 at 10:05:25.500; behind LGWR 12 at 10:05:25.500 (lfs_sum, whole window).
   WHOWL: Per-minute workload (wl): no records in these bundles.
+AAS: Not collected: no aas records in this bundle.

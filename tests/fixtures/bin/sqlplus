@@ -9,7 +9,7 @@
 #   STUB_ARGS=file  the arguments of the call are written there (each call overwrites: the last one stays);  STUB_ARGS_ALL=file  the arguments of every call, one line per call, appended
 #   peer  as meta, plus what the real SQL writes for the endpoints: a dest record (primary) and the fal_server parameter
 #   full  as meta, plus the records and coverage records of the newer statements, in the shapes of sql/json_primary.sql and sql/json_standby.sql:
-#         primary: lfs_by (three dims), wl_hist, alhist and alsync (both kind sql), act rman, act job (with one frequent-job summary, freq true) and act logsw; standby: act rman
+#         primary: lfs_by (three dims), aas (six records, the events beyond the twelfth folded into one with ev null, capped), wl_hist, alhist and alsync (both kind sql), act rman, act job (with one frequent-job summary, freq true) and act logsw; standby: act rman
 #         STUB_OMIT="act:job lfs_by"  those sources write neither records nor a coverage record (the statement failed before its coverage statement); a source is its name, act as act:KIND
 #         STUB_ERR="wl_hist act:rman"  those sources write no records and the error coverage record the SQL writes when their count statement failed (n 0, no first/last)
 [ -n "$STUB_ARGS" ] && echo "$@" > "$STUB_ARGS"      # tests: what collect.sh passed
@@ -61,6 +61,16 @@ if [ "$STUB_MODE" = full ]; then
         '{"t":"lfs_by","side":"primary","dim":"machine","name":"appsrv02.example.com","n":45,"lg":38,"sess":6,"a":"2026-11-13 23:55:00","z":"2026-11-14 00:06:30"}' \
         '{"t":"lfs_by","side":"primary","dim":"machine","name":"batch01","n":7,"lg":0,"sess":2,"a":"2026-11-14 00:02:00","z":"2026-11-14 00:04:00"}'
       cvr lfs_by '"2026-11-13 20:00:00"' '"2026-11-14 00:40:00"' 7 15 false "log file sync samples in ASH (V) by service, module and machine, the 15 groups with the most samples kept per list; n = groups found over the three lists; first/last = what ASH holds" "the statement over ASH failed"
+    fi
+    if want aas; then
+      rec aas \
+        '{"t":"aas","m":"2026-11-13 23:51","ev":"ON CPU","wc":"CPU","fg":41,"bg":3}' \
+        '{"t":"aas","m":"2026-11-13 23:51","ev":"log file sync","wc":"Commit","fg":87,"bg":0}' \
+        '{"t":"aas","m":"2026-11-13 23:51","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":55}' \
+        '{"t":"aas","m":"2026-11-13 23:51","ev":null,"wc":null,"fg":6,"bg":2}' \
+        '{"t":"aas","m":"2026-11-13 23:52","ev":"ON CPU","wc":"CPU","fg":38,"bg":2}' \
+        '{"t":"aas","m":"2026-11-13 23:52","ev":"log file sync","wc":"Commit","fg":90,"bg":0}'
+      cvr aas '"2026-11-13 20:00:00"' '"2026-11-14 00:40:00"' 14 12 true "ASH samples per minute by wait event (V), foreground and other sessions; the 12 events with the most samples kept by name, the rest in one record per minute without a name; n = events found before the fold; first/last = what ASH holds" "the statement over ASH failed"
     fi
     if want wl_hist; then
       rec wl_hist \

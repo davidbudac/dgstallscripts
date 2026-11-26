@@ -23,6 +23,7 @@ REACH: primary/awr_snap | whole window
 REACH: primary/sysmetric | whole window
 REACH: primary/lfs | whole window
 REACH: primary/lfs_by | whole window
+REACH: primary/aas | whole window
 REACH: primary/ashgap | whole window
 REACH: primary/tx | whole window
 REACH: primary/alert_sql | whole window

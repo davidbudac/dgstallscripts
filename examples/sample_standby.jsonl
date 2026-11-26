@@ -216,6 +216,7 @@
 {"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-11-13 03:15:04","z":"2026-11-13 03:21:13","st":"COMPLETED"}
 {"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-11-14 03:15:05","z":"2026-11-14 03:21:15","st":"COMPLETED"}
 {"t":"cov","side":"standby","src":"lfs_by","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the standby"}
+{"t":"cov","side":"standby","src":"aas","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the standby"}
 {"t":"cov","side":"standby","src":"wl_hist","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the standby"}
 {"t":"cov","side":"standby","src":"alsync","kind":"text","st":"empty","first":"2026-10-15 09:41:07","last":"2026-11-14 09:09:58","n":0,"cap":300,"capped":false,"note":"text alert log, last 30 days (since 2026-10-15 09:10:02), newest 300 kept; lines that end an UNSYNCHRONIZED period (LAD:n is SYNCHRONIZED, LAD:n level SYNCHRONIZED)"}
 {"t":"cov","side":"standby","src":"act","kind":"rman","st":"ok","first":"2026-10-02 03:15:01","last":"2026-11-14 03:15:05","n":30,"cap":500,"capped":false,"note":"v$rman_status, rows of type COMMAND, lookback 30 days, newest 500 kept; first/last = the oldest and newest start time the view holds"}

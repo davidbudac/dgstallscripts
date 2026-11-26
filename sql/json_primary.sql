@@ -591,6 +591,64 @@ select json_object('t' value 'cov', 'side' value 'primary', 'src' value 'lfs_by'
          returning varchar2(4000))
 from   dual;
 
+-- active sessions by wait event (aas): ASH samples per minute and event, from the same ASH source and the same window as fg, so that for every minute the fg values of its records add up to
+-- fg.lgwr + fg.other + fg.cpu. ev = the event, or ON CPU when session_state is ON CPU (wc is then CPU), or unknown when a waiting sample has no event; wc = its wait class (Other when the class is null). fg = samples of FOREGROUND sessions, bg = samples of
+-- every other session type. Samples are counts, as in fg: the report divides them by the samples per minute. The 12 events with the most samples over the whole window (ON CPU counts as one) are kept by name,
+-- all the others are added up into one record per minute with ev and wc null. The next statement counts the events for the coverage record: aas_n = distinct events found before the fold.
+define aas_n = -1
+column aas_n new_value aas_n noprint
+with ash as (
+  select sample_time, session_type, session_state, event, wait_class
+  from   v$active_session_history
+  where  '&ash_src' = 'V'
+  and    sample_time between to_timestamp('&t_from','YYYY-MM-DD HH24:MI:SS') and to_timestamp('&t_to','YYYY-MM-DD HH24:MI:SS')
+  union all
+  select sample_time, session_type, session_state, event, wait_class
+  from   dba_hist_active_sess_history
+  where  '&ash_src' = 'H' and dbid = (select dbid from v$database)
+  and    sample_time between to_timestamp('&t_from','YYYY-MM-DD HH24:MI:SS') and to_timestamp('&t_to','YYYY-MM-DD HH24:MI:SS')
+), s as (
+  select to_char(a.sample_time,'YYYY-MM-DD HH24:MI') m,
+         case when a.session_state = 'ON CPU' then 'ON CPU' else nvl(a.event, 'unknown') end ev,
+         case when a.session_state = 'ON CPU' then 'CPU' else nvl(a.wait_class, 'Other') end wc,
+         case when a.session_type = 'FOREGROUND' then 1 else 0 end f
+  from   ash a
+), e as (
+  select ev, min(wc) wc, row_number() over (order by count(*) desc, ev) rn
+  from   s
+  group  by ev
+)
+select json_object('t' value 'aas', 'm' value k.m, 'ev' value k.ev, 'wc' value k.wc,
+         'fg' value sum(k.f), 'bg' value count(*) - sum(k.f) returning varchar2(4000))
+from  (select s.m, case when e.rn <= 12 then s.ev end ev, case when e.rn <= 12 then e.wc end wc, s.f
+       from   s left join e on e.ev = s.ev) k
+group  by k.m, k.ev, k.wc
+order  by k.m, k.ev nulls last;
+
+with ash as (
+  select sample_time, session_type, session_state, event, wait_class
+  from   v$active_session_history
+  where  '&ash_src' = 'V'
+  and    sample_time between to_timestamp('&t_from','YYYY-MM-DD HH24:MI:SS') and to_timestamp('&t_to','YYYY-MM-DD HH24:MI:SS')
+  union all
+  select sample_time, session_type, session_state, event, wait_class
+  from   dba_hist_active_sess_history
+  where  '&ash_src' = 'H' and dbid = (select dbid from v$database)
+  and    sample_time between to_timestamp('&t_from','YYYY-MM-DD HH24:MI:SS') and to_timestamp('&t_to','YYYY-MM-DD HH24:MI:SS')
+), s as (
+  select case when a.session_state = 'ON CPU' then 'ON CPU' else nvl(a.event, 'unknown') end ev
+  from   ash a
+)
+select count(distinct ev) aas_n from s;
+
+select json_object('t' value 'cov', 'side' value 'primary', 'src' value 'aas',
+         'st' value case when &aas_n < 0 then 'error' when &aas_n > 0 then 'ok' else 'empty' end,
+         'first' value case when '&ash_first' = '-' then null else '&ash_first' end, 'last' value case when '&ash_last' = '-' then null else '&ash_last' end,
+         'n' value greatest(&aas_n, 0), 'cap' value 12, 'capped' value case when &aas_n > 12 then 'true' else 'false' end format json,
+         'note' value case when &aas_n < 0 then 'the statement over ASH failed' else 'ASH samples per minute by wait event (&ash_src), foreground and other sessions; the 12 events with the most samples kept by name, the rest in one record per minute without a name; n = events found before the fold; first/last = what ASH holds' end
+         returning varchar2(4000))
+from   dual;
+
 -- sampler gaps (ashgap): consecutive ASH samples (one row per sample_id) whose clock difference exceeds the sample_id difference x 1 s by more than 2 s.
 -- sample_id advances once per second (sampling interval 1 s); the AWR copy keeps every 10th sample but the same sample_id. One minute before and after the window is read
 -- so that the samples around its ends are included. Raw ids and times are written; the report decides. The largest 50 gaps are kept; the coverage record has all counts.

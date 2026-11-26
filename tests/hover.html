@@ -61,13 +61,16 @@ window.addEventListener('load', () => setTimeout(() => {
   tab('report').click();
   log.push('after the Report tab: ' + state());
   const tlv = document.querySelector('#tl svg'); log.push('timeline chart width after the Report tab: ' + (tlv ? tlv.getAttribute('viewBox').split(' ')[2] : 'none'));   // drawn again for the page that is shown: not the 320 of a hidden page
-  // zoom: a drag across the timeline zooms the four charts on the window's clock to that stretch, the click that ends the drag goes nowhere, Ctrl + wheel zooms and a plain wheel
+  // zoom: a drag across the timeline zooms the five charts on the window's clock to that stretch, the click that ends the drag goes nowhere, Ctrl + wheel zooms and a plain wheel
   // does not, the Whole window button and the timeline tabs set the range again; it ends on the whole window, as a fresh load draws it
-  const zr = () => ['tl', 'fg', 'ls', 'ns'].map(id => { const h = document.getElementById(id); if (!h || !h.querySelector('svg')) return id + ' none'; const z = h.previousElementSibling;
+  const zr = () => ['tl', 'fg', 'aasViz', 'ls', 'ns'].map(id => { const h = document.getElementById(id); if (!h || !h.querySelector('svg')) return id + ' none'; const z = h.previousElementSibling;
     return id + ' ' + (z && z.classList.contains('zm') ? z.querySelector('span').textContent : 'whole'); }).join(' | ');
   if (tlv) { const r = tlv.getBoundingClientRect(), y = r.top + r.height / 2, mouse = (t, el, f) => el.dispatchEvent(new MouseEvent(t, { clientX: r.left + r.width * f, clientY: y, button: 0, bubbles: true, cancelable: true }));
     mouse('mousedown', tlv, .4); mouse('mousemove', window, .5); mouse('mousemove', window, .6); mouse('mouseup', window, .6);
     log.push('zoom after a drag across the timeline: ' + zr());
+    const ap = document.querySelector('#aasViz svg path');   // the first area of the active-sessions chart: zoomed, it runs on to the neighbouring minutes under the clip path, as in the whole-window view
+    if (ap) { const xs = (ap.getAttribute('d').match(/[ML]-?[\d.]+/g) || []).map(t => +t.slice(1)), vw = +document.querySelector('#aasViz svg').getAttribute('viewBox').split(' ')[2];
+      log.push('active sessions chart zoomed: the area runs ' + (Math.min(...xs) < 34 ? 'past' : 'to') + ' the left edge and ' + (Math.max(...xs) > vw ? 'past' : 'to') + ' the right edge of the plot'); }
     const nsv = document.querySelector('#ns svg');
     if (nsv) { const nr = nsv.getBoundingClientRect(), [za, zb] = document.querySelector('#ns').previousElementSibling.querySelector('span').textContent.match(/\d\d:\d\d:\d\d/g);
       nsv.dispatchEvent(new MouseEvent('mousemove', { clientX: nr.left + nr.width / 2, clientY: nr.top + nr.height / 3, bubbles: true }));

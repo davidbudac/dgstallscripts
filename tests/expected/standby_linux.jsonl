@@ -16,6 +16,7 @@ ORA-00942: table or view does not exist
 {"t":"cov","side":"standby","src":"sysmetric","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the standby"}
 {"t":"cov","side":"standby","src":"lfs","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the standby"}
 {"t":"cov","side":"standby","src":"lfs_by","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the standby"}
+{"t":"cov","side":"standby","src":"aas","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the standby"}
 {"t":"cov","side":"standby","src":"wl_hist","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the standby"}
 {"t":"cov","side":"standby","src":"alert_sql","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the standby"}
 {"t":"cov","side":"standby","src":"dest_hist","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the standby"}

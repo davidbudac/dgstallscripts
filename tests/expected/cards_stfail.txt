@@ -24,3 +24,4 @@ WHO: Incident 1 · 10:05:00 to 10:10:20 · ORA-16198, destination UNSYNCHRONIZED
   WHOLISTS: Not checked: lfs_by, the statement over ASH failed.
   WHOPEAK: Peak in one sample: 12 at 10:05:25.500; behind LGWR 12 at 10:05:25.500 (lfs_sum, whole window).
   WHOWL: Per-minute workload (wl): no records in these bundles.
+AAS: Not checked: aas, the statement over ASH failed.

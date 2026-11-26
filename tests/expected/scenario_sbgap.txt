@@ -63,6 +63,7 @@ COV: primary/awr_snap | ok | 10-21 10:00 – 11-20 10:55 | 1 | yes
 COV: primary/sysmetric | ok | 10-21 10:00 – 11-20 10:55 | 0 | yes
 COV: primary/lfs | ok | 11-20 09:00 – 11-20 11:00 | 12 / cap 200 | yes
 COV: primary/lfs_by | ok | 11-20 09:00 – 11-20 11:00 | 10 / cap 15 | yes
+COV: primary/aas | ok | 11-20 09:00 – 11-20 11:00 | 11 / cap 12 | yes
 COV: primary/ashgap | empty | 11-20 09:59 – 11-20 10:46 | 0 / cap 50 | yes
 COV: primary/tx | ok | 11-20 09:00 – 11-20 11:00 | 117 | yes
 COV: primary/alert_sql | ok | 10-21 10:00 – 11-20 11:00 | 71 | yes

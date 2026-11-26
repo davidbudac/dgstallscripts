@@ -8,13 +8,14 @@
   bundle_tool.py sample IN          add the lfs / lfs_sum / ashgap records and their cov records to an example bundle (idempotent), fix the LGWR wait
   bundle_tool.py sample3 IN         add the records of collector phase 3 (standby RFS latency, dgstatus, redo destination histogram, baseline days, listener
                                     server-to-server connections, endpoints, timeouts, clock state, sampler samples ...) and their cov records to an example bundle (idempotent)
-  bundle_tool.py sample4 IN         add the records of the second newer-collector step (who waited by service, module and machine; workload per AWR interval; the lines that end an
-                                    UNSYNCHRONIZED period; scheduled activity: RMAN commands, scheduler job runs, log switches) and their cov records to an example bundle (idempotent)
+  bundle_tool.py sample4 IN         add the records of the second newer-collector step (who waited by service, module and machine; active sessions by wait event (aas, from the
+                                    bundle's own fg records); workload per AWR interval; the lines that end an UNSYNCHRONIZED period; scheduled activity: RMAN commands, scheduler job
+                                    runs, log switches) and their cov records to an example bundle (idempotent)
   bundle_tool.py gen OUTDIR         write the synthetic scenario bundles of the tests: <name>_primary.jsonl and <name>_standby.jsonl
                                     (quiet two noash drift lost tzoff rtpmode rac full sbgap late: `full` is a Linux pair with the primary at UTC+01:00 and the standby
-                                    at UTC+00:00 and every record of the newer collector inside the window, `sbgap` the same with a gap in the standby's ASH sampler
-                                    inside the wait, `late` instances that started after the window, `hist` a window older than the newest history lines, `waitcov` an ASH gap check that ends
-                                    shortly after the SYNC wait, `stfail` the statements of the newer sources failing (the job read with its records), `capped` every lookback source cut at its cap); fictional names, documentation addresses 192.0.2.x / 198.51.100.x
+                                    at UTC+00:00 and every record of the newer collector inside the window (aas over a synthetic series: the scenarios have no fg records), `sbgap` the same with a gap in the standby's ASH sampler
+                                    inside the wait, `late` instances that started after the window, `hist` a window older than the newest history lines (and aas with more events than the 12 it names, the rest folded), `waitcov` an ASH gap check that ends
+                                    shortly after the SYNC wait, `stfail` the statements of the newer sources failing (the job read with its records; aas too), `capped` every lookback source cut at its cap); fictional names, documentation addresses 192.0.2.x / 198.51.100.x
 """
 import json, re, sys
 from datetime import datetime, timedelta
@@ -24,7 +25,7 @@ TSF = {'alert': ['ts'], 'tx': ['ts'], 'fg': ['m'], 'fg10': ['b'], 'wl': ['m'], '
        'trace': ['ts'], 'lsnr': ['m'], 'lsnr_ref': ['ts'], 'cid_hit': ['ts'], 'hist_awr': ['b', 'e'], 'net': ['at'], 'alhist': ['ts'],
        'lfs': ['a', 'z'], 'lfs_sum': ['pk_at', 'pk_lg_at'], 'ashgap': ['a', 'z'],
        'lsnr_srv': ['ts'], 'dgstatus': ['ts'], 'netsamp': ['ts'], 'sar': ['ts'], 'base_day': ['from', 'to', 'b', 'e'],
-       'lfs_by': ['a', 'z'], 'wl_hist': ['b', 'e'], 'alsync': ['ts'], 'act': ['a', 'z']}
+       'lfs_by': ['a', 'z'], 'aas': ['m'], 'wl_hist': ['b', 'e'], 'alsync': ['ts'], 'act': ['a', 'z']}
 # cov sources that describe the host or the views as collected (or a log history), not the data of the window: they do not move with a shifted window
 AS_COLLECTED = ('net', 'alhist', 'alsync', 'wl_hist', 'act', 'ep', 'conn', 'sqlnet', 'ostcp', 'ntp', 'dgproc', 'archgap', 'dest_hist', 'rfs_ev', 'rfs_hist')
 MON = {m: '%02d' % (i + 1) for i, m in enumerate('JAN FEB MAR APR MAY JUN JUL AUG SEP OCT NOV DEC'.split())}
@@ -624,13 +625,87 @@ def sc_full(gap=False):
     return p, s
 
 
-def new4_common(p, s, lfs_cap=None):
-    """lfs_by (from the lfs records of the primary) and the skipped cov records of the standby: the part of the new records every scenario that has them shares"""
+# active sessions by wait event (aas). The foreground samples of a minute (lgwr + other + cpu of its fg record) are spread over events of several wait classes, two of them in the same class (User I/O), so that the
+# per-minute foreground sum of the aas records is the fg sum; the background sessions (LGWR on log file parallel write and, while LGWR waits for the standby, on SYNC Remote Write; DBWR; background CPU) add the bg samples.
+# The 12 events with the most samples over the window keep their name, the others are added up per minute in one record with ev and wc null, exactly as the statement does.
+AAS_NOTE = ('ASH samples per minute by wait event (%s), foreground and other sessions; the 12 events with the most samples kept by name, the rest in one record per minute without a name; '
+            'n = events found before the fold; first/last = what ASH holds')
+AAS_FG = [('db file sequential read', 'User I/O', 30), ('db file scattered read', 'User I/O', 15), ('enq: TX - row lock contention', 'Application', 10), ('buffer busy waits', 'Concurrency', 8),
+          ('SQL*Net more data from client', 'Network', 6), ('log buffer space', 'Configuration', 5), ('direct path read', 'User I/O', 4), ('library cache lock', 'Concurrency', 3),
+          ('direct path write', 'User I/O', 3), ('cursor: pin S wait on X', 'Concurrency', 3), ('latch: shared pool', 'Concurrency', 2), ('resmgr:cpu quantum', 'Scheduler', 2),
+          ('enq: TM - contention', 'Application', 2), ('read by other session', 'User I/O', 2), ('SQL*Net more data to client', 'Network', 2), ('latch free', 'Other', 1)]
+
+
+def aas_from(fgs, ivl, many=False):
+    """aas records for the per-minute foreground samples `fgs` ((minute, lgwr, other, cpu), samples of an ASH source with one sample per `ivl` s) and the number of events found"""
+    ev = AAS_FG if many else AAS_FG[:6]
+    wsum, scale = sum(w for _, _, w in ev), 60 // ivl // 6          # background sample counts below are for 6 samples a minute (the 10 s AWR copy)
+    per = {}
+    for i, (m, lgwr, other, cpu) in enumerate(fgs):
+        d = per.setdefault(m, {})
+        add = lambda e, c, f, b: d.__setitem__((e, c), [d.get((e, c), [0, 0])[0] + f, d.get((e, c), [0, 0])[1] + b])
+        add('ON CPU', 'CPU', cpu, (1 + i % 2) * scale)
+        add('log file sync', 'Commit', lgwr, 0)
+        cum = 0
+        for k, (e, c, w) in enumerate(ev):
+            cut = (other * sum(x[2] for x in ev[:k + 1]) + wsum // 2) // wsum
+            add(e, c, cut - cum, 0)
+            cum = cut
+        add('log file parallel write', 'System I/O', 0, (1 if lgwr else 2 + i % 3) * scale)
+        add('db file parallel write', 'System I/O', 0, (1 + i % 2) * scale)
+        if lgwr:
+            add('SYNC Remote Write', 'Other', 0, min(6, 2 + lgwr // (5 * scale)) * scale)
+    tot = {}
+    for d in per.values():
+        for (e, c), (f, b) in d.items():
+            tot[e] = tot.get(e, 0) + f + b
+    keep = {e for e, _ in sorted(tot.items(), key=lambda kv: (-kv[1], kv[0]))[:12] if tot[e] > 0}
+    out = []
+    for m in sorted(per):
+        folded, rows = [0, 0], []
+        for (e, c), (f, b) in per[m].items():
+            if f + b == 0:
+                continue
+            if e in keep:
+                rows.append((e, c, f, b))
+            else:
+                folded = [folded[0] + f, folded[1] + b]
+        rows.sort()
+        if folded != [0, 0]:
+            rows.append((None, None, folded[0], folded[1]))
+        out += [{'t': 'aas', 'm': m, 'ev': e, 'wc': c, 'fg': f, 'bg': b} for e, c, f, b in rows]
+    return out, sum(1 for v in tot.values() if v > 0)
+
+
+def scenario_fg(b):
+    """a per-minute foreground series for a scenario bundle, which has no fg records: every minute of the window, the samples of log file sync behind LGWR from its fg10 records, a little CPU and other waits.
+    (minute, lgwr, other, cpu); the samples of an ASH source with 1 s samples"""
+    lg = {}
+    for o in b.recs:
+        if o['t'] == 'fg10':
+            lg[o['b'][:16]] = lg.get(o['b'][:16], 0) + o['n']
+    out, t, end = [], datetime.strptime(b.frm[:16], '%Y-%m-%d %H:%M'), datetime.strptime(b.to[:16], '%Y-%m-%d %H:%M')
+    i = 0
+    while t <= end:
+        m = t.strftime('%Y-%m-%d %H:%M')
+        out.append((m, lg.get(m, 0), 6 + (i * 3) % 4 * 3, 24 + (i * 7) % 5 * 6))
+        t += timedelta(minutes=1)
+        i += 1
+    return out
+
+
+def new4_common(p, s, lfs_cap=None, aas_many=False):
+    """lfs_by (from the lfs records of the primary), aas (active sessions by wait event, over a synthetic per-minute series: these scenarios have no fg records) and the skipped cov records of the standby:
+    the part of the new records every scenario that has them shares. aas_many: more events than the 12 that are kept by name, so that the rest is folded"""
     lb, ng = lfs_by_from([o for o in p.recs if o['t'] == 'lfs'])
     p.recs.extend(lb)
     p.setcov('lfs_by', 'ok', at(p.frm, -3600), at(p.to, 900), ng if lfs_cap is None else lfs_cap, 15, lfs_cap is not None,
              'log file sync samples in ASH (V) by service, module and machine, the 15 groups with the most samples kept per list; n = groups found over the three lists; first/last = what ASH holds')
-    for src in ('lfs_by', 'wl_hist'):
+    ar, na = aas_from(scenario_fg(p), 1 if p.ash == 'V' else 10, aas_many)
+    p.recs.extend(ar)
+    p.setcov('aas', 'ok' if ar else 'empty', at(p.frm, -3600), at(p.to, 900), na, 12, na > 12, AAS_NOTE % p.ash)
+    assert (na > 12) == aas_many
+    for src in ('lfs_by', 'aas', 'wl_hist'):
         s.setcov(src, 'skipped', note='not collected on the standby')
     for k in ('job', 'logsw'):
         s.setcov('act', 'skipped', note='not collected on the standby', kind=k)
@@ -685,8 +760,8 @@ SH_FULL = -3600
 
 def sc_hist_new(p, s):
     """for `hist`: the capped, failed and not-covered paths. The alsync history starts on 11-04 (the episode of 11-02 is not covered, the one of 11-19 has no return line); the AWR holds 11-04 on; the RMAN list is capped (500 of 620 rows,
-    the oldest kept starts on 11-08: the episodes of 11-02 and 11-07 are not covered); the job read failed; the log switches cover everything; lfs_by is capped"""
-    new4_common(p, s, lfs_cap=44)
+    the oldest kept starts on 11-08: the episodes of 11-02 and 11-07 are not covered); the job read failed; the log switches cover everything; lfs_by is capped; aas finds more events than the 12 it names (the rest is folded)"""
+    new4_common(p, s, lfs_cap=44, aas_many=True)
     wh = wl_hourly('2026-11-04 00:00', '2026-11-20 12:00', {'2026-11-10 10': (0.7, 2.9)})
     p.recs.extend(wh)
     p.setcov('wl_hist', 'ok', '2026-11-04 00:00:00', '2026-11-20 12:00:00', len(wh), 1500, False,
@@ -748,7 +823,7 @@ def sc_hist():
 
 def sc_stfail():
     """`full` with the statements of the newer sources failing, as in the first live run: the job read has its records (the row statement ran) but its count statement failed, so its cov record is st error;
-    the RMAN reads of both hosts, the log-switch read, the workload history, the alsync pass of the primary and lfs_by wrote no records and an error cov record (the notes the SQL writes). The report must say
+    the RMAN reads of both hosts, the log-switch read, the workload history, the alsync pass of the primary, lfs_by and aas wrote no records and an error cov record (the notes the SQL writes). The report must say
     'not checked' for every one of them: never 'none' (the source did not hold the interval) and never 'not covered' (it was not read at all). The records that did arrive may still be drawn."""
     p, s = sc_full()
 
@@ -762,6 +837,7 @@ def sc_stfail():
     fail(p, 'wl_hist', 'the dba_hist_sysmetric_summary statement failed', 1500)
     fail(p, 'alsync', 'the pass over v$diag_alert_ext failed', 300, 'sql')
     fail(p, 'lfs_by', 'the statement over ASH failed', 15)
+    fail(p, 'aas', 'the statement over ASH failed', 12)
     s.setcov('alsync', 'skipped', note='alert log not readable: /u01/app/oracle/diag/rdbms/proddb_s/proddb1/trace/alert_proddb1.log', kind='text')
     return p, s
 
@@ -1081,9 +1157,9 @@ def sample3(recs):
 
 
 # ----------------------------------------------------------------------------------------------------------------------------
-# the second newer-collector step: lfs_by, wl_hist, alsync, act (fictional names)
+# the second newer-collector step: lfs_by, aas, wl_hist, alsync, act (fictional names)
 # ----------------------------------------------------------------------------------------------------------------------------
-NEW4 = ('lfs_by', 'wl_hist', 'alsync', 'act')
+NEW4 = ('lfs_by', 'aas', 'wl_hist', 'alsync', 'act')
 
 
 def new4_clean(recs):
@@ -1121,7 +1197,7 @@ def hourly(first, last, val):
 
 
 def sample4(recs):
-    """the example bundles, extended with who waited (lfs_by), the workload per AWR interval (wl_hist), the lines that end an UNSYNCHRONIZED period (alsync) and scheduled activity (act): RMAN commands, scheduler
+    """the example bundles, extended with who waited (lfs_by), the active sessions by wait event (aas), the workload per AWR interval (wl_hist), the lines that end an UNSYNCHRONIZED period (alsync) and scheduled activity (act): RMAN commands, scheduler
     job runs and log switches. The story: the weekly episodes at about 20:40 on Fridays follow an RMAN full backup that starts at about 20:30 on Fridays (four of the five times within ten minutes before the first line);
     the AWR holds the last eight days only, the control-file history of log switches starts on 2026-10-18 (idempotent)"""
     recs = new4_clean(recs)
@@ -1140,6 +1216,10 @@ def sample4(recs):
         R += lb
         C.append(cov('primary', 'lfs_by', 'ok', '2026-11-06 09:00:03', '2026-11-14 08:59:53', ng, 15, False,
                      'log file sync samples in ASH (H) by service, module and machine, the 15 groups with the most samples kept per list; n = groups found over the three lists; first/last = what ASH holds'))
+        # active sessions by wait event: spread over the bundle's own fg records, so that the foreground samples of a minute add up to its fg record
+        ar, na = aas_from([(o['m'], o['lgwr'], o['other'], o['cpu']) for o in recs if o['t'] == 'fg'], 10)
+        R += ar
+        C.append(cov('primary', 'aas', 'ok', '2026-11-06 09:00:03', '2026-11-14 08:59:53', na, 12, na > 12, AAS_NOTE % 'H'))
         # workload per AWR snapshot interval: the last eight days are held (the same span as the AWR snapshots of this bundle)
         def val(d):
             k = (d.day * 7 + d.hour * 3) % 5
@@ -1208,7 +1288,7 @@ def sample4(recs):
         C.append(cov('primary', 'act', 'ok', '2026-10-18 03:12:09', ts_[-1], len(ts_), 5000, False,
                      'v$log_history, lookback 30 days, newest 5000 kept; first/last = the oldest and newest first_time the view holds', kind='logsw'))
     else:
-        for src in ('lfs_by', 'wl_hist'):
+        for src in ('lfs_by', 'aas', 'wl_hist'):
             C.append(cov('standby', src, 'skipped', None, None, 0, None, False, 'not collected on the standby'))
         C.append(cov('standby', 'alsync', 'empty', '2026-10-15 09:41:07', '2026-11-14 09:09:58', 0, 300, False,
                      'text alert log, last 30 days (since 2026-10-15 09:10:02), newest 300 kept; lines that end an UNSYNCHRONIZED period (LAD:n is SYNCHRONIZED, LAD:n level SYNCHRONIZED)', kind='text'))

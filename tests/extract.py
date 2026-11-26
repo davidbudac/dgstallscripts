@@ -13,7 +13,10 @@
 # --parts adds: REACH (the "Reached the window" column) EXPL* (explanation tables) NEXT (hints, once each) SEQ* (the sequence view)
 #   extract.py DOM --captions | --order | --readings   the card captions with their length, the sections in document order, the Reading disclosures and whether each is closed
 #   extract.py DOM --ui     the log of the button, tab and link clicks of hover.html;  --delivered copy|dl net|ticket  the texts Copy / Download .txt delivered, per incident
-#   extract.py DOM --cards  the cards of the lookback and impact records: EP* (episodes side by side), WHO* (who waited), RECURBAR* (the activity bars of the day-and-hour grid)
+#   extract.py DOM --cards  the cards of the lookback and impact records: EP* (episodes side by side), WHO* (who waited), RECURBAR* (the activity bars of the day-and-hour grid),
+#                           AAS (active sessions by wait event: the empty-state sentence, or the drawn chart with its caption, legend, series colours and footnote)
+#   extract.py DOM --aas    what hovering the minutes of the active-sessions chart logged (tests/hover.html): one line per minute, "AASHOVER hh:mm | series value ; ... | Total value"
+#                           (a minute without records has no line)
 #   extract.py DOM --sets   the episode selector of a report whose bundles hold several collection windows: SETS (its heading), SETNAV (Previous, Next), SET n | window | bundles | alert lines | shown or link ?ep=n per row;
 #                           nothing when the report has no selector
 import json, re, sys, html
@@ -115,6 +118,18 @@ if mode == '--parts':
             host = txt(re.search(r'<span class="badge[^"]*">(?:<span class="dot"></span>)?(.*?)</span>', li, flags=re.S).group(1))
             emit('  SEQMARK %s | %s | %s | %s | %s' % (n, c[0], host, c[1], c[2]))
     sys.exit(0)
+if mode == '--aas':
+    m = re.search(r'<pre id="hovertest"[^>]*>(.*?)</pre>', d, flags=re.S)
+    done = set()
+    for line in html.unescape(m.group(1)).split('\n') if m else []:
+        h = line.partition('|')[2]
+        if 'var(--aas' not in h: continue
+        t = re.search(r'<div class="h">(.*?)</div>', h).group(1)
+        if t in done: continue                       # the mark is hovered once, and the svg around it sixty-one times
+        done.add(t)
+        rows = [(a, b) for a, b in re.findall(r'<div class="r">(?:<i[^>]*></i>)?<span>(.*?)</span><b>(.*?)</b></div>', h)]
+        print('AASHOVER %s | %s | %s' % (t, ' ; '.join('%s %s' % r for r in rows[:-1]), '%s %s' % rows[-1]))
+    sys.exit(0)
 if mode == '--cards':
     rv = block('recurViz')
     emit('RECURBARS: %d RMAN bars, %d job bars; legend: %s' % (len(re.findall(r'<rect[^>]* data-tip="RMAN ', rv)), len(re.findall(r'<rect[^>]* data-tip="Job ', rv)), txt(re.search(r'<div class="legend"[^>]*>(.*?)</div>', rv, flags=re.S).group(1)) if 'id="recurLegend"' in rv else 'none'))
@@ -145,6 +160,17 @@ if mode == '--cards':
             if m: emit('  WHO%s: %s' % (k.upper(), txt(m.group(1))))
         for r in re.findall(r'<tr data-wl="(\w+)">(.*?)</tr>', part, flags=re.S): emit('  WHOWL %s | %s' % (r[0], ' | '.join(txt(x) for x in re.findall(r'<td[^>]*>(.*?)</td>', r[1], flags=re.S))))
         for m in re.findall(r'<p class="seqcap" data-who-wl="1">(.*?)</p>', part, flags=re.S): emit('  WHOWL: ' + txt(m))
+    # active sessions by wait event
+    av, al = block('aasViz'), block('aasLegend')
+    if '<svg' not in av: emit('AAS: ' + txt(av))
+    else:
+        st = re.search(r'<section id="aas"[^>]*style="([^"]*)"', d)
+        css = dict(re.findall(r'(--aas\d+):\s*([^;]+);', html.unescape(st.group(1)) if st else ''))
+        emit('AAS: %d areas, %d minutes with a hover mark' % (len(re.findall(r'<path d="M', av)), len(re.findall(r' data-t="', av))))
+        emit('  AASNOTE: ' + txt(block('aasNote')))
+        emit('  AASLEGEND: ' + ' | '.join(txt(l) for _, l in re.findall(r'<span><i style="background:var\((--aas\d+)\)"></i>(.*?)</span>', al, flags=re.S)))
+        emit('  AASCOLORS: ' + ' | '.join('%s = %s' % (txt(l), css.get(v, '?')) for v, l in re.findall(r'<span><i style="background:var\((--aas\d+)\)"></i>(.*?)</span>', al, flags=re.S)))
+        emit('  AASFOOT: ' + txt(block('aasFoot')))
     sys.exit(0)
 if mode == '--captions':   # every card heading with the paragraph beside it: "length | heading | caption"
     for m in re.finditer(r'<div class="ch"><div><h2[^>]*>(.*?)</h2>(?:<p[^>]*>(.*?)</p>)?', re.sub(r'<script.*?</script>', '', d, flags=re.S)):   # not the page's own source text
@@ -152,7 +178,7 @@ if mode == '--captions':   # every card heading with the paragraph beside it: "l
         print('%d | %s | %s' % (len(c), txt(m.group(1)), c))
     sys.exit(0)
 if mode == '--order':   # the sections of the page in document order, with the ids of the two panes: report, ..., paneHandover, handover
-    ids = 'report summary timeline sequence commits who lgwr baseline recur listener rfsCard nsCard signals explain next coverage episodes history alerts traces shipping cidCard config rfsEvCard standby network paneHandover handover'.split()
+    ids = 'report summary timeline sequence commits who lgwr aas baseline recur listener rfsCard nsCard signals explain next coverage episodes history alerts traces shipping cidCard config rfsEvCard standby network paneHandover handover'.split()
     print(' '.join(m.group(1) for m in re.finditer(r'<(?:section|div)[^>]*\bid="(%s)"' % '|'.join(ids), re.sub(r'<script.*?</script>', '', d, flags=re.S))))
     sys.exit(0)
 if mode == '--sets':   # the page's own source (the selector's template strings) is left out: only a rendered selector counts

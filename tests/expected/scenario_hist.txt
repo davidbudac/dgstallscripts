@@ -45,6 +45,7 @@ COV: primary/awr_snap | ok | 10-11 10:00 – 11-10 10:55 | 1 | yes
 COV: primary/sysmetric | ok | 10-11 10:00 – 11-10 10:55 | 0 | yes
 COV: primary/lfs | ok | 11-10 09:00 – 11-10 11:00 | 12 / cap 200 | yes
 COV: primary/lfs_by | ok | 11-10 09:00 – 11-10 11:00 | 44 / cap 15 capped | was capped (log file sync samples in ASH (V) by service, module and machine, the 15 groups with the most samples kept per list; n = groups found over the three lists; first/last = what ASH holds): rows may be missing
+COV: primary/aas | ok | 11-10 09:00 – 11-10 11:00 | 18 / cap 12 capped | was capped (ASH samples per minute by wait event (V), foreground and other sessions; the 12 events with the most samples kept by name, the rest in one record per minute without a name; n = events found before the fold; first/last = what ASH holds): rows may be missing
 COV: primary/ashgap | empty | 11-10 09:59 – 11-10 10:46 | 0 / cap 50 | yes
 COV: primary/tx | ok | 11-10 09:00 – 11-10 11:00 | 117 | yes
 COV: primary/alert_sql | ok | 10-11 10:00 – 11-10 11:00 | 70 | yes

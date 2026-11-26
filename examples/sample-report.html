@@ -14,6 +14,9 @@
   --crit: var(--destructive, #dc2626); --crit-fg: var(--destructive-foreground, #ffffff);
   --good: var(--success, #16a34a); --warn: var(--warning, #d97706);
   --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s7: #6250d6;
+  /* the wait classes of Enterprise Manager's Top Activity: the same in the light and the dark theme */
+  --wc-cpu: #00CC00; --wc-sched: #CCFFCC; --wc-uio: #004AE7; --wc-sio: #0094E7; --wc-conc: #8B1A00; --wc-app: #C02800; --wc-commit: #E46800;
+  --wc-conf: #5C440B; --wc-adm: #717354; --wc-net: #989779; --wc-queue: #C2B79B; --wc-clu: #C9C2AF; --wc-other: #F06EAA;
   --shadow: 0 1px 2px 0 rgb(0 0 0 / .05);
   --mono: var(--font-mono, ui-monospace, "Geist Mono", "SF Mono", Menlo, Consolas, monospace);
   --sans: var(--font-sans, "Geist", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
@@ -350,6 +353,11 @@ details.rd[open] > summary { margin-bottom: 4px; }
           <div class="cc"><div class="viz" id="hist"></div><p class="fn" id="histFoot"></p></div>
         </section>
       </div>
+
+      <section id="aas" class="card">
+        <div class="ch"><div><h2>Active sessions by wait event</h2><p id="aasNote"></p></div></div>
+        <div class="cc"><div class="legend" id="aasLegend"></div><div class="viz" id="aasViz"></div><p class="fn" id="aasFoot"></p></div>
+      </section>
 
       <section id="baseline" class="card">
         <div class="ch"><div><h2>Baseline: the same clock interval on previous days</h2><p>Waits of the window against the same interval on each previous day (AWR).</p></div>
@@ -1253,6 +1261,140 @@ details.rd[open] > summary { margin-bottom: 4px; }
 {"t":"lfs_by","side":"primary","dim":"machine","name":"app01.example","n":35,"lg":35,"sess":23,"a":"2026-11-13 20:37:40","z":"2026-11-13 20:38:50"}
 {"t":"lfs_by","side":"primary","dim":"machine","name":"app02.example","n":34,"lg":34,"sess":23,"a":"2026-11-13 20:37:40","z":"2026-11-13 20:38:50"}
 {"t":"lfs_by","side":"primary","dim":"machine","name":"batch01.example","n":34,"lg":34,"sess":24,"a":"2026-11-13 20:37:40","z":"2026-11-13 20:38:50"}
+{"t":"aas","m":"2026-11-13 20:35","ev":"ON CPU","wc":"CPU","fg":30,"bg":1}
+{"t":"aas","m":"2026-11-13 20:35","ev":"SQL*Net more data from client","wc":"Network","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:35","ev":"buffer busy waits","wc":"Concurrency","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:35","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":1}
+{"t":"aas","m":"2026-11-13 20:35","ev":"db file scattered read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:35","ev":"db file sequential read","wc":"User I/O","fg":5,"bg":0}
+{"t":"aas","m":"2026-11-13 20:35","ev":"enq: TX - row lock contention","wc":"Application","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:35","ev":"log buffer space","wc":"Configuration","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:35","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":2}
+{"t":"aas","m":"2026-11-13 20:36","ev":"ON CPU","wc":"CPU","fg":36,"bg":2}
+{"t":"aas","m":"2026-11-13 20:36","ev":"SQL*Net more data from client","wc":"Network","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:36","ev":"buffer busy waits","wc":"Concurrency","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:36","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":2}
+{"t":"aas","m":"2026-11-13 20:36","ev":"db file scattered read","wc":"User I/O","fg":4,"bg":0}
+{"t":"aas","m":"2026-11-13 20:36","ev":"db file sequential read","wc":"User I/O","fg":7,"bg":0}
+{"t":"aas","m":"2026-11-13 20:36","ev":"enq: TX - row lock contention","wc":"Application","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:36","ev":"log buffer space","wc":"Configuration","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:36","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":3}
+{"t":"aas","m":"2026-11-13 20:37","ev":"ON CPU","wc":"CPU","fg":30,"bg":1}
+{"t":"aas","m":"2026-11-13 20:37","ev":"SQL*Net more data from client","wc":"Network","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:37","ev":"SYNC Remote Write","wc":"Other","fg":0,"bg":5}
+{"t":"aas","m":"2026-11-13 20:37","ev":"buffer busy waits","wc":"Concurrency","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:37","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":1}
+{"t":"aas","m":"2026-11-13 20:37","ev":"db file scattered read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:37","ev":"db file sequential read","wc":"User I/O","fg":5,"bg":0}
+{"t":"aas","m":"2026-11-13 20:37","ev":"enq: TX - row lock contention","wc":"Application","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:37","ev":"log buffer space","wc":"Configuration","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:37","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":1}
+{"t":"aas","m":"2026-11-13 20:37","ev":"log file sync","wc":"Commit","fg":16,"bg":0}
+{"t":"aas","m":"2026-11-13 20:38","ev":"ON CPU","wc":"CPU","fg":12,"bg":2}
+{"t":"aas","m":"2026-11-13 20:38","ev":"SQL*Net more data from client","wc":"Network","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:38","ev":"SYNC Remote Write","wc":"Other","fg":0,"bg":6}
+{"t":"aas","m":"2026-11-13 20:38","ev":"buffer busy waits","wc":"Concurrency","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:38","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":2}
+{"t":"aas","m":"2026-11-13 20:38","ev":"db file scattered read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:38","ev":"db file sequential read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:38","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":1}
+{"t":"aas","m":"2026-11-13 20:38","ev":"log file sync","wc":"Commit","fg":87,"bg":0}
+{"t":"aas","m":"2026-11-13 20:44","ev":"ON CPU","wc":"CPU","fg":6,"bg":1}
+{"t":"aas","m":"2026-11-13 20:44","ev":"SQL*Net more data from client","wc":"Network","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:44","ev":"buffer busy waits","wc":"Concurrency","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:44","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":1}
+{"t":"aas","m":"2026-11-13 20:44","ev":"db file scattered read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:44","ev":"db file sequential read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:44","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":3}
+{"t":"aas","m":"2026-11-13 20:45","ev":"ON CPU","wc":"CPU","fg":12,"bg":2}
+{"t":"aas","m":"2026-11-13 20:45","ev":"SQL*Net more data from client","wc":"Network","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:45","ev":"buffer busy waits","wc":"Concurrency","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:45","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":2}
+{"t":"aas","m":"2026-11-13 20:45","ev":"db file scattered read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:45","ev":"db file sequential read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:45","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":4}
+{"t":"aas","m":"2026-11-13 20:46","ev":"ON CPU","wc":"CPU","fg":6,"bg":1}
+{"t":"aas","m":"2026-11-13 20:46","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":1}
+{"t":"aas","m":"2026-11-13 20:46","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":2}
+{"t":"aas","m":"2026-11-13 20:47","ev":"ON CPU","wc":"CPU","fg":6,"bg":2}
+{"t":"aas","m":"2026-11-13 20:47","ev":"SQL*Net more data from client","wc":"Network","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:47","ev":"buffer busy waits","wc":"Concurrency","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:47","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":2}
+{"t":"aas","m":"2026-11-13 20:47","ev":"db file scattered read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:47","ev":"db file sequential read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:47","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":3}
+{"t":"aas","m":"2026-11-13 20:48","ev":"ON CPU","wc":"CPU","fg":12,"bg":1}
+{"t":"aas","m":"2026-11-13 20:48","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":1}
+{"t":"aas","m":"2026-11-13 20:48","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":4}
+{"t":"aas","m":"2026-11-13 20:49","ev":"ON CPU","wc":"CPU","fg":6,"bg":2}
+{"t":"aas","m":"2026-11-13 20:49","ev":"SQL*Net more data from client","wc":"Network","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:49","ev":"buffer busy waits","wc":"Concurrency","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:49","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":2}
+{"t":"aas","m":"2026-11-13 20:49","ev":"db file scattered read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:49","ev":"db file sequential read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:49","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":2}
+{"t":"aas","m":"2026-11-13 20:50","ev":"ON CPU","wc":"CPU","fg":12,"bg":1}
+{"t":"aas","m":"2026-11-13 20:50","ev":"SQL*Net more data from client","wc":"Network","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:50","ev":"buffer busy waits","wc":"Concurrency","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:50","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":1}
+{"t":"aas","m":"2026-11-13 20:50","ev":"db file scattered read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:50","ev":"db file sequential read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:50","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":3}
+{"t":"aas","m":"2026-11-13 20:51","ev":"ON CPU","wc":"CPU","fg":6,"bg":2}
+{"t":"aas","m":"2026-11-13 20:51","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":2}
+{"t":"aas","m":"2026-11-13 20:51","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":4}
+{"t":"aas","m":"2026-11-13 20:52","ev":"ON CPU","wc":"CPU","fg":6,"bg":1}
+{"t":"aas","m":"2026-11-13 20:52","ev":"SQL*Net more data from client","wc":"Network","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:52","ev":"buffer busy waits","wc":"Concurrency","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:52","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":1}
+{"t":"aas","m":"2026-11-13 20:52","ev":"db file scattered read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:52","ev":"db file sequential read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:52","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":2}
+{"t":"aas","m":"2026-11-13 20:53","ev":"ON CPU","wc":"CPU","fg":24,"bg":2}
+{"t":"aas","m":"2026-11-13 20:53","ev":"SQL*Net more data from client","wc":"Network","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:53","ev":"buffer busy waits","wc":"Concurrency","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:53","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":2}
+{"t":"aas","m":"2026-11-13 20:53","ev":"db file scattered read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:53","ev":"db file sequential read","wc":"User I/O","fg":5,"bg":0}
+{"t":"aas","m":"2026-11-13 20:53","ev":"enq: TX - row lock contention","wc":"Application","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:53","ev":"log buffer space","wc":"Configuration","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:53","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":3}
+{"t":"aas","m":"2026-11-13 20:54","ev":"ON CPU","wc":"CPU","fg":36,"bg":1}
+{"t":"aas","m":"2026-11-13 20:54","ev":"SQL*Net more data from client","wc":"Network","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:54","ev":"buffer busy waits","wc":"Concurrency","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:54","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":1}
+{"t":"aas","m":"2026-11-13 20:54","ev":"db file scattered read","wc":"User I/O","fg":4,"bg":0}
+{"t":"aas","m":"2026-11-13 20:54","ev":"db file sequential read","wc":"User I/O","fg":7,"bg":0}
+{"t":"aas","m":"2026-11-13 20:54","ev":"enq: TX - row lock contention","wc":"Application","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:54","ev":"log buffer space","wc":"Configuration","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:54","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":4}
+{"t":"aas","m":"2026-11-13 20:55","ev":"ON CPU","wc":"CPU","fg":30,"bg":2}
+{"t":"aas","m":"2026-11-13 20:55","ev":"SQL*Net more data from client","wc":"Network","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:55","ev":"buffer busy waits","wc":"Concurrency","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:55","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":2}
+{"t":"aas","m":"2026-11-13 20:55","ev":"db file scattered read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:55","ev":"db file sequential read","wc":"User I/O","fg":5,"bg":0}
+{"t":"aas","m":"2026-11-13 20:55","ev":"enq: TX - row lock contention","wc":"Application","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:55","ev":"log buffer space","wc":"Configuration","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:55","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":2}
+{"t":"aas","m":"2026-11-13 20:56","ev":"ON CPU","wc":"CPU","fg":36,"bg":1}
+{"t":"aas","m":"2026-11-13 20:56","ev":"SQL*Net more data from client","wc":"Network","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:56","ev":"buffer busy waits","wc":"Concurrency","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:56","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":1}
+{"t":"aas","m":"2026-11-13 20:56","ev":"db file scattered read","wc":"User I/O","fg":4,"bg":0}
+{"t":"aas","m":"2026-11-13 20:56","ev":"db file sequential read","wc":"User I/O","fg":7,"bg":0}
+{"t":"aas","m":"2026-11-13 20:56","ev":"enq: TX - row lock contention","wc":"Application","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:56","ev":"log buffer space","wc":"Configuration","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:56","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":3}
+{"t":"aas","m":"2026-11-13 20:57","ev":"ON CPU","wc":"CPU","fg":30,"bg":2}
+{"t":"aas","m":"2026-11-13 20:57","ev":"SQL*Net more data from client","wc":"Network","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:57","ev":"buffer busy waits","wc":"Concurrency","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:57","ev":"db file parallel write","wc":"System I/O","fg":0,"bg":2}
+{"t":"aas","m":"2026-11-13 20:57","ev":"db file scattered read","wc":"User I/O","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:57","ev":"db file sequential read","wc":"User I/O","fg":5,"bg":0}
+{"t":"aas","m":"2026-11-13 20:57","ev":"enq: TX - row lock contention","wc":"Application","fg":2,"bg":0}
+{"t":"aas","m":"2026-11-13 20:57","ev":"log buffer space","wc":"Configuration","fg":1,"bg":0}
+{"t":"aas","m":"2026-11-13 20:57","ev":"log file parallel write","wc":"System I/O","fg":0,"bg":4}
 {"t":"wl_hist","side":"primary","b":"2026-11-06 09:00","e":"2026-11-06 10:00","redo":2.3,"redo_max":4.11,"txn":49.4}
 {"t":"wl_hist","side":"primary","b":"2026-11-06 10:00","e":"2026-11-06 11:00","redo":2.0,"redo_max":3.6,"txn":43.0}
 {"t":"wl_hist","side":"primary","b":"2026-11-06 11:00","e":"2026-11-06 12:00","redo":1.7,"redo_max":3.09,"txn":36.5}
@@ -1998,6 +2140,7 @@ details.rd[open] > summary { margin-bottom: 4px; }
 {"t":"act","side":"primary","kind":"logsw","a":"2026-11-14 06:28:09","thr":1,"seq":114502}
 {"t":"act","side":"primary","kind":"logsw","a":"2026-11-14 07:52:09","thr":1,"seq":114503}
 {"t":"cov","side":"primary","src":"lfs_by","st":"ok","first":"2026-11-06 09:00:03","last":"2026-11-14 08:59:53","n":10,"cap":15,"capped":false,"note":"log file sync samples in ASH (H) by service, module and machine, the 15 groups with the most samples kept per list; n = groups found over the three lists; first/last = what ASH holds"}
+{"t":"cov","side":"primary","src":"aas","st":"ok","first":"2026-11-06 09:00:03","last":"2026-11-14 08:59:53","n":11,"cap":12,"capped":false,"note":"ASH samples per minute by wait event (H), foreground and other sessions; the 12 events with the most samples kept by name, the rest in one record per minute without a name; n = events found before the fold; first/last = what ASH holds"}
 {"t":"cov","side":"primary","src":"wl_hist","st":"ok","first":"2026-11-06 09:00:00","last":"2026-11-14 09:00:00","n":192,"cap":1500,"capped":false,"note":"dba_hist_sysmetric_summary, group 2, lookback 30 days, one record per AWR snapshot interval, newest 1500 kept; first/last = the span the view holds, n = intervals in the lookback"}
 {"t":"cov","side":"primary","src":"alsync","kind":"sql","st":"ok","first":"2026-10-15 09:12:41","last":"2026-11-14 09:12:39","n":5,"cap":300,"capped":false,"note":"v$diag_alert_ext, lookback 30 days, newest 300 kept; lines that end an UNSYNCHRONIZED period of a destination (LAD:n is SYNCHRONIZED, LAD:n level SYNCHRONIZED)"}
 {"t":"cov","side":"primary","src":"act","kind":"rman","st":"ok","first":"2026-09-18 02:00:04","last":"2026-11-14 02:00:05","n":39,"cap":500,"capped":false,"note":"v$rman_status, rows of type COMMAND, lookback 30 days, newest 500 kept; first/last = the oldest and newest start time the view holds"}
@@ -2223,6 +2366,7 @@ details.rd[open] > summary { margin-bottom: 4px; }
 {"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-11-13 03:15:04","z":"2026-11-13 03:21:13","st":"COMPLETED"}
 {"t":"act","side":"standby","kind":"rman","name":"BACKUP ARCHIVELOG","a":"2026-11-14 03:15:05","z":"2026-11-14 03:21:15","st":"COMPLETED"}
 {"t":"cov","side":"standby","src":"lfs_by","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the standby"}
+{"t":"cov","side":"standby","src":"aas","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the standby"}
 {"t":"cov","side":"standby","src":"wl_hist","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"not collected on the standby"}
 {"t":"cov","side":"standby","src":"alsync","kind":"text","st":"empty","first":"2026-10-15 09:41:07","last":"2026-11-14 09:09:58","n":0,"cap":300,"capped":false,"note":"text alert log, last 30 days (since 2026-10-15 09:10:02), newest 300 kept; lines that end an UNSYNCHRONIZED period (LAD:n is SYNCHRONIZED, LAD:n level SYNCHRONIZED)"}
 {"t":"cov","side":"standby","src":"act","kind":"rman","st":"ok","first":"2026-10-02 03:15:01","last":"2026-11-14 03:15:05","n":30,"cap":500,"capped":false,"note":"v$rman_status, rows of type COMMAND, lookback 30 days, newest 500 kept; first/last = the oldest and newest start time the view holds"}
@@ -2289,7 +2433,7 @@ const hostBadge = (side) => `<span class="badge host ${side === 'primary' ? 'pri
 // v2 bundles hold 'YYYY-MM-DD HH:MI[:SS[.FFF]]'. Everything below sees the v2 form: records of unknown types pass through untouched.
 const TSF = { alert: ['ts'], tx: ['ts'], fg: ['m'], fg10: ['b'], wl: ['m'], arch: ['first', 'next', 'done'], trace: ['ts'], lsnr: ['m'], lsnr_ref: ['ts'],
               cid_hit: ['ts'], hist_awr: ['b', 'e'], net: ['at'], alhist: ['ts'], lfs: ['a', 'z'], lfs_sum: ['pk_at', 'pk_lg_at'], ashgap: ['a', 'z'],
-              lsnr_srv: ['ts'], dgstatus: ['ts'], netsamp: ['ts'], sar: ['ts'], dgproc: ['since'], lfs_by: ['a', 'z'], wl_hist: ['b', 'e'], alsync: ['ts'], act: ['a', 'z'] };
+              lsnr_srv: ['ts'], dgstatus: ['ts'], netsamp: ['ts'], sar: ['ts'], dgproc: ['since'], lfs_by: ['a', 'z'], aas: ['m'], wl_hist: ['b', 'e'], alsync: ['ts'], act: ['a', 'z'] };
 const MON = { JAN: '01', FEB: '02', MAR: '03', APR: '04', MAY: '05', JUN: '06', JUL: '07', AUG: '08', SEP: '09', OCT: '10', NOV: '11', DEC: '12' };
 const full = (v, day) => { v = String(v); const m = /^(\d\d)-([A-Za-z]{3})-(\d{4}) (.+)$/.exec(v);
   return /^\d{4}-\d\d-\d\d/.test(v) ? v : m && MON[m[2].toUpperCase()] ? `${m[3]}-${MON[m[2].toUpperCase()]}-${m[1]} ${m[4]}` : day && /^\d\d:\d\d/.test(v) ? day + ' ' + v : v; };
@@ -2416,7 +2560,7 @@ const SRCN = { database: 'database connection', ash: 'ASH', awr_snap: 'AWR snaps
   tx: 'ASH wait samples (tx)', dgstatus: 'v$dataguard_status', dest_hist: 'destination response histogram', base_hist: 'baseline (previous days)', rfs_ev: 'RFS events since startup', rfs_hist: 'RFS histogram since startup',
   dgproc: 'Data Guard processes', archgap: 'archive gaps', lsnr_srv: 'listener: connections of the other host', ep: 'endpoints (tnsnames.ora)', conn: 'TCP connections to the peer', sqlnet: 'sqlnet.ora timeouts',
   ostcp: 'OS TCP tunables', ntp: 'clock synchronisation', sar: 'sysstat network history', netsamp: 'network sampler',
-  lfs_by: 'commit waits by service, module, machine', wl_hist: 'workload per AWR interval', alsync: 'alert log: UNSYNCHRONIZED periods ended', act: 'scheduled activity' };
+  lfs_by: 'commit waits by service, module, machine', aas: 'active sessions by wait event', wl_hist: 'workload per AWR interval', alsync: 'alert log: UNSYNCHRONIZED periods ended', act: 'scheduled activity' };
 // covers(side, src, a, b, opts): does that source hold the whole interval [a, b], so that "none" or "ruled out" may rest on it?
 //   opts.log: a text log: its last entry may precede b when the bundle was collected after b (nothing was logged since).
 // Not covered when: no bundle or no cov record (v1), the read failed or was skipped, the source starts after a or ends before b, or it was capped.
@@ -2439,12 +2583,12 @@ const covAlert = (side, a, b) => { const c1 = side === 'primary' ? covers('prima
   return c1 && c1.rec && c1.rec.st !== 'skipped' ? c1 : c2; };
 // which cov sources are window sources, and which of them a window source reaches: 'whole' (the source holds the whole window; a capped one still does: its note says rows may be missing), 'part' (it holds some of the window),
 // 'none' (it holds nothing of it), 'collected' (read at collection time: not a window source) or 'na' (skipped or failed: nothing was read). The same covers() decides; no lifetime of any source is assumed.
-const COVORDER = ['database', 'ash', 'awr_snap', 'sysmetric', 'lfs', 'lfs_by', 'ashgap', 'tx', 'alert_sql', 'alert_text', 'alhist', 'alsync', 'wl_hist', 'act', 'dgstatus', 'trace', 'listener', 'lsnr_ref', 'lsnr_srv', 'cid', 'net', 'ep', 'conn', 'sqlnet', 'ostcp', 'ntp', 'sar', 'netsamp',
+const COVORDER = ['database', 'ash', 'awr_snap', 'sysmetric', 'lfs', 'lfs_by', 'aas', 'ashgap', 'tx', 'alert_sql', 'alert_text', 'alhist', 'alsync', 'wl_hist', 'act', 'dgstatus', 'trace', 'listener', 'lsnr_ref', 'lsnr_srv', 'cid', 'net', 'ep', 'conn', 'sqlnet', 'ostcp', 'ntp', 'sar', 'netsamp',
   'dest_hist', 'base_hist', 'rfs_ev', 'rfs_hist', 'dgproc', 'archgap'], LOGS = ['alert_sql', 'alert_text', 'trace', 'listener', 'lsnr_ref', 'lsnr_srv', 'cid'];
 // sources that describe the host or a view as collected, or the previous days: not window sources
 const ASCOLL = ['database', 'alhist', 'alsync', 'wl_hist', 'act', 'net', 'ep', 'conn', 'sqlnet', 'ostcp', 'ntp', 'dgproc', 'archgap', 'dest_hist', 'base_hist', 'rfs_ev', 'rfs_hist'];
 // cov records of sources this page does not know (written by a newer collector) stay out of the table; a source of the other side (written as skipped, "not collected on the standby/primary") is not listed for the sources added with the newer collector
-const NEWSRC = ['lfs_by', 'wl_hist', 'alsync', 'act', 'tx', 'dgstatus', 'dest_hist', 'base_hist', 'rfs_ev', 'rfs_hist', 'dgproc', 'archgap', 'lsnr_srv', 'ep', 'conn', 'sqlnet', 'ostcp', 'ntp', 'sar', 'netsamp'];
+const NEWSRC = ['lfs_by', 'aas', 'wl_hist', 'alsync', 'act', 'tx', 'dgstatus', 'dest_hist', 'base_hist', 'rfs_ev', 'rfs_hist', 'dgproc', 'archgap', 'lsnr_srv', 'ep', 'conn', 'sqlnet', 'ostcp', 'ntp', 'sar', 'netsamp'];
 const COVROWS = COVS.filter(r => COVORDER.includes(r.src) && !(NEWSRC.includes(r.src) && r.st === 'skipped' && /^not collected on the (primary|standby)/.test(String(r.note || '')))).sort((x, y) => (x.side < y.side ? -1 : x.side > y.side ? 1 : 0) || COVORDER.indexOf(x.src) - COVORDER.indexOf(y.src));
 function reachOf(r) {
   if (r.st === 'error' && LBSTMT.includes(r.src)) return 'failed';   // the statement failed: nothing was read, so "as collected" would claim a read
@@ -2714,7 +2858,7 @@ const ACTK = [['rman', 'RMAN', 'v$rman_status'], ['job', 'job', 'cdb_scheduler_j
 const LBKEPT = { alsync: (r) => ALSYNC.filter(x => x.side === r.side).map(x => x.s), wl_hist: () => WLH.map(x => x.b), act: (r) => ACTR.filter(x => x.side === r.side && x.kind === r.kind && !x.freq).map(x => x.a) };
 const LBFIRST = (r) => { const k = r.capped && r.st === 'ok' && LBKEPT[r.src] ? LBKEPT[r.src](r) : []; return k.length ? Math.min(...k) : null; };   // the oldest kept record of a capped lookback source, else null
 // The newer sources that are one SQL statement each. A cov record with st error means the statement failed: nothing was checked. That reads "not checked" with the record's own note, never "none" and never "not covered".
-const LBSTMT = ['lfs_by', 'wl_hist', 'alsync', 'act'];
+const LBSTMT = ['lfs_by', 'aas', 'wl_hist', 'alsync', 'act'];
 const failTxt = (r) => { const n = String(r.note == null ? '' : r.note).replace(/\s+/g, ' ').trim().slice(0, 160); return !n ? 'the statement failed' : /fail/i.test(n) ? n : `the statement failed (${n})`; };
 // Does a lookback source hold [a, b]? Every cov record of the source (one per side, or per kind) is tried; the first that holds is returned, else the first reason (a failed read before any other).
 //   o.log: the rows are a list of events, not samples: the newest row says nothing about where the view ends, so a bundle collected after b holds the end (as a text log does).
@@ -3056,7 +3200,7 @@ if (!INC.length && HAS.primary) {
 if (!HAS.standby) WIN_NC.push(EW('win-standby', 'Standby side', 'no standby bundle', hintsFor({ ok: false, code: 'nobundle', side: 'standby' })));
 /* ================= shell: sidebar, header ================= */
 const NAV = [['Overview', [['summary', 'Summary', 'gauge']]],
-             ['Charts', [['timeline', 'Timeline', 'gantt'], ['sequence', 'Sequence', 'swap'], ['commits', 'Commit waits', 'bars'], ['who', 'Who waited', 'userx'], ['lgwr', 'LGWR and transport', 'activity'], ['baseline', 'Baseline', 'bars'], ['recur', 'Day and hour', 'history'], ['listener', 'Listener logins', 'network'], ['rfsCard', 'RFS write latency', 'server'], ['nsCard', 'Network sampler', 'activity']]],
+             ['Charts', [['timeline', 'Timeline', 'gantt'], ['sequence', 'Sequence', 'swap'], ['commits', 'Commit waits', 'bars'], ['who', 'Who waited', 'userx'], ['lgwr', 'LGWR and transport', 'activity'], ['aas', 'Active sessions', 'activity'], ['baseline', 'Baseline', 'bars'], ['recur', 'Day and hour', 'history'], ['listener', 'Listener logins', 'network'], ['rfsCard', 'RFS write latency', 'server'], ['nsCard', 'Network sampler', 'activity']]],
              ['Findings', [['signals', 'Signals', 'alert'], ['explain', 'Explanations', 'info'], ['next', 'Before the next one', 'timer'], ['coverage', 'Coverage', 'file'], ['episodes', 'Episodes side by side', 'gantt']]],
              ['Logs', [['history', 'Other occurrences', 'history'], ['alerts', 'Alert logs', 'file'], ['traces', 'Background traces', 'file'], ['shipping', 'Redo shipping', 'swap'], ['cidCard', 'Refused clients', 'userx']]],
              ['Configuration and hosts', [['config', 'Configuration', 'settings'], ['standby', 'Standby tables', 'server'], ['network', 'Network and OS', 'server']]]];
@@ -3604,7 +3748,7 @@ function hover(svg, host, fn) {
 const roundTop = (x, y, w, h, r, fill) => { r = Math.min(r, w / 2, h); return r > 0.5 ? `<path d="M${x} ${y + h}V${y + r}q0 -${r} ${r} -${r}h${w - 2 * r}q${r} 0 ${r} ${r}V${y + h}z" fill="${fill}"/>` : `<rect x="${x}" y="${y}" width="${w}" height="${Math.max(0, h)}" fill="${fill}"/>`; };
 
 /* ================= zoom ================= */
-// The charts on the clock of the window (timeline, commit waits, listener logins, sampler) share one time range: VIEW, null for the whole window.
+// The charts on the clock of the window (timeline, commit waits, active sessions by wait event, listener logins, sampler) share one time range: VIEW, null for the whole window.
 // On any of them: drag across the plot to zoom to that stretch, Ctrl/⌘ + wheel (or a trackpad pinch) zooms around the pointer, Shift + wheel (or a sideways swipe) pans,
 // a double click or the "Whole window" button shows the whole window again. A plain wheel still scrolls the page.
 const ZMIN = 10;   // seconds: the narrowest range
@@ -3621,7 +3765,7 @@ function setView(a, b) {
 function drawZoomed() {
   const k = ZOOMS.findIndex(z => VIEW ? z[1] === VIEW[0] && z[2] === VIEW[1] : z[1] === d0 && z[2] === d1);
   document.querySelectorAll('[data-z]').forEach(x => x.setAttribute('aria-selected', +x.dataset.z === k));
-  drawTimeline(); drawFg(); drawLs(); drawNs();
+  drawTimeline(); drawFg(); drawAas(); drawLs(); drawNs();
 }
 // the line above a zoomed chart: the range shown and the way back (also printed, without the button)
 function zoomBar(host, none) {
@@ -3883,6 +4027,82 @@ function drawFg() {
   zoomBar(host); zoomable(host.querySelector('svg'), { W, x0: L, x1: W, a, b, y0: T, h: PH });
   hover(host.querySelector('svg'), host, (e) => { if (!e) return ''; const b = e.target.closest('[data-t]'); if (!b) return ''; const t = +b.dataset.t, d = byS[t];
     return `<div class="h">${clock(t, 5)}</div>` + (d ? FGS.map(([c, l, k]) => row(l, fmtN(d[k]), c)).join('') : row('No samples', '', '')); });
+}
+
+/* ================= active sessions by wait event ================= */
+// Average active sessions per minute, stacked by wait event (aas: ASH samples per minute and event; the 12 events with the most samples over the window by name, the rest in one record with ev null).
+// Supporting evidence only: nothing here feeds the signals, the explanations or the hand-over texts. The colours are the wait classes of Enterprise Manager (the --wc-* properties); an event
+// that shares its class with a kept event of more samples takes a lighter shade of the class colour; the folded rest is grey. The series colours are custom properties of the section (--aas0, --aas1, ...), so that legend() and row() work as for the other charts.
+const WCLS = [['CPU', '--wc-cpu'], ['Scheduler', '--wc-sched'], ['User I/O', '--wc-uio'], ['System I/O', '--wc-sio'], ['Concurrency', '--wc-conc'], ['Application', '--wc-app'], ['Commit', '--wc-commit'],
+  ['Configuration', '--wc-conf'], ['Administrative', '--wc-adm'], ['Network', '--wc-net'], ['Queueing', '--wc-queue'], ['Cluster', '--wc-clu'], ['Other', '--wc-other']];
+const AASR = covRec('primary', 'aas');
+const AAS = of('aas', 'primary').map(o => ({ m: ts(o.m), ev: o.ev == null ? null : String(o.ev), n: (+o.fg || 0) + (+o.bg || 0), wc: o.wc == null ? null : String(o.wc) })).filter(r => Number.isFinite(r.m) && r.n > 0);
+const AASS = (() => {   // the series, bottom to top: the wait classes in the order of Enterprise Manager, in a class the event with more samples lower, the folded rest on top
+  const byEv = new Map(); let rest = 0;
+  AAS.forEach(r => { if (r.ev == null) { rest += r.n; return; } const x = byEv.get(r.ev) || { ev: r.ev, wc: r.wc, n: 0 }; x.n += r.n; byEv.set(r.ev, x); });
+  const ci = (c) => { const i = WCLS.findIndex(w => w[0] === c); return i < 0 ? WCLS.length - 1 : i; };   // an unknown or missing class is drawn as Other
+  const ser = [...byEv.values()].sort((a, b) => ci(a.wc) - ci(b.wc) || b.n - a.n || (a.ev < b.ev ? -1 : a.ev > b.ev ? 1 : 0)), used = {};
+  ser.forEach(x => { const i = ci(x.wc), k = used[i] = (used[i] || 0) + 1;
+    x.css = k === 1 ? `var(${WCLS[i][1]})` : `color-mix(in srgb, var(${WCLS[i][1]}) ${[72, 50, 35, 25, 18, 12][Math.min(k - 2, 5)]}%, white)`;
+    x.label = `${x.ev} · ${x.wc == null ? 'Other' : x.wc}`; x.tip = x.ev; });
+  const folded = AASR && +AASR.n > ser.length ? +AASR.n - ser.length : 0;
+  if (rest) ser.push({ ev: null, wc: null, n: rest, css: 'var(--muted-fg)', label: folded ? `Other events (${folded} folded)` : 'Other events (folded)', tip: 'Other events' });
+  ser.forEach((x, k) => { x.k = k; x.v = '--aas' + k; });
+  return ser;
+})();
+const AASM = new Map();   // minute -> average active sessions per series: samples / (samples per minute and session)
+AAS.forEach(r => { const k = r.ev == null ? AASS.length - 1 : AASS.findIndex(x => x.ev === r.ev); let a = AASM.get(r.m); if (!a) AASM.set(r.m, a = new Array(AASS.length).fill(0)); a[k] += r.n / perMin; });
+AASS.forEach(x => $('#aas').style.setProperty(x.v, x.css));
+// what the card says when there is no chart: the coverage record decides between "not collected", "not checked" and "none in the window"
+const AASMSG = !HAS.primary ? 'No primary bundle.'
+  : AASR && AASR.st === 'error' ? `Not checked: aas, ${failTxt(AASR)}.`
+  : AASR && AASR.st === 'skipped' ? `Not collected: the aas read was skipped${AASR.note ? ' (' + String(AASR.note).slice(0, 140) + ')' : ''}.`
+  : AAS.length ? ''
+  : !AASR ? 'Not collected: no aas records in this bundle.'
+  : AASR.st === 'ok' && +AASR.n > 0 ? `Not checked: aas, the coverage record found ${plural(+AASR.n, 'event')} but the bundle holds no aas records.`
+  : 'No ASH samples in the window (or no Diagnostics Pack data).';
+$('#aasNote').textContent = MP ? `Average active sessions per minute by wait event, foreground and background, ${MP.ash === 'V' ? 'ASH (1 s samples)' : 'AWR ASH (10 s samples)'}.` : '';
+$('#aasLegend').innerHTML = AASMSG ? '' : legend(AASS.map(x => [x.v, x.label]));
+if (AASMSG) $('#aasLegend').style.display = 'none';
+// the footnote: the colours, then, when they apply, how many events a capped source found or what the source does not cover (nothing under an empty state)
+if (!AASMSG) { const cv = AASR && AASR.st === 'ok' ? covers('primary', 'aas', d0, d1, { capOk: true }) : { ok: true };
+  $('#aasFoot').textContent = ['Colours: the wait class of each event, as in Enterprise Manager.',
+    AASR && AASR.capped ? `${plural(+AASR.n, 'event')} found: the ${AASR.cap} with the most samples are shown by name, the others are added up as Other events.` : !cv.ok ? `Not covered: ${cv.why}.` : ''].filter(Boolean).join(' '); }
+const aasN = (v) => v < 0.005 ? '< 0.01' : fmtN(v);
+function drawAas() {
+  const host = $('#aasViz');
+  if (AASMSG) { zoomBar(host, true); host.innerHTML = empty(AASMSG); return; }
+  const W = Math.max(320, host.clientWidth), H = 220, L = 34, B = 22, T = 16, PW = W - L, PH = H - B - T;
+  const m0 = Math.floor(d0 / 60) * 60, n = Math.max(1, Math.round((d1 - m0) / 60));
+  const [a, b] = VIEW || [m0, m0 + n * 60], bw = VIEW ? PW * 60 / (b - a) : PW / n, xi = i => L + (VIEW ? (m0 + i * 60 - a) / 60 : i) * bw;   // as drawFg: the minutes of the window
+  const i0 = Math.max(0, Math.floor((a - m0) / 60)), i1 = Math.max(i0 + 1, Math.min(n, Math.ceil((b - m0) / 60)));
+  const val = (i) => AASM.get(m0 + i * 60), sum = (v) => v ? v.reduce((p, q) => p + q, 0) : 0;
+  // the value at each minute is a point at the middle of it (0 for a minute without a record). Unzoomed, the first and last minute run on to the edges of the plot. Zoomed, the area continues
+  // to the middle of the minute before the first visible one and after the last (when the window has them), as it does in the whole-window view, and runs on under the clip path
+  const pts = [VIEW && i0 > 0 ? [xi(i0 - 1) + bw / 2, i0 - 1] : [xi(i0), i0]]; for (let i = i0; i < i1; i++) pts.push([xi(i) + bw / 2, i]); pts.push(VIEW && i1 < n ? [xi(i1) + bw / 2, i1] : [xi(i1 - 1) + bw, i1 - 1]);
+  let top = 0; for (let i = i0; i < i1; i++) top = Math.max(top, sum(val(i)));
+  if (VIEW) { const tot = pts.map(([, i]) => sum(val(i)));   // the scale also fits the area where it crosses the edges of the plot, so that it does not rise above the top line
+    [L, W].forEach(x => { const j = pts.findIndex((p, k) => k && pts[k - 1][0] <= x && x <= p[0]); if (j > 0) top = Math.max(top, tot[j - 1] + (tot[j] - tot[j - 1]) * (x - pts[j - 1][0]) / Math.max(1e-9, pts[j][0] - pts[j - 1][0])); }); }
+  const max = nice(top), Y = v => T + PH - v / max * PH;
+  let s = '';
+  for (let k = 0; k <= 4; k++) { const v = max * k / 4; s += `<line x1="${L}" x2="${W}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--bd)" ${k ? 'stroke-dasharray="3 3"' : ''}/><text x="${L - 8}" y="${Y(v) + 4}" text-anchor="end" font-size="11" fill="var(--muted-fg)">${fmtN(v)}</text>`; }
+  const every = Math.max(1, Math.ceil((i1 - i0) * (MULTI ? 84 : 44) / PW));
+  if (VIEW) s += `<defs><clipPath id="aasc"><rect x="${L}" y="0" width="${PW}" height="${H}"/></clipPath></defs><g clip-path="url(#aasc)">`;
+  let lo = pts.map(() => 0);
+  AASS.forEach(x => { const up = pts.map(([, i], j) => lo[j] + ((val(i) || [])[x.k] || 0)), old = lo; lo = up;
+    if (up.every((v, j) => v === old[j])) return;
+    const fwd = pts.map(([px], j) => `${j ? 'L' : 'M'}${px.toFixed(1)} ${Y(up[j]).toFixed(1)}`).join(''), back = pts.map(([px], j) => `L${px.toFixed(1)} ${Y(old[j]).toFixed(1)}`).reverse().join('');
+    s += `<path d="${fwd}${back}Z" fill="var(${x.v})" stroke="var(--card-bg)" stroke-width=".75" stroke-linejoin="round"/>`; });
+  for (let i = i0; i < i1; i++) { const t = m0 + i * 60, lx = xi(i) + bw / 2;
+    s += `<rect x="${xi(i)}" y="${T}" width="${bw}" height="${PH}" fill="transparent" data-t="${t}"/>`;
+    if (i % every === 0 && lx >= L && lx <= W) s += `<text x="${lx}" y="${H - 4}" text-anchor="middle" font-size="11" fill="var(--muted-fg)">${clock(t, 5)}</text>`; }
+  if (VIEW) s += '</g>';
+  host.innerHTML = `<svg viewBox="0 0 ${W} ${H}" height="${H}" role="img" aria-label="Active sessions by wait event per minute">${s}</svg>`;
+  zoomBar(host); zoomable(host.querySelector('svg'), { W, x0: L, x1: W, a, b, y0: T, h: PH });
+  hover(host.querySelector('svg'), host, (e) => { if (!e) return ''; const el = e.target.closest('[data-t]'); if (!el) return ''; const t = +el.dataset.t, v = AASM.get(t);
+    if (!v) return `<div class="h">${clock(t, 5)}</div>` + row('No samples', '', '');
+    const rows = AASS.filter(x => v[x.k] > 0).sort((p, q) => v[q.k] - v[p.k] || p.k - q.k);
+    return `<div class="h">${clock(t, 5)}</div>` + rows.map(x => row(x.tip, aasN(v[x.k]), x.v)).join('') + row('Total', aasN(sum(v)), ''); });
 }
 
 /* ================= who waited ================= */
@@ -4380,7 +4600,7 @@ const factOut = FACTS.map(f => ({ id: f.id, converted: !!SHIFT && f.side === 'st
 const factEl = document.createElement('script'); factEl.type = 'application/json'; factEl.id = 'dgr-facts';
 factEl.textContent = JSON.stringify({ clocks: { primary_utc_off: (CLK.primary || {}).utc_off || null, standby_utc_off: (CLK.standby || {}).utc_off || null, standby_times_converted_to_primary_time: !!SHIFT, shift_seconds: SHIFT }, facts: factOut, incidents: INC.map(c => ({ n: c.n, start: stamp(c.s), end: stamp(c.e), kinds: incKinds(c) })) }).replace(/</g, '\\u003c');
 document.body.appendChild(factEl);
-const drawAll = () => { drawTimeline(); drawSeq(); drawFg(); drawHist(); drawLs(); drawRfs(); drawNs(); drawRecur(); };
+const drawAll = () => { drawTimeline(); drawSeq(); drawFg(); drawAas(); drawHist(); drawLs(); drawRfs(); drawNs(); drawRecur(); };
 drawAll();
 let rt; new ResizeObserver(() => { clearTimeout(rt); rt = setTimeout(() => { if (pane === 'report') drawAll(); }, 80); }).observe($('.main'));
 

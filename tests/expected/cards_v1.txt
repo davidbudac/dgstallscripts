@@ -9,3 +9,4 @@ WHO: Incident 1 · 20:38:01 to 20:53:27 · ORA-16198, standby: possible network 
   WHOWL txn | User transactions per second | 44.1 average of 3 minutes, 20:35 to 20:37 | 0.2 lowest of 16 minutes (20:38 to 20:53), at 20:40
   WHOWL redo | Redo, MB per second | 2.1 average of 3 minutes, 20:35 to 20:37 | 0.01 lowest of 16 minutes (20:38 to 20:53), at 20:40
   WHOWL logons | Logons per second | 0.9 average of 3 minutes, 20:35 to 20:37 | 0.2 lowest of 16 minutes (20:38 to 20:53), at 20:38
+AAS: Not collected: no aas records in this bundle.

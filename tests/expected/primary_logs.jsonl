@@ -5,6 +5,7 @@
 {"t":"cov","side":"primary","src":"sysmetric","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"sqlplus not found"}
 {"t":"cov","side":"primary","src":"lfs","st":"skipped","first":null,"last":null,"n":0,"cap":200,"capped":false,"note":"sqlplus not found"}
 {"t":"cov","side":"primary","src":"lfs_by","st":"skipped","first":null,"last":null,"n":0,"cap":15,"capped":false,"note":"sqlplus not found"}
+{"t":"cov","side":"primary","src":"aas","st":"skipped","first":null,"last":null,"n":0,"cap":12,"capped":false,"note":"sqlplus not found"}
 {"t":"cov","side":"primary","src":"ashgap","st":"skipped","first":null,"last":null,"n":0,"cap":50,"capped":false,"note":"sqlplus not found"}
 {"t":"cov","side":"primary","src":"wl_hist","st":"skipped","first":null,"last":null,"n":0,"cap":1500,"capped":false,"note":"sqlplus not found"}
 {"t":"cov","side":"primary","src":"tx","st":"skipped","first":null,"last":null,"n":0,"cap":null,"capped":false,"note":"sqlplus not found"}

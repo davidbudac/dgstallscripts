@@ -15,15 +15,16 @@
 #   panes          the report pane and the hand-over pane (tab, sidebar, a link of the report, the address #handover, Back and Forward; charts drawn again for the page shown), the section order
 #                  (every chart before Signals), no card caption over 120 characters, the Reading disclosures (closed; open for printing, closed again), Copy and Download .txt from the
 #                  hand-over pane against the golden hand-over texts (extract.py --captions, --order, --readings, --delivered; gate.sh with GATE_HASH)
-#   zoom           the timeline, commit waits, listener logins and sampler share one range: a drag zooms all four, the click ending it goes nowhere, Ctrl + wheel zooms and a plain
+#   zoom           the timeline, commit waits, active sessions by wait event, listener logins and sampler share one range: a drag zooms all five, the click ending it goes nowhere, Ctrl + wheel zooms and a plain
 #                  wheel does not, the Incident tabs and the Whole window button and tab set the range (hover.html, extract.py --ui)
 #   collect.sh     raw-log fixtures with a window across midnight, a failing and a partial sqlplus (stub), the caps; hosts with stubbed tools
 #                  (Linux with sar, chronyc, ntpq, getent, netstat, ping, sysctl, lsnrctl; AIX with no, lssrc, ntpq; a bare host with none of them):
 #                  listener server-to-server connections, endpoints from tnsnames.ora, sqlnet.ora timeouts, sar parsing from canned output, clock state,
 #                  derived peer, the sampler log; `collect.sh list`; the next-command hints; make_report.sh defaults; net_sampler.sh; the history pattern list
-#   cards          extract.py --cards: "Episodes side by side", "Who waited" and the activity bars of the day-and-hour grid (the example, `full`, `hist`, `stfail` (statements that failed),
+#   cards          extract.py --cards: "Episodes side by side", "Who waited", "Active sessions by wait event" (aas: the chart, its series and colours, the empty states, a capped and a failed source;
+#                  the per-minute totals of its tooltips against the bundle's fg and aas records, extract.py --aas) and the activity bars of the day-and-hour grid (the example, `full`, `hist`, `stfail` (statements that failed),
 #                  `capped` (sources cut at their cap), v1, pre-phase-3 and the scenarios without the lookback and impact records), the grouped entries of the explanation tables, and that none of it is in the hand-over texts
-#   new records    collect.sh with the stub's `full` mode: lfs_by, wl_hist, alsync and act (rman, job, logsw) kept, a failing or omitted statement an error cov record,
+#   new records    collect.sh with the stub's `full` mode: lfs_by, aas, wl_hist, alsync and act (rman, job, logsw) kept, a failing or omitted statement an error cov record,
 #                  the standby side, the text alert log path of alsync, caps; lints of the SQL files (every &variable defined, no blank line in a statement, a cov record per record type,
 #                  the sync pattern equal in the SQL files and sh/dglib.sh)
 #   lint           the shell scripts stay POSIX sh / POSIX awk
@@ -252,11 +253,11 @@ if [ $HAVE_PY = 1 ] && sh "$T/gate.sh" --have-chrome; then
   render g_racn "$W/racn/quiet_primary.jsonl" "$W/racn/quiet_standby.jsonl"; nojs g_racn "RAC with more than one instance"
   has_l "$W/g_racn.txt" '^NOTICES: .*The primary is a RAC database cluster_database FALSE, 3 instance\(s\) open' "RAC: more than one open instance is enough"
   # the coverage table lists the sources it knows (the newer collector's too); a source it does not know stays out, and so do the by-design skips of the other side
-  KNOWN='database|ash|awr_snap|sysmetric|lfs|lfs_by|alsync|wl_hist|act|ashgap|tx|alert_sql|alert_text|alhist|dgstatus|trace|listener|lsnr_ref|lsnr_srv|cid|net|ep|conn|sqlnet|ostcp|ntp|sar|netsamp|dest_hist|base_hist|rfs_ev|rfs_hist|dgproc|archgap'
+  KNOWN='database|ash|awr_snap|sysmetric|lfs|lfs_by|aas|alsync|wl_hist|act|ashgap|tx|alert_sql|alert_text|alhist|dgstatus|trace|listener|lsnr_ref|lsnr_srv|cid|net|ep|conn|sqlnet|ostcp|ntp|sar|netsamp|dest_hist|base_hist|rfs_ev|rfs_hist|dgproc|archgap'
   if [ "$(grep '^COV:' "$W/v2.txt" | grep -cvE "^COV: (primary|standby)/($KNOWN)")" = 0 ]; then pass "render: every row of the coverage table is a source the page knows"; else fail "render: unknown cov sources in the coverage table" "$(grep '^COV:' "$W/v2.txt" | cut -c1-100)"; fi
   for src in tx dgstatus lsnr_srv ep conn sqlnet ostcp ntp sar netsamp dest_hist base_hist rfs_ev rfs_hist dgproc archgap; do has_l "$W/g_full.txt" "^COV: (primary|standby)/$src" "render full: the coverage table has the source $src"; done
-  for src in primary/lfs_by primary/wl_hist primary/alsync/sql standby/alsync/text primary/act/rman primary/act/job primary/act/logsw standby/act/rman; do has_l "$W/g_full.txt" "^COV: $src " "render full: the coverage table has the source $src (a source with kinds shows its kind)"; done
-  no_l "$W/g_full.txt" '^COV: standby/(lfs_by|wl_hist|act/job|act/logsw) ' "render full: the by-design skips of the standby (lfs_by, wl_hist, job and log-switch activity) are not listed"
+  for src in primary/lfs_by primary/aas primary/wl_hist primary/alsync/sql standby/alsync/text primary/act/rman primary/act/job primary/act/logsw standby/act/rman; do has_l "$W/g_full.txt" "^COV: $src " "render full: the coverage table has the source $src (a source with kinds shows its kind)"; done
+  no_l "$W/g_full.txt" '^COV: standby/(lfs_by|aas|wl_hist|act/job|act/logsw) ' "render full: the by-design skips of the standby (lfs_by, aas, wl_hist, job and log-switch activity) are not listed"
   has_l "$W/g_full.txt" '^COV: primary/wl_hist \| ok \| 11-12 00:00 – 11-20 14:00 \| 206 / cap 1500 \| not a window source$' "render full: the lookback sources say they are not window sources (wl_hist, alsync, act)"
   has_l "$W/g_full.txt" '^COV: primary/lfs_by \| ok \| .* \| 10 / cap 15 \| yes$' "render full: lfs_by is a window source and holds the window"
   no_l "$W/g_full.txt" '^COV: primary/(rfs_ev|rfs_hist|dgproc|archgap)' "render full: the primary's by-design skips of standby-only sources are not listed"
@@ -391,14 +392,15 @@ if [ $HAVE_PY = 1 ] && sh "$T/gate.sh" --have-chrome; then
   has_l "$W/g_two.ui" '^after the Hand-over tab: report:hidden handover:shown; tab handover; address #handover; Copy and Download buttons shown$' "panes: the Hand-over tab shows the hand-over pane (and its buttons), hides the report, and sets the address"
   has_l "$W/g_two.ui" '^after the Report tab: report:shown handover:hidden; tab report; address #report$' "panes: the Report tab brings the report back"
   has_l "$W/g_two.ui" '^timeline chart width after the Report tab: ([4-9][0-9]{2}|[0-9]{4,})$' "panes: the charts are drawn again for the page that is shown (not at the 320 of a hidden page)"
-  # ---- zoom: one range for the timeline, commit waits, listener logins and the sampler
+  # ---- zoom: one range for the timeline, commit waits, active sessions by wait event, listener logins and the sampler
   Z='Zoomed to [0-9:]{8} – [0-9:]{8} \([^)]* of the 23 min 0 s window\)'
-  has_l "$W/v2.ui" "^zoom after a drag across the timeline: tl $Z \| fg $Z \| ls $Z \| ns $Z$" "zoom: a drag across the timeline zooms the four charts on the window's clock to the same range"
+  has_l "$W/v2.ui" "^zoom after a drag across the timeline: tl $Z \| fg $Z \| aasViz $Z \| ls $Z \| ns $Z$" "zoom: a drag across the timeline zooms the five charts on the window's clock to the same range (commit waits and active sessions by wait event among them)"
+  has_l "$W/v2.ui" '^active sessions chart zoomed: the area runs past the left edge and past the right edge of the plot$' "zoom: the area of the active-sessions chart runs on under the clip path to the neighbouring minutes, so that its shape is that of the whole-window view"
   has_l "$W/v2.ui" '^click that ends the drag: swallowed; timeline tab selected: none$' "zoom: the click that ends a drag reaches no mark, and no preset tab stays selected"
-  has_l "$W/v2.ui" '^zoom after the Whole window button: tl whole \| fg whole \| ls whole \| ns whole$' "zoom: the Whole window button shows the whole window on every chart"
+  has_l "$W/v2.ui" '^zoom after the Whole window button: tl whole \| fg whole \| aasViz whole \| ls whole \| ns whole$' "zoom: the Whole window button shows the whole window on every chart"
   has_l "$W/v2.ui" "^plain wheel: page scrolls, whole; Ctrl \+ wheel: taken, $Z$" "zoom: a plain wheel scrolls the page, Ctrl + wheel zooms"
   has_l "$W/v2.ui" '^zoom after the Incident 1 tab: tl Zoomed to 20:37:01 – 20:54:27 ' "zoom: the Incident tab of the timeline sets the shared range"
-  has_l "$W/v2.ui" '^zoom at the end: tl whole \| fg whole \| ls whole \| ns whole$' "zoom: the Whole window tab puts every chart back"
+  has_l "$W/v2.ui" '^zoom at the end: tl whole \| fg whole \| aasViz whole \| ls whole \| ns whole$' "zoom: the Whole window tab puts every chart back"
   has_l "$W/v2.ui" '^sampler tooltip in the middle of the zoomed chart: inside the range$' "zoom: the sampler's tooltip reads its time from the zoomed range"
   has_l "$W/v2.ui" '^zoom after the Incident 1 tab: .*; tab selected: Incident 1$' "zoom: the Incident 1 tab shows selected after its click"
   has_l "$W/g_two.ui" '^zoom after the Incident 1 tab: .*; tab selected: Incident 1$' "zoom: two incidents, the Incident 1 tab shows selected after its click"
@@ -422,12 +424,12 @@ if [ $HAVE_PY = 1 ] && sh "$T/gate.sh" --have-chrome; then
   has_l "$W/g_two_ho.ui" '^timeline chart width after the Report tab: ([4-9][0-9]{2}|[0-9]{4,})$' "panes: a report opened from a page that started on #handover is drawn at the width of the page"
   same "panes: a page opened on #handover holds the same claims as the page opened on the report" "$W/g_two_ho.txt" "$W/g_two.txt"
   # the section order: every chart before Signals; the hand-over texts in the other pane, after the report
-  want='report summary timeline sequence commits who lgwr baseline recur listener rfsCard nsCard signals explain next coverage episodes history alerts traces shipping cidCard config standby rfsEvCard network paneHandover handover'
+  want='report summary timeline sequence commits who lgwr aas baseline recur listener rfsCard nsCard signals explain next coverage episodes history alerts traces shipping cidCard config standby rfsEvCard network paneHandover handover'
   python3 "$T/extract.py" "$W/v2.dom" --order > "$W/v2.order"
   if [ "$(cat "$W/v2.order")" = "$want" ]; then pass "order, example: summary, the chart sections, then the findings, the logs, the configuration and hosts; the hand-over pane last"; else fail "order, example" "$(cat "$W/v2.order")"; fi
   python3 "$T/extract.py" "$W/g_quiet.dom" --order > "$W/g_quiet.order"
-  if awk '{ s = 0; for (i = 1; i <= NF; i++) { if ($i == "signals") s = 1; if (s && ($i == "timeline" || $i == "sequence" || $i == "commits" || $i == "who" || $i == "lgwr" || $i == "baseline" || $i == "recur" || $i == "listener" || $i == "rfsCard" || $i == "nsCard")) exit 1 } exit 0 }' "$W/g_quiet.order"; then pass "order, quiet scenario: no chart section after Signals"; else fail "order, quiet scenario: a chart after Signals" "$(cat "$W/g_quiet.order")"; fi
-  has_l "$W/g_quiet.order" '^report summary timeline sequence commits who lgwr baseline recur listener rfsCard ' "order, quiet scenario: the chart sections keep their order"
+  if awk '{ s = 0; for (i = 1; i <= NF; i++) { if ($i == "signals") s = 1; if (s && ($i == "timeline" || $i == "sequence" || $i == "commits" || $i == "who" || $i == "lgwr" || $i == "aas" || $i == "baseline" || $i == "recur" || $i == "listener" || $i == "rfsCard" || $i == "nsCard")) exit 1 } exit 0 }' "$W/g_quiet.order"; then pass "order, quiet scenario: no chart section after Signals"; else fail "order, quiet scenario: a chart after Signals" "$(cat "$W/g_quiet.order")"; fi
+  has_l "$W/g_quiet.order" '^report summary timeline sequence commits who lgwr aas baseline recur listener rfsCard ' "order, quiet scenario: the chart sections keep their order"
   # captions: one line, at most 120 characters, in every rendered scenario (the tab-dependent ones are checked in the ui log above)
   for f in v1 v2 pre3 g_quiet g_two g_noash g_drift g_lost g_tzoff g_rtpmode g_rac g_full g_sbgap g_late g_hist g_waitcov; do
     python3 "$T/extract.py" "$W/$f.dom" --captions > "$W/$f.captions"
@@ -613,6 +615,82 @@ PY
   has_l "$W/g_two.ui" '^explanation fact click: #inc[12]-o[0-9]+ -> li flashed$' "ui: a click on a grouped fact of the explanation table jumps to its first Observed row"
   has_l "$W/g_two.ui" '^who at start: 1$' "ui: the first incident's impact view shows first"
   has_l "$W/g_two.ui" '^who after choosing the last incident: 2$' "ui: the tabs of Who waited switch the incident"
+  # active sessions by wait event (aas): the chart with its series and the colours of Enterprise Manager's wait classes, the data it is drawn from, the empty states
+  has_l "$W/v2.cards" '^AAS: 11 areas, 23 minutes with a hover mark$' "aas, example: one area per event (eleven) and one hover mark per minute of the window"
+  has_l "$W/v2.cards" '^  AASNOTE: Average active sessions per minute by wait event, foreground and background, AWR ASH \(10 s samples\)\.$' "aas, example: the caption says what is drawn, that it counts foreground and background sessions, and from which ASH source"
+  has_l "$W/v2.cards" '^  AASLEGEND: ON CPU · CPU \| db file sequential read · User I/O \| db file scattered read · User I/O \| log file parallel write · System I/O \| db file parallel write · System I/O \| buffer busy waits · Concurrency \| enq: TX - row lock contention · Application \| log file sync · Commit \| log buffer space · Configuration \| SQL\*Net more data from client · Network \| SYNC Remote Write · Other$' "aas, example: the legend has one entry per event with its class, in the stack order of Enterprise Manager (CPU, User I/O, System I/O, Concurrency, Application, Commit, Configuration, Network, Other; SYNC Remote Write is class Other in v$event_name), the event with more samples lower within a class"
+  has_l "$W/v2.cards" '^  AASCOLORS: ON CPU · CPU = var\(--wc-cpu\) \| db file sequential read · User I/O = var\(--wc-uio\) \| db file scattered read · User I/O = color-mix\(in srgb, var\(--wc-uio\) 72%, white\) \| log file parallel write · System I/O = var\(--wc-sio\) \| db file parallel write · System I/O = color-mix\(in srgb, var\(--wc-sio\) 72%, white\) \| ' "aas, example: an event takes the colour of its class, a second event of the same class a lighter shade of it"
+  has_l "$W/v2.cards" 'log file sync · Commit = var\(--wc-commit\) \| log buffer space · Configuration = var\(--wc-conf\) \| SQL\*Net more data from client · Network = var\(--wc-net\) \| SYNC Remote Write · Other = var\(--wc-other\)$' "aas, example: Commit, Configuration, Network and Other have their colours too"
+  has_l "$W/v2.cards" '^  AASFOOT: Colours: the wait class of each event, as in Enterprise Manager\.$' "aas, example: the footnote says where the colours come from, and nothing else when the source was not capped and holds the window"
+  python3 - "$R/report/template.html" <<'PY' > "$W/wc.out" 2>&1 && pass "aas: the thirteen wait class colours of Enterprise Manager are custom properties of :root, the same in the light and the dark theme" || fail "aas: the wait class colours" "$(head -4 "$W/wc.out")"
+import re, sys
+t = open(sys.argv[1], encoding='utf-8').read()
+want = {'cpu': '00CC00', 'sched': 'CCFFCC', 'uio': '004AE7', 'sio': '0094E7', 'conc': '8B1A00', 'app': 'C02800', 'commit': 'E46800', 'conf': '5C440B', 'adm': '717354', 'net': '989779', 'queue': 'C2B79B', 'clu': 'C9C2AF', 'other': 'F06EAA'}
+css = t[:t.index('</style>')]
+root = css[css.index(':root {'):css.index('}', css.index(':root {'))]
+got = dict(re.findall(r'--wc-(\w+): #([0-9A-Fa-f]{6})', root))
+bad = ['%s: %s, not %s' % (k, got.get(k), v) for k, v in want.items() if (got.get(k) or '').upper() != v]
+dark = [x for x in re.findall(r'--wc-', css[css.index('@media (prefers-color-scheme: dark)'):])]
+if dark: bad.append('a --wc-* property is set again for the dark theme')
+print('\n'.join(bad)); sys.exit(1 if bad else 0)
+PY
+  python3 "$T/extract.py" "$W/v2.dom" --aas > "$W/v2.aas"
+  python3 - "$R/examples/sample_primary.jsonl" "$W/v2.aas" <<'PY' > "$W/aasfg.out" 2>&1 && pass "aas, example: for every minute the foreground samples of its aas records add up to its fg record, and the total of the tooltip is (foreground + background samples) / 6 samples a minute" || fail "aas, example: the aas records against fg, and the tooltips" "$(head -6 "$W/aasfg.out")"
+import json, re, sys
+recs = [json.loads(l) for l in open(sys.argv[1], encoding='utf-8') if l.strip()]
+meta = next(o for o in recs if o['t'] == 'meta'); per = 60 if meta['ash'] == 'V' else 6
+fg = {o['m']: o['lgwr'] + o['other'] + o['cpu'] for o in recs if o['t'] == 'fg'}
+f, b = {}, {}
+for o in recs:
+    if o['t'] == 'aas':
+        f[o['m']] = f.get(o['m'], 0) + o['fg']; b[o['m']] = b.get(o['m'], 0) + o['bg']
+bad = []
+if not fg: bad.append('no fg records')
+for m in sorted(set(fg) | set(f)):
+    if fg.get(m, 0) != f.get(m, 0): bad.append('%s: fg %s, aas foreground %s' % (m, fg.get(m), f.get(m)))
+hov = {}
+for l in open(sys.argv[2], encoding='utf-8'):
+    mt = re.match(r'AASHOVER (\d\d:\d\d) \| .* \| Total (\S+)$', l)
+    if mt: hov[mt.group(1)] = mt.group(2)
+if sorted(hov) != sorted(m[11:] for m in f): bad.append('hovered minutes %s, minutes with records %s' % (sorted(hov), sorted(m[11:] for m in f)))
+for m in f:
+    want = (f[m] + b[m]) / per; got = hov.get(m[11:])
+    if got is None or abs(float(got) - want) > (0.06 if want >= 10 else 0.006): bad.append('%s: tooltip total %s, expected %.3f' % (m, got, want))
+print('\n'.join(bad)); sys.exit(1 if bad else 0)
+PY
+  # the empty states: no records and no cov record (v1, bundles of the older collectors), a failed statement, a source that holds nothing, one that was skipped, a cov record that counts events without records
+  for n in v1 pre3 g_two g_quiet g_noash g_drift g_lost g_tzoff g_rtpmode g_rac g_late g_waitcov; do has_l "$W/$n.cards" '^AAS: Not collected: no aas records in this bundle\.$' "aas, $n: no aas records and no cov record: not collected"; done
+  has_l "$W/g_stfail.cards" '^AAS: Not checked: aas, the statement over ASH failed\.$' "aas, stfail: a failed statement is not checked, with the note of its cov record: no chart"
+  has_l "$W/g_full.cards" '^AAS: 11 areas, 45 minutes with a hover mark$' "aas, full: the chart of the scenario is drawn over the 45 minutes of its window"
+  has_l "$W/g_full.cards" '^  AASFOOT: Colours: the wait class of each event, as in Enterprise Manager\.$' "aas, full: the colour footnote only, when nothing was cut"
+  has_l "$W/g_full.cards" '^  AASNOTE: Average active sessions per minute by wait event, foreground and background, ASH \(1 s samples\)\.$' "aas, full: the same caption with the 1 s wording"
+  has_l "$W/g_capped.cards" '^AAS: 11 areas, 45 minutes with a hover mark$' "aas, capped: a bundle whose other sources were cut at their caps draws the chart as before"
+  has_l "$W/g_hist.cards" '^AAS: 13 areas, 45 minutes with a hover mark$' "aas, hist: twelve events by name and the rest folded: thirteen areas"
+  has_l "$W/g_hist.cards" '^  AASLEGEND: .* \| Other events \(6 folded\)$' "aas, hist: the folded rest is the last entry of the legend, with the number of events folded, and not named like a wait class"
+  has_l "$W/g_hist.cards" '^  AASCOLORS: .* \| Other events \(6 folded\) = var\(--muted-fg\)$' "aas, hist: ... and grey"
+  has_l "$W/g_hist.cards" 'direct path read · User I/O = color-mix\(in srgb, var\(--wc-uio\) 50%, white\) \| direct path write · User I/O = color-mix\(in srgb, var\(--wc-uio\) 35%, white\)' "aas, hist: the third and fourth event of one class take progressively lighter shades"
+  has_l "$W/g_hist.cards" '^  AASFOOT: Colours: the wait class of each event, as in Enterprise Manager\. 18 events found: the 12 with the most samples are shown by name, the others are added up as Other events\.$' "aas, hist: a capped source says how many events were found and that the 12 with the most samples are shown by name, after the colour footnote (appended, not replacing it)"
+  mkdir -p "$W/aasv"; AP=$W/gen/full_primary.jsonl
+  grep -v '"t":"aas"' "$AP" | sed 's/"src":"aas","st":"ok","first":\("[^"]*"\),"last":\("[^"]*"\),"n":11,/"src":"aas","st":"empty","first":\1,"last":\2,"n":0,/' > "$W/aasv/empty_primary.jsonl"
+  grep -v '"t":"aas"' "$AP" > "$W/aasv/noprec_primary.jsonl"
+  sed 's/"src":"aas","st":"ok",/"src":"aas","st":"skipped",/' "$AP" > "$W/aasv/skip_primary.jsonl"
+  grep -v '"t":"aas"' "$AP" | grep -v '"src":"aas"' > "$W/aasv/nocov_primary.jsonl"
+  sed 's/"src":"aas","st":"ok","first":"2026-11-20 09:00:00"/"src":"aas","st":"ok","first":"2026-11-20 10:20:00"/' "$AP" > "$W/aasv/late_primary.jsonl"
+  for v in empty noprec skip nocov late; do cp "$W/gen/full_standby.jsonl" "$W/aasv/${v}_standby.jsonl"; render g_aas$v "$W/aasv/${v}_primary.jsonl" "$W/aasv/${v}_standby.jsonl"; nojs g_aas$v "aas, $v"; python3 "$T/extract.py" "$W/g_aas$v.dom" --cards > "$W/g_aas$v.cards"; done
+  has_l "$W/g_aasempty.cards" '^AAS: No ASH samples in the window \(or no Diagnostics Pack data\)\.$' "aas: a source that read fine and found no sample says so, not that it was not collected"
+  has_l "$W/g_aasnoprec.cards" '^AAS: Not checked: aas, the coverage record found 11 events but the bundle holds no aas records\.$' "aas: a cov record that counted events with no records behind it is not checked, not none"
+  has_l "$W/g_aasskip.cards" '^AAS: Not collected: the aas read was skipped' "aas: a skipped read is not collected, with its note"
+  has_l "$W/g_aasnocov.cards" '^AAS: Not collected: no aas records in this bundle\.$' "aas: no records and no cov record (a bundle of an older collector): not collected"
+  for v in empty noprec skip nocov late; do no_l "$W/g_aas$v.cards" 'NaN|undefined|Invalid Date' "aas, $v: no NaN, undefined or Invalid Date"; done
+  has_l "$W/g_aaslate.cards" '^  AASFOOT: Colours: the wait class of each event, as in Enterprise Manager\. Not covered: primary active sessions by wait event holds nothing before 2026-11-20 10:20:00; the interval starts 2026-11-20 10:00:00\.$' "aas: a source that starts after the window says so in the footnote, after the colour sentence (appended, not replacing it)"
+  for n in v1 pre3 g_stfail g_aasempty g_aasnoprec g_aasskip g_aasnocov; do has "$W/$n.dom" '<p class="fn" id="aasFoot"></p>' "aas, $n: an empty state leaves the footnote empty"; done
+  # nothing of it is a signal, an explanation or part of the hand-over texts
+  for n in v2 g_full g_hist g_stfail g_capped; do
+    python3 "$T/extract.py" "$W/$n.dom" --net > "$W/$n.aasnn"; python3 "$T/extract.py" "$W/$n.dom" --ticket > "$W/$n.aastt"; python3 "$T/extract.py" "$W/$n.dom" > "$W/$n.aasclaims"; python3 "$T/extract.py" "$W/$n.dom" --parts > "$W/$n.aasparts"
+    no_l "$W/$n.aasnn" 'active sessions|wait event|ON CPU|(^|[^a-z])aas([^a-z]|$)' "aas, $n: the network text holds nothing of the active sessions chart"; no_l "$W/$n.aastt" 'active sessions|wait event|ON CPU|(^|[^a-z])aas([^a-z]|$)' "aas, $n: nor does the ticket text"
+    no_l "$W/$n.aasclaims" '^(SIGNAL|OBSERVED|READING|RULED|NONEFOUND|NOTCHECKED|  OBSERVED|  READING).*(active sessions|ON CPU|(^|[^a-z])aas([^a-z]|$))' "aas, $n: no signal, observation, reading or ruled-out entry mentions it"
+    no_l "$W/$n.aasparts" '^(EXPL|  EXPL|NEXT|SEQ|  SEQ).*(active sessions|ON CPU|(^|[^a-z])aas([^a-z]|$))' "aas, $n: nor an explanation, a hint or the sequence of the incident"
+  done
   # the full scenario: the standby is one hour behind; its RMAN commands are laid on the primary's clock; coverage decides between none and not covered
   has_l "$W/g_full.cards" '^  EPROW inc1 .*\| 10:10:20 / 5 min 20 s after the first line \| average 0.84 MB/s, largest 1 minute 3.3 MB/s / 10:00 to 11:00 \| RMAN \(primary\): BACKUP ARCHIVELOG, 09:57:40 to 10:02:02, COMPLETED / RMAN \(standby\): BACKUP ARCHIVELOG, 09:58:30 to 10:03:30, COMPLETED / job: none / log switch: thread 1 sequence [0-9]+, -8 s$' "full: the standby's RMAN command (08:58:30 on its own clock) is shown at 09:58:30 on the primary's clock"
   has_l "$W/g_full.cards" '^  EPROW h4 .*\| no return line in the history \| average 1.4 MB/s' "full: no return line in the history is said as such, not as 0 or a guess"
@@ -641,7 +719,7 @@ PY
   has_l "$W/g_stfail.cards" '^  WHOLISTS: Not checked: lfs_by, the statement over ASH failed\.$' "stfail: who waited says not checked and why when lfs_by failed"
   has_l "$W/g_stfail.cards" '^RECURBARS: 0 RMAN bars, 1 job bars;' "stfail: the job records that arrived are still drawn in the day-and-hour grid (a source whose cov record is an error, no records for the others)"
   python3 "$T/extract.py" "$W/g_stfail.dom" --parts > "$W/g_stfail.parts"; python3 "$T/extract.py" "$W/g_stfail.dom" > "$W/g_stfail.txt"
-  for pair in 'primary/act/job' 'primary/act/rman' 'primary/act/logsw' 'standby/act/rman' 'primary/wl_hist' 'primary/alsync/sql' 'primary/lfs_by'; do
+  for pair in 'primary/act/job' 'primary/act/rman' 'primary/act/logsw' 'standby/act/rman' 'primary/wl_hist' 'primary/alsync/sql' 'primary/lfs_by' 'primary/aas'; do
     has_l "$W/g_stfail.txt" "^COV: $pair \\| error \\| – – – \\| 0 / cap [0-9]+ \\| not checked, the .*(failed)" "stfail, coverage: $pair is an error row that says not checked and why"
     has_l "$W/g_stfail.parts" "^REACH: $pair \\| not checked$" "stfail, coverage: $pair does not say it reached the window or was read as collected"
   done
@@ -957,10 +1035,12 @@ collect_tests() {   # SHELL LABEL
   # ---------------------------------------------------------------- the newer statements: lfs_by, wl_hist, alsync (and alhist) and act (rman, job, logsw) with their coverage records
   # no sqlplus, or a sqlplus that cannot connect: every source the SQL would have written is skipped, with the reason and its cap (the files of the first tests above)
   covis primary.jsonl lfs_by "" skipped "collect.sh ($L): no sqlplus: lfs_by is skipped on the primary"
+  covis primary.jsonl aas "" skipped "collect.sh ($L): no sqlplus: aas is skipped on the primary"
   covis primary.jsonl wl_hist "" skipped "collect.sh ($L): no sqlplus: wl_hist is skipped on the primary"
   covis primary.jsonl alsync sql skipped "collect.sh ($L): no sqlplus: alsync (sql) is skipped on the primary"
   for k in rman job logsw; do covis primary.jsonl act $k skipped "collect.sh ($L): no sqlplus: act $k is skipped on the primary"; done
   hasf primary.jsonl '"src":"lfs_by","st":"skipped","first":null,"last":null,"n":0,"cap":15,"capped":false,"note":"sqlplus not found"' "collect.sh ($L): ... lfs_by with cap 15 and the reason"
+  hasf primary.jsonl '"src":"aas","st":"skipped","first":null,"last":null,"n":0,"cap":12,"capped":false,"note":"sqlplus not found"' "collect.sh ($L): ... aas with cap 12 and the reason"
   hasf primary.jsonl '"src":"wl_hist","st":"skipped","first":null,"last":null,"n":0,"cap":1500,"capped":false,"note":"sqlplus not found"' "collect.sh ($L): ... wl_hist with cap 1500"
   hasf primary.jsonl '"src":"alsync","kind":"sql","st":"skipped","first":null,"last":null,"n":0,"cap":300,"capped":false,"note":"sqlplus not found"' "collect.sh ($L): ... alsync with cap 300 and kind sql"
   hasf primary.jsonl '"src":"act","kind":"rman","st":"skipped","first":null,"last":null,"n":0,"cap":500,"capped":false,"note":"sqlplus not found"' "collect.sh ($L): ... act rman with cap 500"
@@ -969,7 +1049,7 @@ collect_tests() {   # SHELL LABEL
   cnt primary.jsonl '"src":"alsync"' 1 "collect.sh ($L): a primary without -a has the sql kind of alsync only"
   hasf standby.jsonl '"src":"act","kind":"rman","st":"skipped","first":null,"last":null,"n":0,"cap":500,"capped":false,"note":"sqlplus not found"' "collect.sh ($L): no sqlplus on the standby: act rman is skipped with the reason"
   for k in job logsw; do hasf standby.jsonl "\"src\":\"act\",\"kind\":\"$k\",\"st\":\"skipped\",\"first\":null,\"last\":null,\"n\":0,\"cap\":null,\"capped\":false,\"note\":\"not collected on the standby\"" "collect.sh ($L): standby: act $k is never collected there"; done
-  for src in lfs_by wl_hist; do hasf standby.jsonl "\"src\":\"$src\",\"st\":\"skipped\",\"first\":null,\"last\":null,\"n\":0,\"cap\":null,\"capped\":false,\"note\":\"not collected on the standby\"" "collect.sh ($L): standby: $src is never collected there"; done
+  for src in lfs_by aas wl_hist; do hasf standby.jsonl "\"src\":\"$src\",\"st\":\"skipped\",\"first\":null,\"last\":null,\"n\":0,\"cap\":null,\"capped\":false,\"note\":\"not collected on the standby\"" "collect.sh ($L): standby: $src is never collected there"; done
   cnt standby.jsonl '"src":"alsync"' 1 "collect.sh ($L): the standby has alsync as kind text only"
   covis standby.jsonl alsync text ok "collect.sh ($L): ... read from the text alert log"
   cnt standby.jsonl '"t":"alsync"' 1 "collect.sh ($L): the sync line of the fixture alert log is an alsync record"
@@ -979,6 +1059,7 @@ collect_tests() {   # SHELL LABEL
   covis dbfail.jsonl alsync text ok "collect.sh ($L): ... the text alsync is still read"
   # a statement that wrote nothing (STUB_MODE=meta writes the meta line and one cov record, then ORA-00942): error cov records with the first Oracle error, the meta line stays
   hasf dbpart.jsonl '"src":"lfs_by","st":"error","first":null,"last":null,"n":0,"cap":15,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"' "collect.sh ($L): a statement that failed: lfs_by is an error cov record with the Oracle error"
+  hasf dbpart.jsonl '"src":"aas","st":"error","first":null,"last":null,"n":0,"cap":12,"capped":false,"note":"no coverage record: ORA-00942: table or view does not exist"' "collect.sh ($L): ... aas, with its cap of 12"
   hasf dbpart.jsonl '"src":"wl_hist","st":"error","first":null,"last":null,"n":0,"cap":1500,"capped":false,"note":"no coverage record: ORA-00942' "collect.sh ($L): ... wl_hist"
   hasf dbpart.jsonl '"src":"alsync","kind":"sql","st":"error","first":null,"last":null,"n":0,"cap":300,"capped":false,"note":"no coverage record: ORA-00942' "collect.sh ($L): ... alsync (sql)"
   for pair in 'rman 500' 'job 2000' 'logsw 5000'; do
@@ -993,7 +1074,7 @@ collect_tests() {   # SHELL LABEL
   has errF1 'database: done' "collect.sh ($L): the full stub: database: done"
   # the Coverage list the run prints: one line per cov record, src/kind where the record has a kind (the three act sources and the four sar sources are not the same line four times)
   for k in act/rman act/job act/logsw ash/V alhist/sql alsync/sql sar/ETCP sar/TCP sar/DEV sar/EDEV; do has errF1 "^  $k  *[a-z]*  *[0-9]*" "collect.sh ($L): the coverage list at the end has a line for $k"; done
-  for k in lfs_by wl_hist database trace; do has errF1 "^  $k  *[a-z]*  *[0-9]*" "collect.sh ($L): ... and a line for $k, which has no kind, under its own name"; done
+  for k in lfs_by aas wl_hist database trace; do has errF1 "^  $k  *[a-z]*  *[0-9]*" "collect.sh ($L): ... and a line for $k, which has no kind, under its own name"; done
   [ "$(grep -c '^  act/' errF1)" = 3 ] && pass "collect.sh ($L): ... three act lines, told apart" || fail "collect.sh ($L): the act lines of the coverage list" "$(grep '^  act' errF1)"
   fmt "collect.sh ($L): primary bundle with the records of every newer statement" fullp.jsonl allow-ora
   cnt fullp.jsonl '"t":"meta"' 1 "collect.sh ($L): the full stub: one meta line"
@@ -1001,6 +1082,10 @@ collect_tests() {   # SHELL LABEL
   for d in service module machine; do hasf fullp.jsonl "\"t\":\"lfs_by\",\"side\":\"primary\",\"dim\":\"$d\"" "collect.sh ($L): lfs_by: the $d list is there"; done
   hasf fullp.jsonl '"dim":"module","name":null,' "collect.sh ($L): lfs_by: a module that is null is kept as null"
   hasf fullp.jsonl '"src":"lfs_by","st":"ok","first":"2026-11-13 20:00:00","last":"2026-11-14 00:40:00","n":7,"cap":15,"capped":false' "collect.sh ($L): lfs_by cov record: what ASH holds, groups found, cap 15"
+  cnt fullp.jsonl '"t":"aas"' 6 "collect.sh ($L): the six aas records of the statement are kept"
+  hasf fullp.jsonl '{"t":"aas","m":"2026-11-13 23:51","ev":"log file sync","wc":"Commit","fg":87,"bg":0}' "collect.sh ($L): aas: minute, event, wait class, foreground and background samples"
+  hasf fullp.jsonl '{"t":"aas","m":"2026-11-13 23:51","ev":null,"wc":null,"fg":6,"bg":2}' "collect.sh ($L): aas: the events beyond the twelfth are one record per minute with ev and wc null, kept as null"
+  hasf fullp.jsonl '"src":"aas","st":"ok","first":"2026-11-13 20:00:00","last":"2026-11-14 00:40:00","n":14,"cap":12,"capped":true' "collect.sh ($L): aas cov record: what ASH holds, events found, cap 12, capped when more were found"
   cnt fullp.jsonl '"t":"wl_hist"' 3 "collect.sh ($L): the three wl_hist records are kept"
   hasf fullp.jsonl '{"t":"wl_hist","side":"primary","b":"2026-11-13 21:00","e":"2026-11-13 22:00","redo":0.812,"redo_max":3.455,"txn":41.5}' "collect.sh ($L): wl_hist: interval to the minute, redo, largest minute, transactions"
   hasf fullp.jsonl '"redo":null,"redo_max":null,"txn":null}' "collect.sh ($L): wl_hist: an interval without values keeps its nulls"
@@ -1018,7 +1103,7 @@ collect_tests() {   # SHELL LABEL
   cnt fullp.jsonl '"t":"act","side":"primary","kind":"logsw"' 3 "collect.sh ($L): the three act logsw records are kept"
   hasf fullp.jsonl '{"t":"act","side":"primary","kind":"logsw","a":"2026-11-13 23:41:02","thr":1,"seq":114489}' "collect.sh ($L): act logsw: time, thread and sequence"
   hasf fullp.jsonl '"src":"act","kind":"logsw","st":"ok","first":"2026-10-21 12:30:00","last":"2026-11-14 00:00:30","n":3,"cap":5000,"capped":false' "collect.sh ($L): act logsw cov record, cap 5000"
-  for src in lfs_by wl_hist; do cnt fullp.jsonl "\"src\":\"$src\"" 1 "collect.sh ($L): one cov record for $src, the stub's"; done
+  for src in lfs_by aas wl_hist; do cnt fullp.jsonl "\"src\":\"$src\"" 1 "collect.sh ($L): one cov record for $src, the stub's"; done
   for k in rman job logsw; do cnt fullp.jsonl "\"src\":\"act\",\"kind\":\"$k\"" 1 "collect.sh ($L): one cov record for act $k, the stub's"; done
 
   # the statement of one act kind failed before its cov statement: only that kind is an error, the other kinds and all other records stay
@@ -1030,11 +1115,12 @@ collect_tests() {   # SHELL LABEL
   cnt fullo1.jsonl '"t":"act","side":"primary","kind":"job"' 0 "collect.sh ($L): ... no act job records"
   cnt fullo1.jsonl '"t":"act","side":"primary","kind":"rman"' 2 "collect.sh ($L): ... the act rman records are kept"
   cnt fullo1.jsonl '"t":"lfs_by"' 7 "collect.sh ($L): ... and the other new records"
+  cnt fullo1.jsonl '"t":"aas"' 6 "collect.sh ($L): ... aas among them"
   cnt fullo1.jsonl '"t":"meta"' 1 "collect.sh ($L): ... and the meta line"
   fmt "collect.sh ($L): bundle with act job missing" fullo1.jsonl allow-ora
   # the other sources, omitted together
-  STUB_OMIT="lfs_by wl_hist alsync alhist act:rman act:logsw" STUB_MODE=full SQLPLUS=$W/sqlplus $CB "$SH" "$R/sh/collect.sh" primary "$WIN1" "$WIN2" -t trace -l listener_primary.log -o fullo2.jsonl 2> /dev/null
-  for pair in 'lfs_by 15' 'wl_hist 1500'; do
+  STUB_OMIT="lfs_by aas wl_hist alsync alhist act:rman act:logsw" STUB_MODE=full SQLPLUS=$W/sqlplus $CB "$SH" "$R/sh/collect.sh" primary "$WIN1" "$WIN2" -t trace -l listener_primary.log -o fullo2.jsonl 2> /dev/null
+  for pair in 'lfs_by 15' 'aas 12' 'wl_hist 1500'; do
     set -- $pair; hasf fullo2.jsonl "\"src\":\"$1\",\"st\":\"error\",\"first\":null,\"last\":null,\"n\":0,\"cap\":$2,\"capped\":false,\"note\":\"no coverage record: ORA-00942" "collect.sh ($L): $1 missing: an error cov record with its cap"
   done
   hasf fullo2.jsonl '"src":"alsync","kind":"sql","st":"error","first":null,"last":null,"n":0,"cap":300,"capped":false,"note":"no coverage record: ORA-00942' "collect.sh ($L): alsync missing: an error cov record of kind sql"
@@ -1042,15 +1128,18 @@ collect_tests() {   # SHELL LABEL
   covis fullo2.jsonl act rman error "collect.sh ($L): act rman missing: error"
   covis fullo2.jsonl act logsw error "collect.sh ($L): act logsw missing: error"
   covis fullo2.jsonl act job ok "collect.sh ($L): ... act job, which the stub wrote, stays ok"
-  n=$(grep -cE '"t":"(lfs_by|wl_hist|alsync|alhist)"' fullo2.jsonl); if [ "$n" = 0 ]; then pass "collect.sh ($L): the omitted sources have no records"; else fail "collect.sh ($L): $n records of omitted sources"; fi
-  fmt "collect.sh ($L): bundle with five sources missing" fullo2.jsonl allow-ora
+  n=$(grep -cE '"t":"(lfs_by|aas|wl_hist|alsync|alhist)"' fullo2.jsonl); if [ "$n" = 0 ]; then pass "collect.sh ($L): the omitted sources have no records"; else fail "collect.sh ($L): $n records of omitted sources"; fi
+  fmt "collect.sh ($L): bundle with six sources missing" fullo2.jsonl allow-ora
   # the count statement failed: the SQL writes the error cov record itself (n 0, no first or last, the statement named in the note) and no records
-  STUB_ERR="wl_hist act:rman" STUB_MODE=full SQLPLUS=$W/sqlplus $CB "$SH" "$R/sh/collect.sh" primary "$WIN1" "$WIN2" -t trace -l listener_primary.log -o fullerr.jsonl 2> errF2
+  STUB_ERR="wl_hist aas act:rman" STUB_MODE=full SQLPLUS=$W/sqlplus $CB "$SH" "$R/sh/collect.sh" primary "$WIN1" "$WIN2" -t trace -l listener_primary.log -o fullerr.jsonl 2> errF2
   has errF2 '^  act/rman  *error  *0' "collect.sh ($L): the coverage list at the end shows which act source failed: act/rman error"
   has errF2 '^  act/job  *ok  *43201' "collect.sh ($L): ... while act/job, which did not, is ok"
   has errF2 '^  ORA-00942: table or view does not exist' "collect.sh ($L): the queries that reported errors are listed by their ORA- line"
   nof errF2 'ERROR at line' "collect.sh ($L): ... without the ERROR at line N: lines that only say where"
   cnt fullerr.jsonl '"src":"wl_hist"' 1 "collect.sh ($L): a failed count statement: one wl_hist cov record, the SQL's; collect.sh adds none"
+  cnt fullerr.jsonl '"src":"aas"' 1 "collect.sh ($L): ... one aas cov record, the SQL's, and no records"
+  hasf fullerr.jsonl '"src":"aas","st":"error","first":null,"last":null,"n":0,"cap":12,"capped":false,"note":"the statement over ASH failed"' "collect.sh ($L): ... the aas error record has its cap of 12 and the note of the SQL"
+  cnt fullerr.jsonl '"t":"aas"' 0 "collect.sh ($L): ... no aas records"
   cnt fullerr.jsonl '"src":"act","kind":"rman"' 1 "collect.sh ($L): ... and one for act rman"
   hasf fullerr.jsonl '"src":"wl_hist","st":"error","first":null,"last":null,"n":0,"cap":1500,"capped":false,"note":"the dba_hist_sysmetric_summary statement failed"' "collect.sh ($L): ... the wl_hist error record keeps the note of the SQL"
   hasf fullerr.jsonl '"src":"act","kind":"rman","st":"error","first":null,"last":null,"n":0,"cap":500,"capped":false,"note":"the v$rman_status statement failed"' "collect.sh ($L): ... and so does act rman"
@@ -1066,8 +1155,8 @@ collect_tests() {   # SHELL LABEL
   cnt fulls.jsonl '"t":"act","side":"standby","kind":"rman"' 1 "collect.sh ($L): ... its record is kept"
   hasf fulls.jsonl '"src":"act","kind":"rman","st":"ok","first":"2026-11-01 23:30:00","last":"2026-11-13 23:30:00","n":1,"cap":500,"capped":false' "collect.sh ($L): ... with its cov record"
   for k in job logsw; do covis fulls.jsonl act $k skipped "collect.sh ($L): standby: act $k is skipped"; done
-  for src in lfs_by wl_hist; do covis fulls.jsonl $src "" skipped "collect.sh ($L): standby: $src is skipped"; done
-  n=$(grep -cE '"t":"(lfs_by|wl_hist)"|"t":"act","side":"standby","kind":"(job|logsw)"' fulls.jsonl); if [ "$n" = 0 ]; then pass "collect.sh ($L): standby: no records of the primary-only sources"; else fail "collect.sh ($L): standby: $n records of the primary-only sources"; fi
+  for src in lfs_by aas wl_hist; do covis fulls.jsonl $src "" skipped "collect.sh ($L): standby: $src is skipped"; done
+  n=$(grep -cE '"t":"(lfs_by|aas|wl_hist)"|"t":"act","side":"standby","kind":"(job|logsw)"' fulls.jsonl); if [ "$n" = 0 ]; then pass "collect.sh ($L): standby: no records of the primary-only sources"; else fail "collect.sh ($L): standby: $n records of the primary-only sources"; fi
   cnt fulls.jsonl '"src":"alsync"' 1 "collect.sh ($L): standby: one alsync cov record"
   cnt fulls.jsonl '"src":"alhist"' 1 "collect.sh ($L): standby: one alhist cov record"
   covis fulls.jsonl alsync text ok "collect.sh ($L): ... of kind text"
@@ -1459,8 +1548,8 @@ blank_lint() { awk '
   !ins && tolower($0) ~ /^[ \t]*(select|with)[ \t]/ { ins = 1; first = NR }
   ins && $0 ~ /^[ \t]*$/ { print FILENAME ":" NR ": blank line inside the statement that starts at line " first; ins = 0; next }
   ins && $0 ~ /;[ \t]*$/ && $0 !~ /^[ \t]*--/ { ins = 0 }' "$1"; }
-# newsrc_lint FILE [list]: each record statement of the newer sources (t lfs_by, wl_hist, act; act by kind) has a cov statement of the same src (and kind) in the file, and every cov statement of
-# lfs_by, wl_hist, alsync and act has an st case that says 'error' for a count variable that is defined as a negative number. With "list" it prints the record keys it found instead (a lint that finds nothing proves nothing).
+# newsrc_lint FILE [list]: each record statement of the newer sources (t lfs_by, aas, wl_hist, act; act by kind) has a cov statement of the same src (and kind) in the file, and every cov statement of
+# lfs_by, aas, wl_hist, alsync and act has an st case that says 'error' for a count variable that is defined as a negative number. With "list" it prints the record keys it found instead (a lint that finds nothing proves nothing).
 newsrc_lint() { awk -v q="'" -v list="$2" '
   function field(s, name,   re) {   # the literal in  name value literal  of the statement, "" when there is none
     re = q name q " value " q "[A-Za-z_0-9]+" q
@@ -1469,13 +1558,13 @@ newsrc_lint() { awk -v q="'" -v list="$2" '
   function stmt(s,   t, k, re, v) {
     t = field(s, "t")
     if (t == "cov") {
-      k = field(s, "src"); if (k !~ /^(lfs_by|wl_hist|alsync|act)$/) return
+      k = field(s, "src"); if (k !~ /^(lfs_by|aas|wl_hist|alsync|act)$/) return
       if (k == "act") k = "act:" field(s, "kind")
       cov[k] = 1
       re = q "st" q " value case when &[A-Za-z_0-9]+ < 0 then " q "error" q
       if (!match(s, re)) { bad[k] = "no st case with error on a negative count variable"; return }
       v = substr(s, RSTART, RLENGTH); sub(/.*when &/, "", v); sub(/ < 0.*/, "", v); var[k] = v }
-    else if (t ~ /^(lfs_by|wl_hist|act)$/) { k = t; if (t == "act") k = "act:" field(s, "kind"); rec[k] = 1 } }
+    else if (t ~ /^(lfs_by|aas|wl_hist|act)$/) { k = t; if (t == "act") k = "act:" field(s, "kind"); rec[k] = 1 } }
   /^define[ \t]/ { nm = $0; sub(/^define[ \t]+/, "", nm); val = nm; sub(/[ \t]*=.*/, "", nm); sub(/^[^=]*=[ \t]*/, "", val); sub(/[ \t]+$/, "", val); defv[nm] = val }
   !ins && tolower($0) ~ /^[ \t]*(select|with)[ \t]/ { ins = 1; buf = "" }
   ins && $0 !~ /^[ \t]*--/ { buf = buf " " $0 }
@@ -1537,7 +1626,15 @@ if [ -z "$(newsrc_lint "$W/n_good.sql")" ] && [ "$(newsrc_lint "$W/n_good.sql" l
    && says "$nb2" 'records of lfs_by are written but there is no cov statement' && says "$nb3" 'the cov statement of lfs_by has no st case with error on a negative count variable' && says "$nb4" 'tests &n, which is not defined as a negative number'; then
   pass "sql lint: the check of the newer sources finds a record without a cov statement (by kind for act), a cov statement without the error case, a count variable that is not negative, and accepts the right form"
 else fail "sql lint: the check of the newer sources itself is wrong" "$(newsrc_lint "$W/n_good.sql"; echo "$nb1"; echo "$nb2"; echo "$nb3"; echo "$nb4")"; fi
-for spec in "json_primary act:job act:logsw act:rman lfs_by wl_hist" "json_standby act:rman"; do
+# the same for aas: a record of that type needs a cov statement with src aas and the error case on a negative count variable
+printf "$NS_OK" | sed "s/'t' value 'lfs_by'/'t' value 'aas'/; s/'src' value 'lfs_by'/'src' value 'aas'/" > "$W/n_aas.sql"
+printf "$NS_OK" | sed "s/'t' value 'lfs_by'/'t' value 'aas'/" > "$W/n_aasnocov.sql"
+printf "$NS_OK" | sed "s/'t' value 'lfs_by'/'t' value 'aas'/; s/'src' value 'lfs_by'/'src' value 'aas'/; s/then 'error' when/then 'bad' when/" > "$W/n_aasnoerr.sql"
+na1=$(newsrc_lint "$W/n_aasnocov.sql"); na2=$(newsrc_lint "$W/n_aasnoerr.sql")
+if [ -z "$(newsrc_lint "$W/n_aas.sql")" ] && [ "$(newsrc_lint "$W/n_aas.sql" list | sort | tr '\n' ' ')" = "aas act:job " ] && says "$na1" 'records of aas are written but there is no cov statement' && says "$na2" 'the cov statement of aas has no st case with error on a negative count variable'; then
+  pass "sql lint: the check of the newer sources covers aas: a record without a cov statement of src aas, and a cov statement without the error case, are found"
+else fail "sql lint: the check of the newer sources does not cover aas" "$(newsrc_lint "$W/n_aas.sql"; echo "$na1"; echo "$na2")"; fi
+for spec in "json_primary aas act:job act:logsw act:rman lfs_by wl_hist" "json_standby act:rman"; do
   set -- $spec; f=$1; shift; out=$(newsrc_lint "$R/sql/$f.sql")
   if [ -z "$out" ] && [ "$(newsrc_lint "$R/sql/$f.sql" list | sort | tr '\n' ' ')" = "$* " ]; then
     pass "sql lint: $f.sql: every record statement of $* has a cov statement with the same src (and kind), an st case with 'error' on a count variable that defaults to a negative number"

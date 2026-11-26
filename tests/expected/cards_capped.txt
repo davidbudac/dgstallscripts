@@ -29,3 +29,8 @@ WHO: Incident 1 · 10:05:00 to 10:10:20 · ORA-16198, destination UNSYNCHRONIZED
   WHOCAP: ASH (v$active_session_history, 1 s samples): samples, not durations or commits. Lists for the whole window. 10 groups found, none cut.
   WHOPEAK: Peak in one sample: 12 at 10:05:25.500; behind LGWR 12 at 10:05:25.500 (lfs_sum, whole window).
   WHOWL: Per-minute workload (wl): no records in these bundles.
+AAS: 11 areas, 45 minutes with a hover mark
+  AASNOTE: Average active sessions per minute by wait event, foreground and background, ASH (1 s samples).
+  AASLEGEND: ON CPU · CPU | db file sequential read · User I/O | db file scattered read · User I/O | log file parallel write · System I/O | db file parallel write · System I/O | buffer busy waits · Concurrency | enq: TX - row lock contention · Application | log file sync · Commit | log buffer space · Configuration | SQL*Net more data from client · Network | SYNC Remote Write · Other
+  AASCOLORS: ON CPU · CPU = var(--wc-cpu) | db file sequential read · User I/O = var(--wc-uio) | db file scattered read · User I/O = color-mix(in srgb, var(--wc-uio) 72%, white) | log file parallel write · System I/O = var(--wc-sio) | db file parallel write · System I/O = color-mix(in srgb, var(--wc-sio) 72%, white) | buffer busy waits · Concurrency = var(--wc-conc) | enq: TX - row lock contention · Application = var(--wc-app) | log file sync · Commit = var(--wc-commit) | log buffer space · Configuration = var(--wc-conf) | SQL*Net more data from client · Network = var(--wc-net) | SYNC Remote Write · Other = var(--wc-other)
+  AASFOOT: Colours: the wait class of each event, as in Enterprise Manager.
